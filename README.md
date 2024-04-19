@@ -1,0 +1,2 @@
+# freezy-inventory
+freezy-inventory
