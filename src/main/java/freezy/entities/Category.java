@@ -25,18 +25,11 @@ public class Category {
     @JoinColumn(name = "updated_by")
     private User updatedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "deleted_by")
-    private User deletedBy;
-
     @Column(nullable = false)
     private LocalDateTime created_at;
 
     @Column(nullable = false)
     private LocalDateTime updated_at;
-
-    @Column(nullable = false)
-    private LocalDateTime deleted_at;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;

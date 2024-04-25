@@ -1,4 +1,4 @@
-package com.freezy.freezy.Controller;
+package freezy.controllers;
 
 
 import org.springframework.web.bind.annotation.GetMapping;

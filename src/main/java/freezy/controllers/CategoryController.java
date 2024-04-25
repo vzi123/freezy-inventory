@@ -3,12 +3,15 @@ package freezy.controllers;
 
 import freezy.entities.Category;
 import freezy.services.CategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/categories")
 public class CategoryController {
     @Autowired
@@ -16,6 +19,8 @@ public class CategoryController {
 
     @GetMapping
     public List<Category> getAllCategories() {
+
+        log.info("here");
         return categoryService.getAllCategories();
     }
 

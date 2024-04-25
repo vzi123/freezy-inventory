@@ -16,5 +16,7 @@ public class CategoryUOMMap {
     @Enumerated(EnumType.STRING)
     private UOM uom;
 
+    private String multiple;
+
     // Getters and setters
 }
