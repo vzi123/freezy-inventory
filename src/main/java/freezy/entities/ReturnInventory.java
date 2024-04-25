@@ -1,7 +1,7 @@
 package freezy.entities;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "return_inventory")

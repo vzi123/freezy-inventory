@@ -3,7 +3,7 @@ package freezy.entities;
 
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity(name = "delivery")
