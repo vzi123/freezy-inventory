@@ -25,8 +25,9 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public Category getCategoryById(@PathVariable String id) {
-        return categoryService.getCategoryById(id);
+    public String getCategoryById(@PathVariable String id) {
+        Category category =  categoryService.getCategoryById(id);
+        return category.toString();
     }
 
     @PostMapping

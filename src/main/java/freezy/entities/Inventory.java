@@ -3,7 +3,7 @@ package freezy.entities;
 
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "inventory")
@@ -31,13 +31,12 @@ public class Inventory {
     private User deletedBy;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private String created_at;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private String updated_at;
 
-    @Column(nullable = false)
-    private LocalDateTime deleted_at;
+
 
     // Getters and setters
 }

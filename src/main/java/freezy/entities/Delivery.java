@@ -4,7 +4,7 @@ package freezy.entities;
 
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+
 
 @Entity(name = "delivery")
 @Table(name = "delivery")
@@ -25,7 +25,7 @@ public class Delivery {
     private User customer;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private String date;
 
     @Column(nullable = false)
     private int price;

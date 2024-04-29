@@ -3,11 +3,13 @@ package freezy.entities;
 
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.ToString;
+
 import java.util.List;
 
 @Entity
 @Table(name = "category")
+@ToString
 public class Category {
     @Id
     private String id;
@@ -26,10 +28,10 @@ public class Category {
     private User updatedBy;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private String created_at;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private String updated_at;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
