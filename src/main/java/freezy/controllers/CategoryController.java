@@ -5,7 +5,6 @@ import freezy.entities.Category;
 import freezy.services.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,9 +24,9 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public String getCategoryById(@PathVariable String id) {
-        Category category =  categoryService.getCategoryById(id);
-        return category.toString();
+    public Category getCategoryById(@PathVariable String id) {
+      return categoryService.getCategoryById(id);
+
     }
 
     @PostMapping

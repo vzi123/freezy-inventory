@@ -3,6 +3,9 @@ package freezy.entities;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
@@ -10,6 +13,9 @@ import java.util.List;
 @Entity
 @Table(name = "category")
 @ToString
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
     @Id
     private String id;

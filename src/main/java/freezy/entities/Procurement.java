@@ -3,16 +3,22 @@ package freezy.entities;
 
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name = "procurement")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Procurement {
     @Id
     private String id;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private String date;
 
     @Column(nullable = false)
     private String description;

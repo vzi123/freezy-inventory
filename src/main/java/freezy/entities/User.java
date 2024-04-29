@@ -2,11 +2,18 @@ package freezy.entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name = "user")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     private String id;
@@ -26,12 +33,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by")
-    private User createdBy;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private String created_at;
 
     // Getters and setters
 }

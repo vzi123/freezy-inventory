@@ -2,9 +2,15 @@ package freezy.entities;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "return_inventory")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReturnInventory {
     @Id
     private String id;

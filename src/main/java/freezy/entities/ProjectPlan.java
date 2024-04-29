@@ -3,10 +3,16 @@ package freezy.entities;
 
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name = "project_plan")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectPlan {
     @Id
     private String id;
@@ -30,7 +36,7 @@ public class ProjectPlan {
     private User createdBy;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private String created_at;
 
     // Getters and setters
 }

@@ -2,13 +2,18 @@ package freezy.entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     @Id
     private String id;
@@ -20,6 +25,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnore
     private Category category;
 
     @ManyToOne
@@ -35,13 +41,12 @@ public class Product {
     private User deletedBy;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private String created_at;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private String updated_at;
 
-    @Column(nullable = false)
-    private LocalDateTime deleted_at;
+
 
     // Getters and setters
 }

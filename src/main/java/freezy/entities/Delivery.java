@@ -4,10 +4,16 @@ package freezy.entities;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Entity(name = "delivery")
 @Table(name = "delivery")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Delivery {
     @Id
     private String id;

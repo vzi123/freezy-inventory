@@ -3,10 +3,16 @@ package freezy.entities;
 
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name = "transfer_inventory")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TransferInventory {
     @Id
     private String id;
@@ -23,7 +29,7 @@ public class TransferInventory {
     private User user;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private String date;
 
     private String reason;
 
