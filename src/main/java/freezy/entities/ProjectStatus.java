@@ -1,9 +1,14 @@
 package freezy.entities;
 
 enum ProjectStatus {
-    NEW,
+    DRAFT,
     INVOICED,
     ACTIVE,
     COMPLETED,
-    REJECTED
+    REJECTED,
+    draft,
+    invoiced,
+    active,
+    completed,
+    rejected;
 }

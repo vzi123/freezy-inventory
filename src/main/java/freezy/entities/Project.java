@@ -29,12 +29,12 @@ public class Project {
     @JoinColumn(name = "customer")
     private User customer;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by")
-    private User createdBy;
-
-    @Column(nullable = false)
-    private String created_at;
+//    @ManyToOne
+//    @JoinColumn(name = "created_by")
+//    private User createdBy;
+//
+//    @Column(nullable = false)
+//    private String created_at;
 
     // Getters and setters
 }

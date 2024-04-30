@@ -1,53 +1,45 @@
 package freezy.entities;
 
-
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 
 @Entity
-@Table(name = "product")
+@Table(name = "sales_order")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+public class SalesOrder {
+
     @Id
     private String id;
 
-    @Column(nullable = false)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userId;
 
-    private String description;
+    @Column(nullable = false)
+    private String userPersona;
+
+    @Column(nullable = false)
+    private String status;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "po_id", nullable = false)
     @JsonIgnore
-    private Category category;
+    private PurchaseOrder purchaseOrder;
+
+    @OneToMany(mappedBy = "salesOrder")
+    private List<SalesOrderItems> salesOrderItems;
 
 //    @ManyToOne
 //    @JoinColumn(name = "created_by")
 //    private User createdBy;
 //
-//    @ManyToOne
-//    @JoinColumn(name = "updated_by")
-//    private User updatedBy;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "deleted_by")
-//    private User deletedBy;
-//
 //    @Column(nullable = false)
 //    private String created_at;
-//
-//    @Column(nullable = false)
-//    private String updated_at;
-
-
-
-    // Getters and setters
 }
-

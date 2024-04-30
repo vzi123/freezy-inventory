@@ -25,19 +25,19 @@ public class Category {
 
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by")
-    private User createdBy;
-
-    @ManyToOne
-    @JoinColumn(name = "updated_by")
-    private User updatedBy;
-
-    @Column(nullable = false)
-    private String created_at;
-
-    @Column(nullable = false)
-    private String updated_at;
+//    @ManyToOne
+//    @JoinColumn(name = "created_by")
+//    private User createdBy;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "updated_by")
+//    private User updatedBy;
+//
+//    @Column(nullable = false)
+//    private String created_at;
+//
+//    @Column(nullable = false)
+//    private String updated_at;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;

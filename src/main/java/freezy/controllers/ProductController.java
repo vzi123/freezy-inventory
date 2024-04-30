@@ -4,8 +4,10 @@ package freezy.controllers;
 import freezy.entities.Product;
 import freezy.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 
 @RestController
@@ -14,12 +16,12 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value= "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Product getProductById(@PathVariable String id) {
         return productService.getProductById(id);
     }

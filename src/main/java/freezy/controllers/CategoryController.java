@@ -5,6 +5,7 @@ import freezy.entities.Category;
 import freezy.services.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,14 +17,14 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/all")
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Category> getAllCategories() {
 
         log.info("here");
         return categoryService.getAllCategories();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Category getCategoryById(@PathVariable String id) {
       return categoryService.getCategoryById(id);
 

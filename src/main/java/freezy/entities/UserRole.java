@@ -5,5 +5,8 @@ enum UserRole {
     ADMIN,
     TECHNICIAN,
     SUB_CONTRACTOR,
-    admin;
+    admin,
+    customer,
+    technician,
+    sub_contractor;
 }
