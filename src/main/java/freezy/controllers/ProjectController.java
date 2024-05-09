@@ -3,6 +3,7 @@ package freezy.controllers;
 import freezy.entities.Project;
 import freezy.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @GetMapping
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Project> getAllProjects() {
         return projectService.getAllProjects();
     }

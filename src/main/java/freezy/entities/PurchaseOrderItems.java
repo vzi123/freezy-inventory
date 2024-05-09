@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class PurchaseOrderItems {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @ManyToOne

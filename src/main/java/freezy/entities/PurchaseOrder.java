@@ -17,11 +17,20 @@ public class PurchaseOrder {
 
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+//
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User userId;
+    private User user;
 
     @Column(nullable = false)
     private String userPersona;
@@ -36,12 +45,13 @@ public class PurchaseOrder {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-//    @ManyToOne
-//    @JoinColumn(name = "created_by")
-//    private User createdBy;
-//
-//    @Column(nullable = false)
-//    private String created_at;
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
+    @JoinColumn(name = "created_at")
+    @Column(nullable = false)
+    private String createdAt;
 
     @OneToMany(mappedBy = "purchaseOrder")
     private List<PurchaseOrderItems> purchaseOrderItems;

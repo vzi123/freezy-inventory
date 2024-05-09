@@ -15,10 +15,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Inventory {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)
-    private int inventory;
+    private Integer inventory;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

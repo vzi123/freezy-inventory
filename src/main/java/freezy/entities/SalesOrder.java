@@ -16,11 +16,12 @@ import java.util.List;
 public class SalesOrder {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User userId;
+    private User user;
 
     @Column(nullable = false)
     private String userPersona;
@@ -36,10 +37,11 @@ public class SalesOrder {
     @OneToMany(mappedBy = "salesOrder")
     private List<SalesOrderItems> salesOrderItems;
 
-//    @ManyToOne
-//    @JoinColumn(name = "created_by")
-//    private User createdBy;
-//
-//    @Column(nullable = false)
-//    private String created_at;
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
+    @JoinColumn(name = "created_at")
+    @Column(nullable = false)
+    private String createdAt;
 }

@@ -1,12 +1,15 @@
 package freezy.controllers;
 
 
+import freezy.dto.InventoryCountDTO;
 import freezy.entities.Inventory;
 import freezy.services.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/inventory")
@@ -14,7 +17,7 @@ public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
 
-    @GetMapping
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Inventory> getAllInventory() {
         return inventoryService.getAllInventory();
     }
@@ -36,8 +39,15 @@ public class InventoryController {
         }
     }
 
+    @GetMapping(value = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<InventoryCountDTO> getInventoryNumbers() {
+        return inventoryService.getInventoryCount();
+    }
+
+
     @DeleteMapping("/{id}")
     public void deleteInventory(@PathVariable String id) {
         inventoryService.deleteInventory(id);
     }
+
 }
