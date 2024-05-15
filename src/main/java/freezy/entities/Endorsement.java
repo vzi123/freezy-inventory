@@ -1,45 +1,38 @@
 package freezy.entities;
 
-
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
-@Table(name = "user")
+@Table(name = "endorsement")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Endorsement {
+
     @Id
     private String id;
 
+
+    @ManyToOne
+    @JoinColumn(name = "po_id", nullable = false)
+    @JsonIgnore
+    private PurchaseOrder purchaseOrder;
+
+    @Column(nullable = false)
+    Integer budget;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    @JsonIgnore
+    private User createdBy;
+
+    @JoinColumn(name = "created_at")
     @Column(nullable = false)
     @JsonIgnore
-    private String first_name;
+    private String createdAt;
 
-    @Column(nullable = false)
-    @JsonIgnore
-    private String last_name;
-
-    @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private int phone_number;
-
-    @Enumerated(EnumType.STRING)
-    @JsonIgnore
-    private UserRole role;
-
-
-    @Column(nullable = false)
-    @JsonIgnore
-    private String created_at;
-
-    // Getters and setters
 }

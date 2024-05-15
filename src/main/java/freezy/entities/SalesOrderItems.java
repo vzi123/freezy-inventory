@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 public class SalesOrderItems {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @ManyToOne
@@ -32,10 +31,10 @@ public class SalesOrderItems {
     @Column(nullable = false)
     private Integer price;
 
-//    @ManyToOne
-//    @JoinColumn(name = "created_by")
-//    private User createdBy;
-//
-//    @Column(nullable = false)
-//    private String created_at;
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
+    @Column(nullable = false)
+    private String createdAt;
 }

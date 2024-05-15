@@ -2,6 +2,7 @@ package freezy.repository;
 
 import freezy.entities.Product;
 import freezy.entities.PurchaseOrder;
+import freezy.entities.PurchaseOrderStatus;
 import freezy.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

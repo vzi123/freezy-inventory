@@ -2,6 +2,7 @@ package freezy.entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Inventory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)
@@ -37,13 +37,24 @@ public class Inventory {
 //    @JoinColumn(name = "deleted_by")
 //    private User deletedBy;
 //
-//    @Column(nullable = false)
-//    private String created_at;
-//
-//    @Column(nullable = false)
-//    private String updated_at;
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    @JsonIgnore
+    private User createdBy;
 
+    @JoinColumn(name = "created_at")
+    @Column(nullable = false)
+    @JsonIgnore
+    private String createdAt;
 
+    @ManyToOne
+    @JoinColumn(name = "updated_by")
+    @JsonIgnore
+    private User updatedBy;
 
-    // Getters and setters
+    @JoinColumn(name = "udpated_at")
+    @Column(nullable = false)
+    @JsonIgnore
+    private String updatedAt;
+
 }

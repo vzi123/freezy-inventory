@@ -8,34 +8,44 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "purchase_order_items")
+@Table(name = "payables")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseOrderItems {
+public class Payable {
 
     @Id
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    @ManyToOne
     @JoinColumn(name = "created_by")
     private User createdBy;
 
-    @Column(nullable = false)
     @JoinColumn(name = "created_at")
+    @Column(nullable = false)
     private String createdAt;
 
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
+
     @Column(nullable = false)
-    private Integer quantity;
+    private Integer amount;
 
     @ManyToOne
-    @JoinColumn(name = "po_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User vendor;
+
+
+    @Column(nullable = false)
+    private PayableStatus status;
+
+    @Column
+    private String comments;
+
+    @ManyToOne
+    @JoinColumn(name = "po_id")
     @JsonIgnore
-    @JsonBackReference
     private PurchaseOrder purchaseOrder;
 
 }

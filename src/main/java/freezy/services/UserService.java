@@ -21,6 +21,10 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public User getSuperUser(){
+        return getUserById("U0001");
+    }
+
     public void saveUser(User user) {
         userRepository.save(user);
     }

@@ -1,5 +1,6 @@
 package freezy.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,6 @@ import java.util.List;
 public class SalesOrder {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @ManyToOne
@@ -30,7 +30,8 @@ public class SalesOrder {
     private String status;
 
     @ManyToOne
-    @JoinColumn(name = "po_id", nullable = false)
+    @JoinColumn(name = "po_id", nullable = true)
+    @JsonBackReference
     @JsonIgnore
     private PurchaseOrder purchaseOrder;
 

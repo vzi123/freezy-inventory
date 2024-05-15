@@ -1,6 +1,7 @@
 package freezy.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,16 +18,7 @@ public class PurchaseOrder {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
-//
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -57,6 +49,14 @@ public class PurchaseOrder {
     private List<PurchaseOrderItems> purchaseOrderItems;
 
     @OneToMany(mappedBy = "purchaseOrder")
+    private List<Endorsement> endorsements;
+
+    @OneToMany(mappedBy = "purchaseOrder")
+    @JsonManagedReference
     private List<SalesOrder> salesOrders;
+
+    public String toString(){
+        return this.id;
+    }
 
 }

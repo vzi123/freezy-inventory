@@ -3,6 +3,7 @@ package freezy.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)
@@ -26,6 +26,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonManagedReference
     @JsonIgnore
     private Category category;
 
@@ -50,5 +51,9 @@ public class Product {
 
 
     // Getters and setters
+
+    public String toString(){
+        return this.name;
+    }
 }
 

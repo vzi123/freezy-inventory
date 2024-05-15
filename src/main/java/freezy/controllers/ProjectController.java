@@ -1,7 +1,9 @@
 package freezy.controllers;
 
 import freezy.entities.Project;
+import freezy.schedule.StockAlertSchedule;
 import freezy.services.ProjectService;
+import freezy.utils.StockAlertEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +16,13 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private StockAlertEmailService stockAlertEmailService;
+
+
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Project> getAllProjects() {
+    public List<Project> getAllProjects() throws Exception {
+        //stockAlertEmailService.checkAndSendEmail();
         return projectService.getAllProjects();
     }
 
@@ -24,16 +31,18 @@ public class ProjectController {
         return projectService.getProjectById(id);
     }
 
-    @PostMapping
-    public void addProject(@RequestBody Project project) {
+    @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Project addProject(@RequestBody Project project) {
         projectService.saveProject(project);
+        return projectService.getProjectById(project.getId());
     }
 
     @PutMapping("/{id}")
-    public void updateProject(@PathVariable String id, @RequestBody Project project) {
+    public Project updateProject(@PathVariable String id, @RequestBody Project project) {
         if (projectService.getProjectById(id) != null) {
             projectService.saveProject(project);
         }
+        return projectService.getProjectById(project.getId());
     }
 
     @DeleteMapping("/{id}")

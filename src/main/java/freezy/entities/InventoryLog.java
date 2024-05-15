@@ -17,7 +17,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class InventoryLog {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @ManyToOne
@@ -33,6 +32,6 @@ public class InventoryLog {
 
     @Column(nullable = false)
     @JoinColumn(name = "created_at")
-    private Timestamp createdAt;
+    private String createdAt;
 
 }

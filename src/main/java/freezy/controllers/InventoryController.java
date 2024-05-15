@@ -2,6 +2,7 @@ package freezy.controllers;
 
 
 import freezy.dto.InventoryCountDTO;
+import freezy.dto.InventoryDTO;
 import freezy.entities.Inventory;
 import freezy.services.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +28,15 @@ public class InventoryController {
         return inventoryService.getInventoryById(id);
     }
 
-    @PostMapping
-    public void addInventory(@RequestBody Inventory inventory) {
-        inventoryService.saveInventory(inventory);
+    @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void addInventory(@RequestBody InventoryDTO inventoryDTO) {
+        inventoryService.saveInventory(inventoryDTO);
     }
 
     @PutMapping("/{id}")
-    public void updateInventory(@PathVariable String id, @RequestBody Inventory inventory) {
+    public void updateInventory(@PathVariable String id, @RequestBody InventoryDTO inventoryDTO) {
         if (inventoryService.getInventoryById(id) != null) {
-            inventoryService.saveInventory(inventory);
+            inventoryService.saveInventory(inventoryDTO);
         }
     }
 

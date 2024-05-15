@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 
 @Entity
@@ -15,7 +16,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Project {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)
@@ -30,12 +30,13 @@ public class Project {
     @JoinColumn(name = "customer")
     private User customer;
 
-//    @ManyToOne
-//    @JoinColumn(name = "created_by")
-//    private User createdBy;
-//
-//    @Column(nullable = false)
-//    private String created_at;
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
+    @Column(nullable = false)
+    @JoinColumn(name = "created_at")
+    private String createdAt;
 
     // Getters and setters
 }
