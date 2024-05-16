@@ -30,10 +30,9 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private int phone_number;
+    private String phone_number;
 
     @Enumerated(EnumType.STRING)
-    @JsonIgnore
     private UserRole role;
 
 

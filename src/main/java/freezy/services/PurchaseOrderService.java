@@ -57,10 +57,12 @@ public class PurchaseOrderService {
 
     public void savePurchaseOrder(PurchaseOrder purchaseOrder) {
         log.info(" in service");
-        purchaseOrder.setId(utilsService.generateId(Constants.PURCHASE_ORDER_PREFIX));
-        purchaseOrder.setCreatedAt(utilsService.generateDateFormat());
-        purchaseOrder.setCreatedBy(utilsService.getSuperUser());
-        purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
+        if(null == purchaseOrder.getId()){
+            purchaseOrder.setId(utilsService.generateId(Constants.PURCHASE_ORDER_PREFIX));
+            purchaseOrder.setCreatedAt(utilsService.generateDateFormat());
+            purchaseOrder.setCreatedBy(utilsService.getSuperUser());
+            purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
+        }
         purchaseOrderRepository.save(purchaseOrder);
     }
 

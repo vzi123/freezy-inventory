@@ -2,6 +2,7 @@ package freezy.services;
 
 import freezy.entities.Payable;
 import freezy.entities.Receivable;
+import freezy.entities.SalesOrder;
 import freezy.repository.PayableRepository;
 import freezy.repository.ReceivableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,9 @@ public class ReceivableService {
 
     public void deleteReceivable(String id) {
         receivableRepository.deleteById(id);
+    }
+
+    public Receivable findBySalesOrder(SalesOrder salesOrder){
+        return receivableRepository.findBySalesOrder(salesOrder);
     }
 }

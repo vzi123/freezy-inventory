@@ -11,5 +11,8 @@ public interface SalesOrderItemsRepository extends JpaRepository<SalesOrderItems
 
     @Query(value = "select sum(soi.price), sum(soi.quantity),soi.product_id, po.budget, po.id from sales_order_items soi, sales_order so, purchase_order po where po.id = :poId and soi.so_id = so.id and po.id = so.po_id group by po.id, soi.product_id", nativeQuery = true)
     public List getStockAndPriceByPurchaseOrder(@Param("poId") String poId);
+
+    @Query(value = "select sum(soi.price), sum(soi.quantity),soi.product_id, so.id from sales_order_items soi, sales_order so where soi.so_id = so.id and so.id = :soId group by  soi.product_id;", nativeQuery = true)
+    public List getStockAndPriceBySalesOrder(@Param("soId") String soId);
 }
 

@@ -1,21 +1,22 @@
 package freezy.services;
 
-import freezy.dto.*;
+import freezy.dto.CompareDTO;
+import freezy.dto.InventoryDTO;
+import freezy.dto.SOItemsDTO;
+import freezy.dto.SalesOrderDetailsDTO;
 import freezy.entities.*;
+import freezy.repository.PayableRepository;
+import freezy.repository.ReceivableRepository;
 import freezy.repository.SalesOrderItemsRepository;
 import freezy.repository.SalesOrderRepository;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
-import io.swagger.models.auth.In;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -45,6 +46,18 @@ public class SalesOrderService {
     @Autowired
     InventoryLogService inventoryLogService;
 
+    @Autowired
+    PayableRepository payableRepository;
+
+    @Autowired
+    ReceivableRepository receivableRepository;
+
+    @Autowired
+    PayableService payableService;
+
+    @Autowired
+    ReceivableService receivableService;
+
     public List<SalesOrder> getAllSalesOrders() {
         return salesOrderRepository.findAll();
     }
@@ -64,13 +77,14 @@ public class SalesOrderService {
     public SalesOrder saveSalesOrderDetails(SalesOrderDetailsDTO salesOrderDetailsDTO) {
         log.info(" in service");
         SalesOrder salesOrder = new SalesOrder();
+        PurchaseOrder purchaseOrder =  purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
         salesOrder.setId(utilsService.generateId(Constants.SALES_ORDER_PREFIX));
         salesOrder.setCreatedAt(utilsService.generateDateFormat());
         salesOrder.setCreatedBy(utilsService.getSuperUser());
-        salesOrder.setStatus(SalesOrderStatus.RAISED.toString());
+        salesOrder.setPurchaseOrder(purchaseOrder);
         salesOrder.setUserPersona(salesOrderDetailsDTO.getUserPersona());
         salesOrder.setUser(userService.getUserById(salesOrderDetailsDTO.getUserId()));
-        salesOrder.setPurchaseOrder(purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId()));
+        salesOrder.setStatus(SalesOrderStatus.DEFAULT.toString());
         salesOrderRepository.saveAndFlush(salesOrder);
 
         List<SalesOrderItems> salesOrderItems = new ArrayList<SalesOrderItems>();
@@ -91,73 +105,174 @@ public class SalesOrderService {
             salesOrderItems.add(salesOrderItem);
         }
         salesOrderItemsRepository.saveAllAndFlush(salesOrderItems);
+        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)){
+            salesOrder.setStatus(SalesOrderStatus.RAISED.toString());
+            saveReceivable(salesOrder, ReceivableStatus.TO_BE_RECEIVED, "Raised a Receivable");
+        }
+        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
+            salesOrder.setStatus(SalesOrderStatus.RECEIVED.toString());
+            savePayable(salesOrder, PayableStatus.TO_BE_PAID, "Raised a Payable");
+        }
+        salesOrderRepository.saveAndFlush(salesOrder);
         return salesOrder;
     }
 
-    public Boolean validateBudgetAndStock(SalesOrderDetailsDTO salesOrderDetails, Integer budget){
-        try{
-            List budgetAndStock = salesOrderItemsRepository.getStockAndPriceByPurchaseOrder(salesOrderDetails.getPoId());
-            Map<String, CompareDTO> existingDetails = new HashMap<String, CompareDTO>();
-            Map<String, CompareDTO> newDetails = new HashMap<String, CompareDTO>();
-            Map<String, Integer> inventoryMap = new HashMap<String, Integer>();
-            for (Object obj: budgetAndStock) {
-                CompareDTO compareDTO = new CompareDTO();
-                Object[] objects = (Object[]) obj;
-                compareDTO.setPrice(Integer.parseInt(objects[0].toString()));
-                compareDTO.setQuantity(Integer.parseInt(objects[1].toString()));
-                compareDTO.setProductId(objects[2].toString());
-                existingDetails.put((objects[2].toString()),compareDTO);
-            }
-            List<SOItemsDTO> soItems = salesOrderDetails.getSoItems();
-            for(SOItemsDTO soItem: soItems){
-                CompareDTO compareDTO = new CompareDTO();
-                compareDTO.setProductId(soItem.getProductId());
-                compareDTO.setQuantity(soItem.getQuantity());
-                compareDTO.setPrice(soItem.getPrice());
-                newDetails.put(soItem.getProductId(), compareDTO);
-            }
-            Map<String, Integer> priceMap = new HashMap<String, Integer>();
-            Map<String, Integer> stockMap = new HashMap<String, Integer>();
-            Integer compareBudget = 0;
-            for(String key: newDetails.keySet()){
-                Integer totalStock = ((CompareDTO)newDetails.get(key)).getQuantity() + ((CompareDTO)existingDetails.get(key)).getQuantity();
-                Integer totalBudget = (((CompareDTO)newDetails.get(key)).getQuantity() * ((CompareDTO)newDetails.get(key)).getPrice()) +
-                        ((((CompareDTO)existingDetails.get(key)).getQuantity() * ((CompareDTO)existingDetails.get(key)).getPrice()));
-                priceMap.put(key, totalBudget);
-                compareBudget = compareBudget + totalBudget;
-                stockMap.put(key, totalStock);
-                inventoryMap.put(key, inventoryService.getInventoryById(key).getInventory());
-            }
-            log.info(" the map " + stockMap + " " + priceMap + " " + budget + " " + compareBudget);
-            if(budget >= compareBudget){
-                if(null != inventoryMap && null != stockMap){
-                    for(String product: stockMap.keySet()){
-                        if(stockMap.get(product) >= inventoryMap.get(product)) return false;
-                    }
-                    return true;
-                }
-            }
-            return false;
-
+    public Map<String, CompareDTO> getBudgetAndStock(SalesOrder salesOrder){
+        Map<String, CompareDTO> details = new HashMap<String, CompareDTO>();
+        List budgetAndStock = salesOrderItemsRepository.getStockAndPriceBySalesOrder(salesOrder.getId());
+        for (Object obj: budgetAndStock) {
+            CompareDTO compareDTO = new CompareDTO();
+            Object[] objects = (Object[]) obj;
+            compareDTO.setPrice(Integer.parseInt(objects[0].toString()));
+            compareDTO.setQuantity(Integer.parseInt(objects[1].toString()));
+            compareDTO.setProductId(objects[2].toString());
+            details.put((objects[2].toString()),compareDTO);
         }
-        catch (Exception e){
-
-        }
-        return true;
+        return details;
     }
 
     public void changeStatus(SalesOrder salesOrder, String oldStatus, String newStatus){
         salesOrder.setStatus(newStatus);
+        PurchaseOrder purchaseOrder = salesOrder.getPurchaseOrder();
         if(newStatus.equalsIgnoreCase(SalesOrderStatus.DELIVERED.toString())){
-            PurchaseOrder purchaseOrder = salesOrder.getPurchaseOrder();
             purchaseOrder.setStatus(PurchaseOrderStatus.PARTIALLY_DELIVERED.toString());
             purchaseOrderService.savePurchaseOrder(purchaseOrder);
+            saveReceivable(salesOrder, ReceivableStatus.PARTIAL_PAYMENT_RECEIVED, "Payment Received");
+        }
+        if(newStatus.equalsIgnoreCase(SalesOrderStatus.RECEIVED.toString())){
+            purchaseOrder.setStatus(PurchaseOrderStatus.PARTIALLY_RECEIVED.toString());
+            purchaseOrderService.savePurchaseOrder(purchaseOrder);
+            savePayable(salesOrder, PayableStatus.PARTIAL_PAYMENT_DONE, "Payment Done");
         }
         if(newStatus.equalsIgnoreCase(SalesOrderStatus.CLOSED.toString())){
-            PurchaseOrder purchaseOrder = salesOrder.getPurchaseOrder();
-            purchaseOrder.setStatus(PurchaseOrderStatus.PARTIAL_PAYMENT_RECEIVED.toString());
+            if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)) {
+                purchaseOrder.setStatus(PurchaseOrderStatus.PARTIAL_PAYMENT_RECEIVED.toString());
+            }
+            if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)) {
+                purchaseOrder.setStatus(PurchaseOrderStatus.PARTIAL_PAYMENT_DONE.toString());
+            }
             purchaseOrderService.savePurchaseOrder(purchaseOrder);
         }
         salesOrderRepository.saveAndFlush(salesOrder);
+    }
+
+    public Payable savePayable(SalesOrder salesOrder, PayableStatus status, String comments){
+        PurchaseOrder purchaseOrder = salesOrder.getPurchaseOrder();
+        Map<String, CompareDTO> details = getBudgetAndStock(salesOrder);
+        Integer payableAmount = 0;
+        for(String key: details.keySet()){
+            CompareDTO detailsDTO = (CompareDTO) details.get(key);
+            payableAmount = payableAmount + (detailsDTO.getQuantity() * detailsDTO.getPrice());
+        }
+
+        Payable payable = payableRepository.findBySalesOrder(salesOrder);
+        if(null == payable) {
+            payable = new Payable();
+            payable.setId(utilsService.generateId(Constants.PAYABLE_PREFIX));
+            payable.setSalesOrder(salesOrder);
+            payable.setProject(purchaseOrder.getProject());
+            payable.setVendor(purchaseOrder.getUser());
+        }
+        payable.setAmount(payableAmount);
+        payable.setStatus(status);
+        payable.setComments(comments);
+        payable.setCreatedAt(utilsService.generateDateFormat());
+        payable.setCreatedBy(utilsService.getSuperUser());
+        payableRepository.saveAndFlush(payable);
+        return payable;
+    }
+
+    public Receivable saveReceivable(SalesOrder salesOrder, ReceivableStatus status, String comments){
+        PurchaseOrder purchaseOrder = salesOrder.getPurchaseOrder();
+        Map<String, CompareDTO> details = getBudgetAndStock(salesOrder);
+        Integer receivableAmount = 0;
+        for(String key: details.keySet()){
+            CompareDTO detailsDTO = (CompareDTO) details.get(key);
+            receivableAmount = receivableAmount + (detailsDTO.getQuantity() * detailsDTO.getPrice());
+        }
+
+        Receivable receivable = receivableRepository.findBySalesOrder(salesOrder);
+        if(null == receivable) {
+            receivable = new Receivable();
+            receivable.setId(utilsService.generateId(Constants.RECEIVABLE_PREFIX));
+            receivable.setSalesOrder(salesOrder);
+            receivable.setProject(purchaseOrder.getProject());
+            receivable.setCustomer(purchaseOrder.getUser());
+        }
+        receivable.setAmount(receivableAmount);
+        receivable.setCreatedAt(utilsService.generateDateFormat());
+        receivable.setCreatedBy(utilsService.getSuperUser());
+        receivable.setStatus(status);
+        receivable.setComments(comments);
+        receivableRepository.saveAndFlush(receivable);
+        return receivable;
+    }
+
+    public Map getBudgetAndStock(PurchaseOrder purchaseOrder){
+        Map<String, CompareDTO> details = new HashMap<String, CompareDTO>();
+        CompareDTO compareDTO = new CompareDTO();
+        List<PurchaseOrderItems> purchaseOrderItems = purchaseOrder.getPurchaseOrderItems();
+        for(PurchaseOrderItems purchaseOrderItem: purchaseOrderItems){
+            compareDTO.setProductId(purchaseOrderItem.getProduct().getId());
+            compareDTO.setQuantity(purchaseOrderItem.getQuantity());
+            compareDTO.setPrice(purchaseOrder.getBudget());
+            details.put(purchaseOrderItem.getProduct().getId(), compareDTO);
+        }
+        return details;
+    }
+
+    public String validateIncomingStockWithPurchaseOrder(SalesOrderDetailsDTO salesOrderDetailsDTO){
+        PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
+        List<PurchaseOrderItems> purchaseOrderItems = purchaseOrder.getPurchaseOrderItems();
+        Integer poQuantity = 0;
+        Integer inputBudget = 0;
+        Integer inputQuantity = 0;
+        Map<String, Integer> poQuantityMap = new HashMap<>();
+        for(PurchaseOrderItems item: purchaseOrderItems){
+            poQuantityMap.put(item.getProduct().getId(), item.getQuantity());
+        }
+        List<SOItemsDTO> soItemsDTOS = salesOrderDetailsDTO.getSoItems();
+        for (SOItemsDTO dto: soItemsDTOS){
+            inputBudget = inputBudget + (dto.getPrice() * dto.getQuantity());
+            inputQuantity = dto.getQuantity();
+            if(inputQuantity > poQuantityMap.get(dto.getProductId())) return Constants.PO_BUDGET_STOCK_ERROR;
+        }
+        if(inputBudget > purchaseOrder.getBudget()) return Constants.PO_BUDGET_STOCK_ERROR;
+        return null;
+    }
+
+    public String validateIncomingWithPOAndSO(SalesOrderDetailsDTO salesOrderDetailsDTO){
+        PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
+        List<PurchaseOrderItems> purchaseOrderItems = purchaseOrder.getPurchaseOrderItems();
+        List<SalesOrder> salesOrders = purchaseOrder.getSalesOrders();
+
+        Integer inputBudget = 0;
+        Integer inputQuantity = 0;
+        Map<String, Integer> poQuantityMap = new HashMap<>();
+        Map<String, Integer> soQuantityMap = new HashMap<>();
+        for(PurchaseOrderItems pItem: purchaseOrderItems){
+            poQuantityMap.put(pItem.getProduct().getId(), pItem.getQuantity());
+        }
+        for(SalesOrder salesOrder: salesOrders){
+            List<SalesOrderItems> items = salesOrder.getSalesOrderItems();
+            for(SalesOrderItems sItem: items){
+                if(soQuantityMap.keySet().contains(sItem.getProduct().getId())){
+                    soQuantityMap.put(sItem.getProduct().getId(), soQuantityMap.get(sItem.getProduct().getId()) + sItem.getQuantity());
+                }
+                else{
+                    soQuantityMap.put(sItem.getProduct().getId(),sItem.getQuantity());
+                }
+                inputBudget = inputBudget + (sItem.getQuantity() * sItem.getPrice());
+            }
+        }
+        List<SOItemsDTO> soItemsDTOS = salesOrderDetailsDTO.getSoItems();
+        for (SOItemsDTO dto: soItemsDTOS){
+            inputBudget = inputBudget + (dto.getPrice() * dto.getQuantity());
+            inputQuantity = soQuantityMap.get(dto.getProductId()) + dto.getQuantity();
+            soQuantityMap.put(dto.getProductId(), soQuantityMap.get(dto.getProductId()) + dto.getQuantity());
+            if(inputQuantity > poQuantityMap.get(dto.getProductId())) return Constants.PO_SO_BUDGET_STOCK_ERROR;
+        }
+        if(inputBudget > purchaseOrder.getBudget()) return Constants.PO_SO_BUDGET_STOCK_ERROR;;
+        return null;
     }
 }

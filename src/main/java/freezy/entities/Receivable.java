@@ -43,8 +43,8 @@ public class Receivable {
     private String comments;
 
     @ManyToOne
-    @JoinColumn(name = "po_id")
+    @JoinColumn(name = "so_id")
     @JsonIgnore
-    private PurchaseOrder purchaseOrder;
+    private SalesOrder salesOrder;
 
 }
