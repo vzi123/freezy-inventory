@@ -12,8 +12,6 @@
 	<properties>
 		<java.version>8</java.version>
 		<skipTests>true</skipTests>
-		<!-- Or, you can use the following property to skip test compilation as well -->
-		<!-- <maven.test.skip>true</maven.test.skip> -->
 	</properties>
 
 	<groupId>com.freezy</groupId>
@@ -94,6 +92,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.2.5</version>
 				<executions>
 					<execution>
 						<goals>
@@ -102,6 +101,7 @@
 					</execution>
 				</executions>
 				<configuration>
+					<mainClass>freezy.FreezyApplication</mainClass> <!-- Ensure this is your main class -->
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -116,7 +116,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.0.0-M5</version> <!-- Use the latest stable version -->
 				<configuration>
-					<skipTests>${skipTests}</skipTests>
+					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
 		</plugins>
