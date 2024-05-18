@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -8,14 +8,20 @@
 		<version>3.2.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+	<properties>
+		<java.version>8</java.version>
+		<skipTests>true</skipTests>
+		<!-- Or, you can use the following property to skip test compilation as well -->
+		<!-- <maven.test.skip>true</maven.test.skip> -->
+	</properties>
+
 	<groupId>com.freezy</groupId>
 	<artifactId>freezy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>freezy</name>
 	<description>Air Conditioners Inventory</description>
-	<properties>
-		<java.version>8</java.version>
-	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -30,7 +36,6 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-			<version>3.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -41,7 +46,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
@@ -83,10 +87,6 @@
 			<artifactId>xercesImpl</artifactId>
 			<version>2.9.1</version>
 		</dependency>
-
-
-
-
 	</dependencies>
 
 	<build>
@@ -94,6 +94,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -103,39 +110,25 @@
 					</excludes>
 				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-
-                    <source>8</source>
-
-                    <target>8</target>
-
-                </configuration>
-            </plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.3.0</version>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version> <!-- Use the latest stable version -->
 				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>freezy.FreezyApplication</mainClass>
-							<layout>JAR</layout>
-						</manifest>
-						<executions>
-							<execution>
-								<goals>
-									<goal>repackage</goal>
-								</goals>
-							</execution>
-						</executions>
-					</archive>
+					<skipTests>${skipTests}</skipTests>
 				</configuration>
 			</plugin>
-        </plugins>
+		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>skip-tests</id>
+			<properties>
+				<skipTests>true</skipTests>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>
