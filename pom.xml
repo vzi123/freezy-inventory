@@ -110,21 +110,24 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>2.4</version>
 				<configuration>
-
 					<archive>
+						<!-- Configures the content of the created manifest -->
 						<manifest>
-							<packageName>freezy</packageName>
+							<!-- Adds the classpath to the created manifest -->
+							<addClasspath>true</addClasspath>
+							<!-- Specifies that all dependencies of our application are found -->
+							<!-- Configures the main class of the application -->
+							<mainClass>freezy.FreezyApplication</mainClass>
 						</manifest>
-						<manifestEntries>
-							<Created-By>vijay</Created-By>
-						</manifestEntries>
 					</archive>
 				</configuration>
+
 			</plugin>
 
 			<plugin>
@@ -146,5 +149,6 @@
 			</properties>
 		</profile>
 	</profiles>
+
 
 </project>
