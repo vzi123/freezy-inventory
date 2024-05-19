@@ -1,43 +1,28 @@
-FROM maven:3.8.7-eclipse-temurin-19-alpine
-RUN chmod +x mvnw
-
-FROM openjdk:11-jdk-slim
-
-# Copy the project files
+# First stage: build
+FROM maven:3.8.3-openjdk-17 AS build
 COPY . /app
 WORKDIR /app
+RUN chmod +x mvnw
+RUN chmod +x ./mvnw
+RUN ls -al /app
+
+RUN echo \
+    "<settings xmlns='http://maven.apache.org/SETTINGS/1.0.0\' \
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' \
+    xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd'> \
+        <localRepository>/root/Users/myname/.m2/repository</localRepository> \
+        <interactiveMode>true</interactiveMode> \
+        <usePluginRegistry>false</usePluginRegistry> \
+        <offline>false</offline> \
+    </settings>" \
+    > /usr/share/maven/conf/settings.xml;
+
+COPY . /usr/src/app
+RUN mvn --batch-mode -f /usr/src/app/pom.xml clean package
 
 
-# Run the build
-RUN ./mvnw clean package --batch-mode -DskipTests -Dhttp.keepAlive=false -f=pom.xml --quiet
-
-
-
-# Just echo so we can see, if everything is there :)
-RUN ls -l
-
-
-
-# Run Maven build
-RUN mvn clean install
-
-# https://security.alpinelinux.org/vuln/CVE-2021-46848
-RUN apk add --upgrade libtasn1-progs
-
-# https://security.alpinelinux.org/vuln/CVE-2022-37434
-RUN apk update && apk upgrade zlib
-
-
-# Create a new user with UID 10014
-RUN addgroup -g 10014 choreo && \
-    adduser  --disabled-password  --no-create-home --uid 10014 --ingroup choreo choreouser
-
-VOLUME /tmp
-
-
-
-# Add Spring Boot app.jar to Container
-COPY --from=0 "/java-springboot/target/product-*.jar" app.jar
-
-# Fire up our Spring Boot app by default
-CMD [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
+# Second stage: runtime
+FROM openjdk:17-jdk-slim
+COPY --from=build /app/target/*.jar /app/my-app.jar
+WORKDIR /app
+CMD ["java", "-jar", "my-app.jar"]
