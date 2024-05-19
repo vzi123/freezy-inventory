@@ -1,10 +1,12 @@
 FROM maven:3.8.7-eclipse-temurin-19-alpine
-
+RUN chmod +x mvnw
 ADD . /java-springboot
 WORKDIR /java-springboot
 
 # Just echo so we can see, if everything is there :)
 RUN ls -l
+
+
 
 # Run Maven build
 RUN mvn clean install
