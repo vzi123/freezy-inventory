@@ -1,15 +1,16 @@
 package freezy.services;
 
 
+import freezy.dto.FulfillmentDTO;
+import freezy.dto.FulfillmentItemsDTO;
 import freezy.dto.POItemsDTO;
 import freezy.dto.PurchaseOrderDetailsDTO;
-import freezy.entities.PurchaseOrder;
-import freezy.entities.PurchaseOrderItems;
-import freezy.entities.PurchaseOrderStatus;
-import freezy.entities.User;
+import freezy.entities.*;
 import freezy.repository.PurchaseOrderItemsRepository;
 import freezy.repository.PurchaseOrderRepository;
+import freezy.repository.SalesOrderItemsRepository;
 import freezy.utils.Constants;
+import freezy.utils.FreazySMSService;
 import freezy.utils.UtilsService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +21,7 @@ import java.nio.file.LinkOption;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -47,6 +45,15 @@ public class PurchaseOrderService {
     @Autowired
     UtilsService utilsService;
 
+    @Autowired
+    PurchaseOrderItemsService purchaseOrderItemsService;
+
+    @Autowired
+    FreazySMSService freazySMSService;
+
+    @Autowired
+    SalesOrderItemsRepository salesOrderItemsRepository;
+
     public List<PurchaseOrder> getAllPurchaseOrders() {
         return purchaseOrderRepository.findAll();
     }
@@ -68,13 +75,8 @@ public class PurchaseOrderService {
 
     public PurchaseOrder savePurchaseOrderDetails(PurchaseOrderDetailsDTO purchaseOrderDetails) {
         log.info(" in service");
-        PurchaseOrder purchaseOrder = new PurchaseOrder();
-        //if(null != purchaseOrder && (purchaseOrder.getStatus().equalsIgnoreCase(PurchaseOrderStatus.APPROVED.toString()) || ){
-        purchaseOrder.setId(utilsService.generateId(Constants.PURCHASE_ORDER_PREFIX));
-        purchaseOrder.setCreatedAt(utilsService.generateDateFormat());
-        purchaseOrder.setCreatedBy(utilsService.getSuperUser());
+        PurchaseOrder purchaseOrder = getPurchaseOrder();
         purchaseOrder.setUserPersona(purchaseOrderDetails.getUserPersona());
-        purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
         purchaseOrder.setUser(userService.getUserById(purchaseOrderDetails.getUserId()));
         purchaseOrder.setBudget(purchaseOrderDetails.getBudget());
         purchaseOrder.setProject(projectService.getProjectById(purchaseOrderDetails.getProjectId()));
@@ -83,19 +85,23 @@ public class PurchaseOrderService {
         List<PurchaseOrderItems> purchaseOrderItems = new ArrayList<PurchaseOrderItems>();
         for (POItemsDTO poDTO: purchaseOrderDetails.getPoItems()
         ) {
-            PurchaseOrderItems purchaseOrderItem = new PurchaseOrderItems();
-            purchaseOrderItem.setId(utilsService.generateId(Constants.PURCHASE_ORDER_ITEM_PREFIX));
-            purchaseOrderItem.setCreatedAt(utilsService.generateDateFormat());
-            purchaseOrderItem.setCreatedBy(utilsService.getSuperUser());
+            PurchaseOrderItems purchaseOrderItem = getPurchaseOrderItems();
             purchaseOrderItem.setPurchaseOrder(purchaseOrder);
             purchaseOrderItem.setProduct(productService.getProductById(poDTO.getProductId()));
             purchaseOrderItem.setQuantity(poDTO.getQuantity());
+            purchaseOrderItem.setPrice(poDTO.getPrice());
             purchaseOrderItems.add(purchaseOrderItem);
         }
         purchaseOrderItemsRepository.saveAll(purchaseOrderItems);
         return purchaseOrder;
-        //}
-//        return false;
+    }
+
+    private PurchaseOrderItems getPurchaseOrderItems() {
+        PurchaseOrderItems purchaseOrderItem = new PurchaseOrderItems();
+        purchaseOrderItem.setId(utilsService.generateId(Constants.PURCHASE_ORDER_ITEM_PREFIX));
+        purchaseOrderItem.setCreatedAt(utilsService.generateDateFormat());
+        purchaseOrderItem.setCreatedBy(utilsService.getSuperUser());
+        return purchaseOrderItem;
     }
 
     public void deletePurchaseOrder(String id) {
@@ -111,5 +117,75 @@ public class PurchaseOrderService {
         purchaseOrderRepository.saveAndFlush(purchaseOrder);
     }
 
-    // Other methods as needed
+    public PurchaseOrder createPOFromQuotation(Quotation quotation){
+        try{
+            PurchaseOrder purchaseOrder = getPurchaseOrder();
+            purchaseOrder.setUserPersona(quotation.getUserPersona());
+            purchaseOrder.setUser(quotation.getUser());
+            purchaseOrder.setBudget(quotation.getBudget());
+            purchaseOrder.setProject(quotation.getProject());
+            purchaseOrderRepository.saveAndFlush(purchaseOrder);
+
+            List<PurchaseOrderItems> purchaseOrderItems = new ArrayList<PurchaseOrderItems>();
+            for (QuotationItems item: quotation.getQuotationItems()) {
+                PurchaseOrderItems purchaseOrderItem = getPurchaseOrderItems();
+                purchaseOrderItem.setPurchaseOrder(purchaseOrder);
+                purchaseOrderItem.setProduct(item.getProduct());
+                purchaseOrderItem.setQuantity(item.getQuantity());
+                purchaseOrderItem.setPrice(item.getPrice());
+                purchaseOrderItems.add(purchaseOrderItem);
+            }
+            purchaseOrderItemsService.savePurchaseOrderItems(purchaseOrderItems);
+            freazySMSService.sendSms(Constants.SEND_SMS, utilsService.generateQuoToPOMessage(quotation.getId(), purchaseOrder.getId()));
+            return purchaseOrder;
+        }
+        catch (Exception e){
+
+        }
+        return null;
+    }
+
+    private PurchaseOrder getPurchaseOrder() {
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        purchaseOrder.setId(utilsService.generateId(Constants.PURCHASE_ORDER_PREFIX));
+        purchaseOrder.setCreatedAt(utilsService.generateDateFormat());
+        purchaseOrder.setCreatedBy(utilsService.getSuperUser());
+        purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
+        return purchaseOrder;
+    }
+
+    public FulfillmentDTO getFulfillmentDetails(PurchaseOrder purchaseOrder){
+        FulfillmentDTO dto = new FulfillmentDTO();
+        List<FulfillmentItemsDTO> items = new ArrayList<FulfillmentItemsDTO>();
+        List<Object> resultSet = purchaseOrderRepository.getGivenStockByPurchaseOrder(purchaseOrder.getId());
+        List<Object> resultSet2 = salesOrderItemsRepository.getGivenStockBySalesOrderForPurchaseOrder(purchaseOrder.getId());
+        Map<String, Integer> purchaseOrderMap = new HashMap<>();
+        Map<String, Integer> salesOrderMap = new HashMap<>();
+        for (Object item: resultSet
+             ) {
+            Object[] itemArr = (Object[])item;
+            purchaseOrderMap.put(itemArr[0].toString(), Integer.parseInt(itemArr[1].toString()));
+        }
+
+        for (Object item: resultSet2
+        ) {
+            Object[] itemArr = (Object[])item;
+            salesOrderMap.put(itemArr[0].toString(), Integer.parseInt(itemArr[1].toString()));
+        }
+        for(String key: purchaseOrderMap.keySet()){
+            FulfillmentItemsDTO itemDto = new FulfillmentItemsDTO();
+            itemDto.setProductId(key);
+            itemDto.setProductName(productService.getProductById(key).getName());
+            if(salesOrderMap.keySet().contains(key)){
+                itemDto.setQuantity(purchaseOrderMap.get(key) - salesOrderMap.get(key));
+            }
+            else{
+                itemDto.setQuantity(purchaseOrderMap.get(key));
+            }
+            items.add(itemDto);
+        }
+        dto.setFulfillmentItemsDTOs(items);
+        dto.setPoId(purchaseOrder.getId());
+        return dto;
+    }
 }

@@ -1,14 +1,18 @@
 package freezy.controllers;
 
+import freezy.dto.FulfillmentDTO;
 import freezy.dto.PurchaseOrderDetailsDTO;
 import freezy.dto.PurchaseOrderStatusDTO;
 import freezy.entities.Category;
 import freezy.entities.Product;
 import freezy.entities.PurchaseOrder;
 import freezy.entities.User;
+import freezy.services.PdfGenerateService;
 import freezy.services.ProductService;
 import freezy.services.PurchaseOrderService;
 import freezy.services.UserService;
+import freezy.utils.Constants;
+import freezy.utils.FreazySMSService;
 import freezy.utils.UtilsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -34,15 +38,27 @@ public class PurchaseOrderController {
     @Autowired
     UtilsService utilsService;
 
+    @Autowired
+    FreazySMSService freazySMSService;
+
+    @Autowired
+    PdfGenerateService pdfGenerateService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<PurchaseOrder> getAllPurchaseOrders() {
-        return purchaseOrderService.getAllPurchaseOrders();
+        List<PurchaseOrder> purchaseOrders = purchaseOrderService.getAllPurchaseOrders();
+        return purchaseOrders;
     }
 
     @GetMapping(value= "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public PurchaseOrder getPurchaseOrderById(@PathVariable String id) {
         return purchaseOrderService.getPurchaseOrderById(id);
+    }
+
+    @GetMapping(value= "/{id}/fulfill", produces = MediaType.APPLICATION_JSON_VALUE)
+    public FulfillmentDTO getFulfillmentDetails(@PathVariable String id) {
+        PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(id);
+        return purchaseOrderService.getFulfillmentDetails(purchaseOrder);
     }
 
     @PostMapping(value = "/changeStatus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,7 +67,6 @@ public class PurchaseOrderController {
          purchaseOrderService.changeStatus(purchaseOrder, purchaseOrderStatusDTO.getOldStatus(), purchaseOrderStatusDTO.getNewStatus());
          return purchaseOrder;
     }
-
 
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public PurchaseOrder addPurchaseOrder(@RequestBody PurchaseOrder purchaseOrder) {
@@ -70,11 +85,8 @@ public class PurchaseOrderController {
     public Object savePurchaseOrderDetails(@RequestBody PurchaseOrderDetailsDTO purchaseOrderDetails) {
         log.info(" in post controller");
         PurchaseOrder purchaseOrder = purchaseOrderService.savePurchaseOrderDetails(purchaseOrderDetails);
+        freazySMSService.sendSms(Constants.SEND_SMS, utilsService.generatePOMessage(purchaseOrder.getId()));
         return purchaseOrder;
-//        if(saved){
-//            return purchaseOrderService.getPurchaseOrderById(purchaseOrderDetails.getPoId());
-//        }
-//        return utilsService.sendResponse("PO not in Approved State", HttpStatus.OK);
     }
 
 }

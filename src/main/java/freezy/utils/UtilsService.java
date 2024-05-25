@@ -33,4 +33,24 @@ public class UtilsService {
         ResponseEntity response = new ResponseEntity(message, statusCode);
         return response;
     }
+
+    public String generatePOMessage(String poId){
+        return "A new PO with id " + poId + " has been created. Please login into Freazy to see the details.";
+    }
+
+    public String generatePayableMessage(String payable){
+        return "A new payable with amount " + payable + " has been created. Please login into Freazy to see the details.";
+    }
+
+    public String generateReceivableMessage(String payable){
+        return "A new receivable with amount " + payable + " has been created. Please login into Freazy to see the details.";
+    }
+
+    public String generateSOMessage(String soId){
+        return "A new SO with id " + soId + " has been created. Please login into Freazy to see the details.";
+    }
+
+    public String generateQuoToPOMessage(String quoId, String poId){
+        return "A quotation with id " + quoId +" is converted to a new PO with id " + poId + " has been created. Please login into Freazy to see the details.";
+    }
 }

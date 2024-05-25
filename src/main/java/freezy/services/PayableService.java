@@ -14,7 +14,7 @@ public class PayableService {
 
     @Autowired
     PayableRepository payableRepository;
-    public List<Payable> getAllReceivables() {
+    public List<Payable> getAllPayables() {
         return payableRepository.findAll();
     }
 

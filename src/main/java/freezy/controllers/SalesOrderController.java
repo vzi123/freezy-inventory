@@ -11,6 +11,7 @@ import freezy.services.PurchaseOrderService;
 import freezy.services.SalesOrderService;
 import freezy.services.UserService;
 import freezy.utils.Constants;
+import freezy.utils.FreazySMSService;
 import freezy.utils.UtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class SalesOrderController {
     @Autowired
     UtilsService utilsService;
 
+    @Autowired
+    FreazySMSService freazySMSService;
+
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<SalesOrder> getSalesOrders() {
@@ -68,20 +72,26 @@ public class SalesOrderController {
         log.info(" in post controller");
         //validateStockAndBudgetWithPurchaseOrder
         //validateStockAndBudgetOfSalesOrderWithPO
+        PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
+        if(purchaseOrder.getStatus().equalsIgnoreCase(PurchaseOrderStatus.DRAFT.toString())){
+            return utilsService.sendResponse(Constants.PO_STATE_NOT_ALLOWED, HttpStatus.OK);
+        }
+        String doProductsMatch = salesOrderService.validateIncomingProductsWithPO(salesOrderDetailsDTO);
+        if(doProductsMatch != null){
+            return utilsService.sendResponse(Constants.PO_SO_PRODUCT_ERROR, HttpStatus.OK);
+        }
         String isBudgetAndQuantityOnPOValid = salesOrderService.validateIncomingStockWithPurchaseOrder(salesOrderDetailsDTO);
-        String isValidBudgetAndStockWithPOAndSO = salesOrderService.validateIncomingWithPOAndSO(salesOrderDetailsDTO);
         if(isBudgetAndQuantityOnPOValid != null){
             return utilsService.sendResponse(Constants.PO_BUDGET_STOCK_ERROR, HttpStatus.OK);
         }
+        String isValidBudgetAndStockWithPOAndSO = salesOrderService.validateIncomingWithPOAndSO(salesOrderDetailsDTO);
         if(isValidBudgetAndStockWithPOAndSO != null){
             return utilsService.sendResponse(Constants.PO_SO_BUDGET_STOCK_ERROR, HttpStatus.OK);
         }
-        PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
-        if(!purchaseOrder.getStatus().equalsIgnoreCase(PurchaseOrderStatus.DRAFT.toString())){
-            SalesOrder salesOrder = salesOrderService.saveSalesOrderDetails(salesOrderDetailsDTO);
-            return salesOrderService.getSalesOrderById(salesOrder.getId());
-        }
-        return utilsService.sendResponse("Validation Failed", HttpStatus.OK);
+        SalesOrder salesOrder = salesOrderService.saveSalesOrderDetails(salesOrderDetailsDTO);
+        freazySMSService.sendSms(Constants.SEND_SMS2, utilsService.generateSOMessage(salesOrder.getId()));
+        return salesOrderService.getSalesOrderById(salesOrder.getId());
+
     }
 
     @PostMapping(value = "/changeStatus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

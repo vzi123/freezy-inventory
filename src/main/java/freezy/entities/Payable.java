@@ -45,7 +45,6 @@ public class Payable {
 
     @ManyToOne
     @JoinColumn(name = "so_id")
-    @JsonIgnore
     private SalesOrder salesOrder;
 
 }

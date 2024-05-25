@@ -15,7 +15,7 @@ public class InventoryLogService {
     private InventoryLogRepository inventoryLogRepository;
 
     public List<InventoryLog> getAllInventoryLogs() {
-        return inventoryLogRepository.findAll();
+        return inventoryLogRepository.findAllByOrderByCreatedAtDesc();
     }
 
     public InventoryLog getInventoryLogById(String id) {

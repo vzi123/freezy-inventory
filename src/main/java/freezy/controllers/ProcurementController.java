@@ -1,8 +1,10 @@
 package freezy.controllers;
 
+import freezy.dto.ProcurementDTO;
 import freezy.entities.Procurement;
 import freezy.services.ProcurementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +16,8 @@ public class ProcurementController {
     @Autowired
     private ProcurementService procurementService;
 
-    @GetMapping
-    public List<Procurement> getAllProcurements() {
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ProcurementDTO> getAllProcurements() {
         return procurementService.getAllProcurements();
     }
 
@@ -24,15 +26,15 @@ public class ProcurementController {
         return procurementService.getProcurementById(id);
     }
 
-    @PostMapping
-    public void addProcurement(@RequestBody Procurement procurement) {
-        procurementService.saveProcurement(procurement);
+    @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void addProcurement(@RequestBody ProcurementDTO procurementDTO) {
+        procurementService.saveProcurement(procurementDTO);
     }
 
     @PutMapping("/{id}")
-    public void updateProcurement(@PathVariable String id, @RequestBody Procurement procurement) {
+    public void updateProcurement(@PathVariable String id, @RequestBody ProcurementDTO procurementDTO) {
         if (procurementService.getProcurementById(id) != null) {
-            procurementService.saveProcurement(procurement);
+            procurementService.saveProcurement(procurementDTO);
         }
     }
 

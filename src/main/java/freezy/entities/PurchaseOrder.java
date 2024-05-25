@@ -20,6 +20,10 @@ public class PurchaseOrder {
     @Id
     private String id;
 
+    public User getUser() {
+        return user;
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -59,4 +63,11 @@ public class PurchaseOrder {
         return this.id;
     }
 
+    public List<PurchaseOrderItems> getPurchaseOrderItems() {
+        return purchaseOrderItems;
+    }
+
+    public void setPurchaseOrderItems(List<PurchaseOrderItems> purchaseOrderItems) {
+        this.purchaseOrderItems = purchaseOrderItems;
+    }
 }

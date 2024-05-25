@@ -3,6 +3,7 @@ package freezy.controllers;
 import freezy.entities.Project;
 import freezy.schedule.StockAlertSchedule;
 import freezy.services.ProjectService;
+import freezy.utils.FreazySMSService;
 import freezy.utils.StockAlertEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
@@ -20,9 +20,13 @@ public class ProjectController {
     @Autowired
     private StockAlertEmailService stockAlertEmailService;
 
+    @Autowired
+    FreazySMSService freazySMSService;
+
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Project> getAllProjects() throws Exception {
+        freazySMSService.sendSms("+91-8105944553", "Freazy SMS enabled");
         //stockAlertEmailService.checkAndSendEmail();
         return projectService.getAllProjects();
     }

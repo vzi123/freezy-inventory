@@ -33,7 +33,7 @@ public class InventoryService {
     ProductService productService;
 
     public List<Inventory> getAllInventory() {
-        return inventoryRepository.findAll();
+        return inventoryRepository.findAllByOrderByIdAsc();
     }
 
     public Inventory getInventoryById(String id) {
@@ -44,10 +44,17 @@ public class InventoryService {
 
         Product product = productService.getProductById(inventoryDTO.getProductId());
         Inventory inventory = inventoryRepository.findByProduct(product);
+        if(null == inventory){
+            inventory = new Inventory();
+            inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+            inventory.setInventory(inventoryDTO.getStock());
+        }
+        else{
+            inventory.setInventory(inventory.getInventory() + inventoryDTO.getStock());
+        }
         inventory.setCreatedAt(utilsService.generateDateFormat());
         inventory.setCreatedBy(utilsService.getSuperUser());
         inventory.setProduct(product);
-        inventory.setInventory(inventory.getInventory() + inventoryDTO.getStock());
         inventory.setUpdatedAt(utilsService.generateDateFormat());
         inventory.setUpdatedBy(utilsService.getSuperUser());
 
@@ -101,11 +108,12 @@ public class InventoryService {
             InventoryLog inventoryLog = new InventoryLog();
             inventoryLog.setInventory(inventory);
             inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-            inventoryLog.setInOut(InventoryLogEntry.IN);
             if(addOrDeduct.equalsIgnoreCase(Constants.INVENTORY_INC)){
+                inventoryLog.setInOut(InventoryLogEntry.IN);
                 inventoryLog.setComments("Procured " + inventoryDTO.getStock() + " on " + utilsService.generateDateFormat());
             }
             else{
+                inventoryLog.setInOut(InventoryLogEntry.OUT);
                 inventoryLog.setComments("Deducted " + inventoryDTO.getStock() + " on " + utilsService.generateDateFormat() + " for " + comments);
             }
 

@@ -1,12 +1,12 @@
-# fly.toml app configuration file generated for freezy-divine-night-3195 on 2024-05-25T15:31:02+05:30
+# fly.toml app configuration file generated for freezy-small-dew-912 on 2024-05-25T18:19:00+05:30
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'freezy-divine-night-3195'
+app = 'freezy-small-dew-912'
 primary_region = 'ams'
 kill_signal = 'SIGINT'
-kill_timeout = '20s'
+kill_timeout = '5s'
 
 [experimental]
   auto_rollback = true

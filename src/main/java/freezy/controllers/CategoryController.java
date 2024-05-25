@@ -31,7 +31,7 @@ public class CategoryController {
 
     }
 
-    @PostMapping
+    @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE)
     public void addCategory(@RequestBody Category category) {
         categoryService.saveCategory(category);
     }

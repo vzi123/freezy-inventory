@@ -30,4 +30,8 @@ public class PurchaseOrderItemsService {
         return purchaseOrderItemsRepository.findAllByPurchaseOrder(purchaseOrder);
     }
 
+    public void savePurchaseOrderItems(List<PurchaseOrderItems> items){
+        purchaseOrderItemsRepository.saveAllAndFlush(items);
+    }
+
 }

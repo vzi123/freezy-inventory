@@ -4,6 +4,15 @@ public class POItemsDTO {
 
     String productId;
     Integer quantity;
+    Integer price;
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     public String getProductId() {
         return productId;

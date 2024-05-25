@@ -32,10 +32,25 @@ public class PurchaseOrderItems {
     @Column(nullable = false)
     private Integer quantity;
 
+    @Column(nullable = false)
+    private Integer price;
+
     @ManyToOne
     @JoinColumn(name = "po_id", nullable = false)
     @JsonIgnore
     @JsonBackReference
     private PurchaseOrder purchaseOrder;
 
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public PurchaseOrder getPurchaseOrder() {
+        return purchaseOrder;
+    }
 }
