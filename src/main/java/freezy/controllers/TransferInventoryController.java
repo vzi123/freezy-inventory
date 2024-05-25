@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/transfer-inventories")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TransferInventoryController {
     @Autowired
     private TransferInventoryService transferInventoryService;

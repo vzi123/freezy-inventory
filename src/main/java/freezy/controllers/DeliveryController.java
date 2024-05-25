@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/deliveries")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class DeliveryController {
     @Autowired
     private DeliveryService deliveryService;

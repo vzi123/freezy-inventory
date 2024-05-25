@@ -24,6 +24,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/salesOrders")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SalesOrderController {
 
     @Autowired

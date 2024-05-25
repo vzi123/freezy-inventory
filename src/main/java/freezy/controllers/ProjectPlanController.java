@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/project-plans")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProjectPlanController {
     @Autowired
     private ProjectPlanService projectPlanService;

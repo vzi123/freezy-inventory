@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/return-inventories")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReturnInventoryController {
     @Autowired
     private ReturnInventoryService returnInventoryService;

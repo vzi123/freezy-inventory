@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/endorsements")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EndorsementController {
     @Autowired
     private EndorsementService endorsementService;

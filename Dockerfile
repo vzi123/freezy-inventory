@@ -21,8 +21,28 @@ COPY . /usr/src/app
 RUN mvn --batch-mode -f /usr/src/app/pom.xml clean package
 
 
-# Second stage: runtime
+# Default command
+CMD [ "pwsh" ]
+EXPOSE 8080
+EXPOSE 80
+EXPOSE 443
+EXPOSE 3000
+EXPOSE 8443
+
+
+
 FROM openjdk:17-jdk-slim
+COPY ebininfosoft-ssl-key.p12 /app/ebininfosoft-ssl-key.p12
+COPY private.p12 /app/private.p12
+COPY private.key /app/private.key
+COPY certificate.crt /app/certificate.crt
+
+
+
 COPY --from=build /app/target/*.jar /app/my-app.jar
 WORKDIR /app
+
+
+EXPOSE 50005 9183
+
 CMD ["java", "-jar", "my-app.jar"]

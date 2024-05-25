@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/inventory")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class InventoryController {
     @Autowired
     private InventoryService inventoryService;

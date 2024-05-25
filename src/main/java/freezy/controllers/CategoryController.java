@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/categories")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;

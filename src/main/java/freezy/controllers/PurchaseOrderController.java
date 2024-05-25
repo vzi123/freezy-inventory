@@ -22,6 +22,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/purchaseOrders")
 public class PurchaseOrderController {
     @Autowired

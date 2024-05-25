@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/procurements")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProcurementController {
     @Autowired
     private ProcurementService procurementService;

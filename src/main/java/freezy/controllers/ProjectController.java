@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProjectController {
     @Autowired
     private ProjectService projectService;

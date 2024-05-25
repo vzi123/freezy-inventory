@@ -1,12 +1,12 @@
-# fly.toml app configuration file generated for freezy-dry-water-8809 on 2024-05-19T23:28:15+05:30
+# fly.toml app configuration file generated for freezy-divine-night-3195 on 2024-05-25T15:31:02+05:30
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'freezy-dry-water-8809'
+app = 'freezy-divine-night-3195'
 primary_region = 'ams'
 kill_signal = 'SIGINT'
-kill_timeout = '5s'
+kill_timeout = '20s'
 
 [experimental]
   auto_rollback = true

@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/category-uom-maps")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CategoryUOMMapController {
     @Autowired
     private CategoryUOMMapService categoryUOMMapService;
