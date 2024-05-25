@@ -19,11 +19,11 @@ public class User {
     private String id;
 
     @Column(nullable = false)
-    @JsonIgnore
+
     private String first_name;
 
     @Column(nullable = false)
-    @JsonIgnore
+
     private String last_name;
 
     @Column(nullable = false)
