@@ -28,6 +28,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/quotations")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class QuotationController {
     @Autowired
     private QuotationService quotationService;

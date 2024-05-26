@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/quotationItems")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class QuotationItemsController {
     @Autowired
     private QuotationItemsService quotationItemsService;

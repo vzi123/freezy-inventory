@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/payables")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PayablesController {
     @Autowired
     private PayableService payableService;
