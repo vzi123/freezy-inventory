@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -47,9 +49,36 @@ public class DashboardController {
     @Autowired
     QuotationService quotationService;
 
+    @Autowired
+    ProcurementService procurementService;
+
     @GetMapping(value = "/stockAlerts", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<StockAlerts> getAllStockAlerts() {
-        return stockAlertService.getAllStockAlerts();
+    public List<StockAlertDTO> getAllStockAlerts() {
+        List<StockAlerts> stockAlerts = stockAlertService.getAllStockAlerts();
+        List<Inventory> inventories = inventoryService.getAllInventory();
+        List<StockAlertDTO> alertsDTO = new ArrayList<>();
+        Map<String, StockAlerts> alertsMap = new HashMap<>();
+        Map<String, Inventory> inventoryMap = new HashMap<>();
+        for(StockAlerts stockAlert: stockAlerts){
+            alertsMap.put(stockAlert.getProduct().getId(), stockAlert);
+        }
+        for(Inventory inventory: inventories){
+            inventoryMap.put(inventory.getProduct().getId(), inventory);
+        }
+        for(String key: inventoryMap.keySet()){
+            if(null != alertsMap.get(key)){
+                if(inventoryMap.get(key).getInventory() < alertsMap.get(key).getAlertQuantity()){
+                    StockAlertDTO stockAlertDTO = new StockAlertDTO();
+                    stockAlertDTO.setProductId(inventoryMap.get(key).getProduct().getId());
+                    stockAlertDTO.setProductName(inventoryMap.get(key).getProduct().getName());
+                    stockAlertDTO.setAlertQuantity(alertsMap.get(key).getAlertQuantity());
+                    stockAlertDTO.setCurrentQuantity(inventoryMap.get(key).getInventory());
+                    alertsDTO.add(stockAlertDTO);
+
+                }
+            }
+        }
+        return alertsDTO;
     }
 
     @GetMapping(value = "/inventoryLog", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -135,5 +164,10 @@ public class DashboardController {
             }
         }
         return quotationDTOS;
+    }
+
+    @GetMapping(value = "/procurements", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ProcurementDTO> getAllProcurements() {
+        return procurementService.getAllProcurements();
     }
 }
