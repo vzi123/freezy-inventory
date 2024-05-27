@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/inventoryLog")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class InventoryLogController {
     @Autowired
     private InventoryLogService inventoryLogService;
