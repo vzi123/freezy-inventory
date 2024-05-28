@@ -1,5 +1,9 @@
 package freezy.utils;
 
+import java.util.Map;
+
+import static java.util.Map.entry;
+
 public class Constants {
     public static final String PURCHASE_ORDER_PREFIX = "PO";
     public static final String PURCHASE_ORDER_ITEM_PREFIX = "POI";
@@ -27,4 +31,20 @@ public class Constants {
     public static final String PO_STATE_NOT_ALLOWED = "Sales Order can be created only after the Purchase Order is approved";
     public static final String SEND_SMS = "+91-9740893534";
     public static final String SEND_SMS2 = "+91-8105944553";
+
+    public static final Map DASHBOARD_WIDGETS = Map.ofEntries(
+                                                    entry("stock_alerts", "getAllStockAlerts"),
+                                                    entry("stock_available", "getStock"),
+                                                    entry("inventory_log", "getInventoryLog"),
+                                                    entry("open_quotations", "getOpenQuotations")
+                                                );
+
+    public static final String stock_alerts = "getAllStockAlerts";
+    public static final String stock_available = "getStock";
+    public static final String inventory_log = "getInventoryLog";
+    public static final String open_quotations = "getOpenQuotations";
+    public static final String payables = "getAllPayables";
+    public static final String procurements = "getAllProcurements";
+    public static final String receivables = "getAllReceivables";
+    public static final String fulfillments = "getAllFulfillments";
 }

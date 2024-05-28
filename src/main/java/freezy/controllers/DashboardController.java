@@ -2,8 +2,10 @@ package freezy.controllers;
 
 import freezy.dto.*;
 import freezy.entities.*;
+import freezy.repository.DashboardWidgetsRepository;
 import freezy.repository.StockAlertsRepository;
 import freezy.services.*;
+import freezy.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +56,9 @@ public class DashboardController {
 
     @Autowired
     ProcurementService procurementService;
+
+    @Autowired
+    DashboardWidgetsService dashboardWidgetsService;
 
     @GetMapping(value = "/stockAlerts", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<StockAlertDTO> getAllStockAlerts() {
@@ -171,5 +177,54 @@ public class DashboardController {
     @GetMapping(value = "/procurements", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ProcurementDTO> getAllProcurements() {
         return procurementService.getAllProcurements();
+    }
+
+
+    @GetMapping(value = "/widgets", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<DashBoardWidgets> getWidgets() {
+        return dashboardWidgetsService.getAllWidgets();
+    }
+
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public DashboardDTO getDashboard() throws Exception{
+        List<DashBoardWidgets> widgets = dashboardWidgetsService.getAllWidgets();
+        DashboardDTO dashboard = new DashboardDTO();
+        for (DashBoardWidgets widget: widgets){
+            if(null != widget && widget.getIsEnabled().booleanValue() == Boolean.TRUE){
+                if(widget.getWidgetCode().equalsIgnoreCase(Constants.open_quotations)){
+                    List<QuotationDTO> quotations = getOpenQuotations();
+                    dashboard.setOpenQuotations(quotations);
+                }
+                if(widget.getWidgetCode().equalsIgnoreCase(Constants.inventory_log)){
+                    List<InventoryLogDTO> inventories = getInventoryLog();
+                    dashboard.setInventoryLog(inventories);
+                }
+                if(widget.getWidgetCode().equalsIgnoreCase(Constants.receivables)){
+                    List<ReceivableDTO> receivables = getAllReceivables();
+                    dashboard.setReceivables(receivables);
+                }
+                if(widget.getWidgetCode().equalsIgnoreCase(Constants.payables)){
+                    List<PayableDTO> payables = getAllPayables();
+                    dashboard.setPayables(payables);
+                }
+                if(widget.getWidgetCode().equalsIgnoreCase(Constants.stock_alerts)){
+                    List<StockAlertDTO> stockAlerts = getAllStockAlerts();
+                    dashboard.setStockAlerts(stockAlerts);
+                }
+                if(widget.getWidgetCode().equalsIgnoreCase(Constants.stock_available)){
+                    List<Inventory> inventories = getStock();
+                    dashboard.setStock(inventories);
+                }
+                if(widget.getWidgetCode().equalsIgnoreCase(Constants.procurements)){
+                    List<ProcurementDTO> procurements = getAllProcurements();
+                    dashboard.setProcurements(procurements);
+                }
+                if(widget.getWidgetCode().equalsIgnoreCase(Constants.fulfillments)){
+                    List<FulfillmentDTO> fulfillments = getAllFulfillments();
+                    dashboard.setFulfillments(fulfillments);
+                }
+            }
+        }
+        return dashboard;
     }
 }

@@ -1,12 +1,10 @@
 package freezy.controllers;
 
 import freezy.dto.FulfillmentDTO;
+import freezy.dto.PurchaseOrderDTO;
 import freezy.dto.PurchaseOrderDetailsDTO;
 import freezy.dto.PurchaseOrderStatusDTO;
-import freezy.entities.Category;
-import freezy.entities.Product;
-import freezy.entities.PurchaseOrder;
-import freezy.entities.User;
+import freezy.entities.*;
 import freezy.services.PdfGenerateService;
 import freezy.services.ProductService;
 import freezy.services.PurchaseOrderService;
@@ -22,6 +20,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -51,8 +50,13 @@ public class PurchaseOrderController {
     }
 
     @GetMapping(value= "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PurchaseOrder getPurchaseOrderById(@PathVariable String id) {
-        return purchaseOrderService.getPurchaseOrderById(id);
+    public PurchaseOrderDTO getPurchaseOrderById(@PathVariable String id) {
+        PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(id);
+        FulfillmentDTO fulfillmentDTO = purchaseOrderService.getFulfillmentDetails(purchaseOrder);
+        PurchaseOrderDTO purchaseOrderDTO = new PurchaseOrderDTO();
+        purchaseOrderDTO.setPurchaseOrder(purchaseOrder);
+        purchaseOrderDTO.setFulfillment(fulfillmentDTO);
+        return purchaseOrderDTO;
     }
 
     @GetMapping(value= "/{id}/fulfill", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -87,6 +91,16 @@ public class PurchaseOrderController {
         PurchaseOrder purchaseOrder = purchaseOrderService.savePurchaseOrderDetails(purchaseOrderDetails);
         freazySMSService.sendSms(Constants.SEND_SMS, utilsService.generatePOMessage(purchaseOrder.getId()));
         return purchaseOrder;
+    }
+
+    @GetMapping(value= "/{id}/products", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Product> getProductsInPurchaseOrder(@PathVariable String id) {
+        PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(id);
+        List<Product> products = new ArrayList<>();
+        for(PurchaseOrderItems item: purchaseOrder.getPurchaseOrderItems()){
+            products.add(item.getProduct());
+        }
+        return products;
     }
 
 }
