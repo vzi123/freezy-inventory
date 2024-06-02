@@ -6,10 +6,28 @@ public class PurchaseOrderDetailsDTO {
 
     String userId;
     String userPersona;
-    Integer budget;
+    Integer discount;
     String projectId;
     List<POItemsDTO> poItems;
     String poId;
+
+    String comments;
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
 
     public String getPoId() {
         return poId;
@@ -33,14 +51,6 @@ public class PurchaseOrderDetailsDTO {
 
     public void setUserPersona(String userPersona) {
         this.userPersona = userPersona;
-    }
-
-    public Integer getBudget() {
-        return budget;
-    }
-
-    public void setBudget(Integer budget) {
-        this.budget = budget;
     }
 
     public String getProjectId() {

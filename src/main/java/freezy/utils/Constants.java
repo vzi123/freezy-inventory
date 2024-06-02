@@ -48,4 +48,34 @@ public class Constants {
     public static final String procurements = "getAllProcurements";
     public static final String receivables = "getAllReceivables";
     public static final String fulfillments = "getAllFulfillments";
+
+    public static final String QUOTATION_CREATED_STRING = "Hello %s, a new quotation for amount Rs. %s /- is raised for customer %s. Team Freazy.";
+    public static final String QUOTATION_APPROVED_STRING = "Hello %s, Quotation %s is now approved. A Purchase Order %s is auto created. Team Freazy.";
+    public static final String SALES_ORDER_DELIVERED = "Hello %s, A Sales Order for PO %s is delivered. A receivable for amount %s is raised. Team Freazy.";
+
+    public static final Map PO_STATUSES = Map.ofEntries(
+            entry("5", "CLOSED"),
+            entry("4", "FULL_PAYMENT_RECEIVED"),
+            entry("3", "PARTIAL_PAYMENT_RECEIVED"),
+            entry("2", "PARTIALLY_DELIVERED"),
+            entry("1", "APPROVED"),
+            entry("0", "DRAFT")
+    );
+
+    public static final Map SO_STATUSES = Map.ofEntries(
+            entry("5", "CLOSED"),
+            entry("4", "FULL_PAYMENT_RECEIVED"),
+            entry("3", "PARTIAL_PAYMENT_RECEIVED"),
+            entry("2", "PARTIALLY_DELIVERED"),
+            entry("1", "APPROVED"),
+            entry("0", "DRAFT")
+    );
+
+    public static final Map QUOTATION_STATUSES = Map.ofEntries(
+            entry("4", "CONVERTED"),
+            entry("3", "CANCELLED"),
+            entry("2", "APPROVED"),
+            entry("1", "SENT"),
+            entry("0", "DRAFT")
+    );
 }

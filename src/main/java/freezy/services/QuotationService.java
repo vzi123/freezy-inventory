@@ -12,6 +12,8 @@ import freezy.repository.CategoryRepository;
 import freezy.repository.ProductRepository;
 import freezy.repository.QuotationRepository;
 import freezy.utils.Constants;
+import freezy.utils.FreazyWhatsAppService;
+import freezy.utils.StringUtils;
 import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,12 @@ public class QuotationService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    FreazyWhatsAppService freazyWhatsAppService;
+
+    @Autowired
+    StringUtils stringUtils;
+
     public List<Quotation> getAllQuotations() {
         return quotationRepository.findAll();
     }
@@ -58,12 +66,14 @@ public class QuotationService {
             quotation.setId(utilsService.generateId(Constants.QUOTATION_PREFIX));
             quotation.setStatus(QuotationStatus.DRAFT.toString());
         }
-        quotation.setBudget(dto.getBudget());
+
         quotation.setProject(projectService.getProjectById(dto.getProjectId()));
         quotation.setCreatedAt(utilsService.generateDateFormat());
         quotation.setCreatedBy(utilsService.getSuperUser());
         quotation.setUser(userService.getUserById(dto.getUserId()));
         quotation.setUserPersona(dto.getUserPersona());
+
+        Integer budget = 0;
         if(dto.getQuotationItems().size() > 0  && quotation.getQuotationItems() != null && quotation.getQuotationItems().size() > 0){
             quotationItemsService.deleteQuotationItems(quotation.getQuotationItems());
         }
@@ -79,10 +89,14 @@ public class QuotationService {
             item.setCreatedBy(utilsService.getSuperUser());
             item.setProduct(productService.getProductById(items.getProductId()));
             quotationItemsService.saveQuotationItems(item);
+            budget = budget + (items.getPrice() * item.getQuantity());
             itemsEntity.add(item);
         }
         quotation.setQuotationItems(itemsEntity);
+        quotation.setBudget(budget);
         quotationRepository.saveAndFlush(quotation);
+        String message = String.format(Constants.QUOTATION_CREATED_STRING, utilsService.getSuperUser().getFirst_name(),userService.getUserById(dto.getUserId()).getFirst_name());
+        freazyWhatsAppService.sendMessage(Constants.SEND_SMS, message);
         return quotation;
     }
 

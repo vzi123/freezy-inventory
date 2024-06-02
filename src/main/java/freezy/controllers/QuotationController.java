@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -73,6 +74,11 @@ public class QuotationController {
     public void deleteQuotation(@PathVariable String id) {
         quotationService.deleteQuotation(id);
 
+    }
+
+    @GetMapping(value= "/statuses", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map getQuotationStatuses() {
+        return Constants.QUOTATION_STATUSES;
     }
 
     @PostMapping(value = "/status", produces = MediaType.APPLICATION_JSON_VALUE)

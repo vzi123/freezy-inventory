@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -101,6 +102,11 @@ public class PurchaseOrderController {
             products.add(item.getProduct());
         }
         return products;
+    }
+
+    @GetMapping(value= "/statuses", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map getPurchaseOrderStatuses() {
+        return Constants.PO_STATUSES;
     }
 
 }

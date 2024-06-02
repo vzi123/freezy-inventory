@@ -59,6 +59,10 @@ public class PurchaseOrder {
     @JsonManagedReference
     private List<SalesOrder> salesOrders;
 
+    private Integer discount;
+
+    private String comments;
+
     public String toString(){
         return this.id;
     }

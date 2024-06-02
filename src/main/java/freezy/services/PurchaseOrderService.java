@@ -78,10 +78,12 @@ public class PurchaseOrderService {
         PurchaseOrder purchaseOrder = getPurchaseOrder();
         purchaseOrder.setUserPersona(purchaseOrderDetails.getUserPersona());
         purchaseOrder.setUser(userService.getUserById(purchaseOrderDetails.getUserId()));
-        purchaseOrder.setBudget(purchaseOrderDetails.getBudget());
+        purchaseOrder.setDiscount(purchaseOrderDetails.getDiscount());
+        purchaseOrder.setComments(purchaseOrderDetails.getComments());
         purchaseOrder.setProject(projectService.getProjectById(purchaseOrderDetails.getProjectId()));
         purchaseOrderRepository.save(purchaseOrder);
 
+        Integer budget = 0;
         List<PurchaseOrderItems> purchaseOrderItems = new ArrayList<PurchaseOrderItems>();
         for (POItemsDTO poDTO: purchaseOrderDetails.getPoItems()
         ) {
@@ -90,9 +92,12 @@ public class PurchaseOrderService {
             purchaseOrderItem.setProduct(productService.getProductById(poDTO.getProductId()));
             purchaseOrderItem.setQuantity(poDTO.getQuantity());
             purchaseOrderItem.setPrice(poDTO.getPrice());
+            budget = budget + (poDTO.getQuantity() * poDTO.getPrice());
             purchaseOrderItems.add(purchaseOrderItem);
         }
         purchaseOrderItemsRepository.saveAll(purchaseOrderItems);
+        purchaseOrder.setBudget(budget);
+        purchaseOrderRepository.saveAndFlush(purchaseOrder);
         return purchaseOrder;
     }
 

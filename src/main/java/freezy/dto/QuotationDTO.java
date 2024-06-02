@@ -45,10 +45,6 @@ public class QuotationDTO {
         this.userPersona = userPersona;
     }
 
-    public Integer getBudget() {
-        return budget;
-    }
-
     public void setBudget(Integer budget) {
         this.budget = budget;
     }
