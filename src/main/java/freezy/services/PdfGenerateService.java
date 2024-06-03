@@ -3,6 +3,7 @@ package freezy.services;
 import freezy.dto.QuotationMailDTO;
 import freezy.dto.UserDTO;
 import freezy.entities.*;
+import freezy.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.lowagie.text.DocumentException;
@@ -13,6 +14,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -27,16 +29,16 @@ public class PdfGenerateService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    @Value("${pdf.directory}")
-    private String pdfDirectory;
 
-    public void generatePdfFile(String templateName, Map<String, Object> data, String pdfFileName) {
+    public void generatePdfFile(String templateName, Map<String, Object> data, String pdfFileName) throws Exception{
         Context context = new Context();
         context.setVariables(data);
 
         String htmlContent = templateEngine.process(templateName, context);
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(pdfDirectory + pdfFileName);
+            File yourFile = new File(Constants.FILE_LOCATION + pdfFileName);
+            yourFile.createNewFile();
+            FileOutputStream fileOutputStream = new FileOutputStream(Constants.FILE_LOCATION + pdfFileName);
             ITextRenderer renderer = new ITextRenderer();
             renderer.setDocumentFromString(htmlContent);
             renderer.layout();
@@ -50,7 +52,7 @@ public class PdfGenerateService {
     }
 
 
-    public void generateQuotation(Quotation quotation){
+    public void generateQuotation(Quotation quotation) throws Exception{
         User customer = quotation.getUser();
         UserDTO userDTO = new UserDTO();
         userDTO.setName(customer.getFirst_name() + " " + customer.getLast_name());
@@ -75,6 +77,6 @@ public class PdfGenerateService {
         data.put("quotation", quotations);
         data.put("customer",userDTO);
         data.put("total", quotationTotal);
-        generatePdfFile("quotation", data,"quotation.pdf");
+        generatePdfFile("quotation", data,quotation.getId() + " - " + "quotation.pdf");
     }
 }

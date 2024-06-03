@@ -5,6 +5,15 @@ public class UserDTO {
     String email;
     String phoneNumber;
     String address;
+    String city;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getName() {
         return name;

@@ -23,6 +23,7 @@ public class PurchaseOrderItems {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
+    @JsonIgnore
     private User createdBy;
 
     @Column(nullable = false)

@@ -119,7 +119,7 @@ public class SalesOrderService {
             saveReceivable(salesOrder, ReceivableStatus.TO_BE_RECEIVED, "Raised a Receivable");
         }
         if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
-            salesOrder.setStatus(SalesOrderStatus.TO_BE_RECEIVED.name());
+            salesOrder.setStatus(SalesOrderStatus.STOCK_TO_BE_RECEIVED.name());
             savePayable(salesOrder, PayableStatus.TO_BE_PAID, "Raised a Payable");
         }
         salesOrderRepository.saveAndFlush(salesOrder);
@@ -143,12 +143,12 @@ public class SalesOrderService {
     public void changeStatus(SalesOrder salesOrder, String oldStatus, String newStatus){
         salesOrder.setStatus(newStatus);
         PurchaseOrder purchaseOrder = salesOrder.getPurchaseOrder();
-        if(newStatus.equalsIgnoreCase(SalesOrderStatus.DELIVERED.toString())){
+        if(newStatus.equalsIgnoreCase(SalesOrderStatus.STOCK_DELIVERED.toString())){
             purchaseOrder.setStatus(PurchaseOrderStatus.PARTIALLY_DELIVERED.toString());
             purchaseOrderService.savePurchaseOrder(purchaseOrder);
             saveReceivable(salesOrder, ReceivableStatus.FULL_PAYMENT_RECEIVED, "Payment Received");
         }
-        if(newStatus.equalsIgnoreCase(SalesOrderStatus.RECEIVED.toString())){
+        if(newStatus.equalsIgnoreCase(SalesOrderStatus.STOCK_RECEIVED.toString())){
             purchaseOrder.setStatus(PurchaseOrderStatus.PARTIALLY_RECEIVED.toString());
             purchaseOrderService.savePurchaseOrder(purchaseOrder);
             savePayable(salesOrder, PayableStatus.FULL_PAYMENT_DONE, "Payment Done");

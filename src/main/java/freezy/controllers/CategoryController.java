@@ -5,6 +5,7 @@ import freezy.entities.Category;
 import freezy.services.CategoryService;
 import freezy.utils.Constants;
 import freezy.utils.FreazyWhatsAppService;
+import freezy.utils.StockAlertEmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,6 +23,9 @@ public class CategoryController {
 
     @Autowired
     FreazyWhatsAppService freazyWhatsAppService;
+
+    @Autowired
+    StockAlertEmailService stockAlertEmailService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Category> getAllCategories() {
@@ -57,5 +61,10 @@ public class CategoryController {
     public void sendWhatsaApp(@PathVariable String message) {
         freazyWhatsAppService.sendMessage(Constants.SEND_SMS, message);
         freazyWhatsAppService.sendMessage(Constants.SEND_SMS2, message);
+    }
+
+    @GetMapping(value = "/mail", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void sendEmail() throws Exception{
+        stockAlertEmailService.checkAndSendEmail();
     }
 }

@@ -58,6 +58,14 @@ public class PurchaseOrderService {
         return purchaseOrderRepository.findAll();
     }
 
+    public List<PurchaseOrder> getAllPurchaseOrdersByPersona(String persona) {
+        return purchaseOrderRepository.findAllByUserPersona(persona);
+    }
+
+    public List<PurchaseOrder> getAllPurchaseOrdersByPersonaAndStates(String persona, List<String> states) {
+        return purchaseOrderRepository.findAllByUserPersonaAndStatusIn(persona, states);
+    }
+
     public PurchaseOrder getPurchaseOrderById(String id) {
         return purchaseOrderRepository.findById(id).orElse(null);
     }
@@ -95,6 +103,7 @@ public class PurchaseOrderService {
             budget = budget + (poDTO.getQuantity() * poDTO.getPrice());
             purchaseOrderItems.add(purchaseOrderItem);
         }
+        budget = (int)(budget * (1 - (float)(purchaseOrderDetails.getDiscount())/100));
         purchaseOrderItemsRepository.saveAll(purchaseOrderItems);
         purchaseOrder.setBudget(budget);
         purchaseOrderRepository.saveAndFlush(purchaseOrder);

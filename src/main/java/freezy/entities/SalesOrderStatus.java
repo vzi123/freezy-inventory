@@ -2,9 +2,19 @@ package freezy.entities;
 
 public enum SalesOrderStatus {
     RAISED,
-    TO_BE_RECEIVED,
-    RECEIVED,
-    DELIVERED,
+    SHARED,
+
+    STOCK_TO_BE_DELIVERED,
+    STOCK_DELIVERED,
+    STOCK_TO_BE_RECEIVED,
+    STOCK_RECEIVED,
+
+    PAYMENT_TO_BE_DONE,
+    PAYMENT_DONE,
+    PAYMENT_TO_BE_RECEIVED,
+    PAYMENT_RECEIVED,
+
     CLOSED,
     DEFAULT
+
 }

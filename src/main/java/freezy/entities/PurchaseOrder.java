@@ -31,7 +31,7 @@ public class PurchaseOrder {
     @Column(nullable = false)
     private String userPersona;
 
-    @Column(nullable = false)
+    @Column
     private Integer budget;
 
     @Column(nullable = false)
@@ -43,6 +43,7 @@ public class PurchaseOrder {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
+    @JsonIgnore
     private User createdBy;
 
     @JoinColumn(name = "created_at")

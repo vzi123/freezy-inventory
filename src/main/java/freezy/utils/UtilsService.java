@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+
 
 @Service
 public class UtilsService {
@@ -53,4 +55,10 @@ public class UtilsService {
     public String generateQuoToPOMessage(String quoId, String poId){
         return "A quotation with id " + quoId +" is converted to a new PO with id " + poId + " has been created. Please login into Freazy to see the details.";
     }
+
+//    private static final BigDecimal ONE_HUNDRED = new BigDecimal("100");
+//
+//    public BigDecimal toPercentageOf(BigDecimal value, BigDecimal total) {
+//        return value.divide(total, 4, RoundingMode.HALF_UP).multiply(ONE_HUNDRED);
+//    }
 }

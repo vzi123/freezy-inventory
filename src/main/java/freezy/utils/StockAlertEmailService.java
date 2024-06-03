@@ -43,7 +43,7 @@ public class StockAlertEmailService {
         if(alertInventory.size() > 0){
             MimeMessage mailMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mailMessage, false, "utf-8");
-            helper.setTo("no-reply@tripor.ai");
+            helper.setFrom(new InternetAddress("no-reply@tripor.ai"));
             helper.setTo(new InternetAddress("vedaprakash.n@gmail.com"));
             helper.setSubject("Stock Alert !");
             mailMessage.setContent(generateReportMessage(alertInventory), "text/html");

@@ -100,7 +100,7 @@ public class QuotationController {
 
 
     @GetMapping(value = "{quotationId}/mail", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object mailQuotation(@PathVariable String quotationId) {
+    public Object mailQuotation(@PathVariable String quotationId) throws Exception{
         Quotation quotationObj = quotationService.getQuotationById(quotationId);
         if(quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.DRAFT.name()) || quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.SENT.name())){
             pdfGenerateService.generateQuotation(quotationObj);

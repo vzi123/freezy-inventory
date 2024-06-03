@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -104,9 +105,26 @@ public class PurchaseOrderController {
         return products;
     }
 
-    @GetMapping(value= "/statuses", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map getPurchaseOrderStatuses() {
-        return Constants.PO_STATUSES;
+    @GetMapping(value= "/statuses/{persona}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map getPurchaseOrderStatuses(@PathVariable String persona) {
+        if(null != persona && persona.equalsIgnoreCase(Constants.CUSTOMER)){
+            return Constants.PO_STATUSES_CUSTOMER;
+        }
+        if(null != persona && persona.equalsIgnoreCase(Constants.VENDOR)){
+            return Constants.PO_STATUSES_SUPPLIER;
+        }
+        return null;
+    }
+
+    @GetMapping(value = "/all/{persona}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PurchaseOrder> getAllPurchaseOrders(@PathVariable String persona, @RequestParam(required = false) String state) {
+        String[] states = null;
+        if(null != state && state.length() > 0){
+            states = state.split(",");
+        }
+        List<String> orderStates = Arrays.asList(states);
+        List<PurchaseOrder> purchaseOrders = purchaseOrderService.getAllPurchaseOrdersByPersonaAndStates(persona, orderStates);
+        return purchaseOrders;
     }
 
 }

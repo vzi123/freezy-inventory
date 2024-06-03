@@ -46,6 +46,7 @@ public class UserController {
         user.setPhone_number(dto.getPhoneNumber());
         user.setAddress(dto.getAddress());
         user.setRole(UserRole.CUSTOMER);
+        user.setCity(dto.getCity());
         user.setId(utilsService.generateId(Constants.USER_PREFIX));
         user.setCreated_at(utilsService.generateDateFormat());
         userService.saveUser(user);
@@ -58,6 +59,7 @@ public class UserController {
         user.setLast_name(dto.getName());
         user.setPhone_number(dto.getPhoneNumber());
         user.setAddress(dto.getAddress());
+        user.setCity(dto.getCity());
         user.setRole(UserRole.SUPPLIER);
         user.setId(utilsService.generateId(Constants.USER_PREFIX));
         user.setCreated_at(utilsService.generateDateFormat());

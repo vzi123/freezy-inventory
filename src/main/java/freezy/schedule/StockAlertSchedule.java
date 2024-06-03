@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,11 +32,9 @@ public class StockAlertSchedule {
     StockAlertEmailService stockAlertEmailService;
 
 
-    @Scheduled(fixedRate = 50000)
-    public void scheduleTask() throws Exception
-    {
-        System.out.println("Every 5 mins");
-        stockAlertEmailService.checkAndSendEmail();
+    @Scheduled(cron = "0 */5 * ? * *")
+    public void runEvey5Minutes() {
+        System.out.println("Current time is :: " + LocalDate.now());
     }
 
 

@@ -53,21 +53,23 @@ public class Constants {
     public static final String QUOTATION_APPROVED_STRING = "Hello %s, Quotation %s is now approved. A Purchase Order %s is auto created. Team Freazy.";
     public static final String SALES_ORDER_DELIVERED = "Hello %s, A Sales Order for PO %s is delivered. A receivable for amount %s is raised. Team Freazy.";
 
-    public static final Map PO_STATUSES = Map.ofEntries(
-            entry("5", "CLOSED"),
-            entry("4", "FULL_PAYMENT_RECEIVED"),
+    public static final Map PO_STATUSES_CUSTOMER = Map.ofEntries(
+            entry("6", "CLOSED"),
+            entry("5", "FULL_PAYMENT_RECEIVED"),
+            entry("4", "FULLY_DELIVERED"),
             entry("3", "PARTIAL_PAYMENT_RECEIVED"),
             entry("2", "PARTIALLY_DELIVERED"),
             entry("1", "APPROVED"),
             entry("0", "DRAFT")
     );
 
-    public static final Map SO_STATUSES = Map.ofEntries(
-            entry("5", "CLOSED"),
-            entry("4", "FULL_PAYMENT_RECEIVED"),
-            entry("3", "PARTIAL_PAYMENT_RECEIVED"),
-            entry("2", "PARTIALLY_DELIVERED"),
-            entry("1", "APPROVED"),
+    public static final Map PO_STATUSES_SUPPLIER = Map.ofEntries(
+            entry("6", "CLOSED"),
+            entry("5", "FULL_PAYMENT_DONE"),
+            entry("4", "FULLY_RECEIVED"),
+            entry("3", "PARTIAL_PAYMENT_DONE"),
+            entry("2", "PARTIALLY_RECEIVED"),
+            entry("1", "GIVEN"),
             entry("0", "DRAFT")
     );
 
@@ -78,4 +80,41 @@ public class Constants {
             entry("1", "SENT"),
             entry("0", "DRAFT")
     );
+
+    /*
+    RAISED,
+    SHARED,
+
+    TO_BE_DELIVERED,
+    DELIVERED,
+    RECEIVED,
+    TO_BE_RECEIVED,
+
+    TO_BE_PAID,
+    PAID,
+    TO_RECEIVE_PAYMENT,
+    PAYMENT_RECEIVED,
+
+    CLOSED
+     */
+
+    public static final Map SO_STATUSES_CUSTOMER = Map.ofEntries(
+            entry("5", "CLOSED"),
+            entry("4", "PAYMENT_DONE"),
+            entry("3", "PAYMENT_TO_BE_DONE"),
+            entry("2", "STOCK_DELIVERED"),
+            entry("1", "STOCK_TO_BE_DELIVERED"),
+            entry("0", "RAISED")
+    );
+
+    public static final Map SO_STATUSES_SUPPLIER = Map.ofEntries(
+            entry("5", "CLOSED"),
+            entry("4", "PAYMENT_RECEIVED"),
+            entry("3", "PAYMENT_TO_BE_RECEIVED"),
+            entry("2", "STOCK_RECEIVED"),
+            entry("1", "STOCK_TO_BE_RECEIVED"),
+            entry("0", "SHARED")
+    );
+
+    public static final String FILE_LOCATION = "classpath:pdfs/";
 }

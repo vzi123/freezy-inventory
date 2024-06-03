@@ -14,6 +14,6 @@ public class DashboardWidgetsService {
     DashboardWidgetsRepository dashboardWidgetsRepository;
 
     public List<DashBoardWidgets> getAllWidgets(){
-        return dashboardWidgetsRepository.findAll();
+        return dashboardWidgetsRepository.findAllByOrderBySequenceAsc();
     }
 }

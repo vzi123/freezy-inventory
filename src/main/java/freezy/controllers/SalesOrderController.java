@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -99,5 +100,16 @@ public class SalesOrderController {
         SalesOrder salesOrder = salesOrderService.getSalesOrderById(salesOrderStatusDTO.getId());
         salesOrderService.changeStatus(salesOrder, salesOrderStatusDTO.getOldStatus(), salesOrderStatusDTO.getNewStatus());
         return salesOrder;
+    }
+
+    @GetMapping(value= "/statuses/{persona}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map getSalesOrderStatuses(@PathVariable String persona) {
+        if(null != persona && persona.equalsIgnoreCase(Constants.CUSTOMER)){
+            return Constants.SO_STATUSES_CUSTOMER;
+        }
+        if(null != persona && persona.equalsIgnoreCase(Constants.VENDOR)){
+            return Constants.SO_STATUSES_SUPPLIER;
+        }
+        return null;
     }
 }
