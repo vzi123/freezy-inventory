@@ -12,6 +12,7 @@ import freezy.services.PdfGenerateService;
 import freezy.services.PurchaseOrderService;
 import freezy.services.QuotationService;
 import freezy.utils.Constants;
+import freezy.utils.FreazyEmailService;
 import freezy.utils.UtilsService;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.io.File;
 
 @RestController
 @Slf4j
@@ -42,6 +44,9 @@ public class QuotationController {
 
     @Autowired
     PdfGenerateService pdfGenerateService;
+
+    @Autowired
+    FreazyEmailService freazyEmailService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Quotation> getAllQuotations() {
@@ -103,7 +108,8 @@ public class QuotationController {
     public Object mailQuotation(@PathVariable String quotationId) throws Exception{
         Quotation quotationObj = quotationService.getQuotationById(quotationId);
         if(quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.DRAFT.name()) || quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.SENT.name())){
-            pdfGenerateService.generateQuotation(quotationObj);
+            File quotation = pdfGenerateService.generateQuotation(quotationObj);
+            freazyEmailService.sendEmail(quotation);
             return utilsService.sendResponse("Quotation Mailed", HttpStatus.OK);
         }
         return utilsService.sendResponse("Mail cannot be sent for approved quotations", HttpStatus.OK);

@@ -37,5 +37,11 @@ public class StockAlertSchedule {
         System.out.println("Current time is :: " + LocalDate.now());
     }
 
+    //stock alert email
+    //payables email
+    //receivables email
+    //inventory log report
+
+
 
 }

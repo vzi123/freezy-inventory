@@ -6,6 +6,7 @@ public enum UserRole {
     TECHNICIAN,
     SUB_CONTRACTOR,
     SUPPLIER,
+    supplier,
     admin,
     customer,
     technician,

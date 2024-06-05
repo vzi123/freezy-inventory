@@ -2,6 +2,7 @@ package freezy.repository;
 
 
 import freezy.entities.User;
+import freezy.entities.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
             , nativeQuery = true)
     public List<User> searchByParams(@Param("firstName") String firstName, @Param("lastName") String lastName,
                                      @Param("phNo") String phNo, @Param("email") String email);
+
+    public List<User> findAllByRole(UserRole userRole);
 }

@@ -2,6 +2,7 @@ package freezy.services;
 
 
 import freezy.entities.User;
+import freezy.entities.UserRole;
 import freezy.repository.UserRepository;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
@@ -42,5 +43,19 @@ public class UserService {
 
     public List<User> searchUsers(String firstName, String lastName, String phNo, String email){
         return userRepository.searchByParams(firstName, lastName, phNo, email);
+    }
+
+    public List<User> getUsersByType(String type) {
+        UserRole role = null;
+        if(null != type && type.equalsIgnoreCase(UserRole.CUSTOMER.name())){
+            role = UserRole.CUSTOMER;
+        }
+        if(null != type && type.equalsIgnoreCase(UserRole.SUPPLIER.name())){
+            role = UserRole.SUPPLIER;
+        }
+        if(null != role){
+            return userRepository.findAllByRole(role);
+        }
+        return null;
     }
 }

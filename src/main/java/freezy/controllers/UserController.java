@@ -91,4 +91,10 @@ public class UserController {
                 email);
         return userService.searchUsers(firstName, lastName, phoneNo, email);
     }
+
+    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<User> filterUsers(@RequestParam(required = false) String type) {
+
+        return userService.getUsersByType(type);
+    }
 }

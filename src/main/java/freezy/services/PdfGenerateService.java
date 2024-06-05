@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -30,29 +32,34 @@ public class PdfGenerateService {
     private TemplateEngine templateEngine;
 
 
-    public void generatePdfFile(String templateName, Map<String, Object> data, String pdfFileName) throws Exception{
+    public File generatePdfFile(String templateName, Map<String, Object> data, String pdfFileName) throws Exception{
         Context context = new Context();
         context.setVariables(data);
 
         String htmlContent = templateEngine.process(templateName, context);
         try {
-            File yourFile = new File(Constants.FILE_LOCATION + pdfFileName);
+            Resource resource = new ClassPathResource("/pdfs/");
+            resource.getURL().getPath();
+            File yourFile = new File((resource.getURL().getPath() + pdfFileName));
             yourFile.createNewFile();
-            FileOutputStream fileOutputStream = new FileOutputStream(Constants.FILE_LOCATION + pdfFileName);
+            FileOutputStream fileOutputStream = new FileOutputStream((resource.getURL().getPath() + pdfFileName));
             ITextRenderer renderer = new ITextRenderer();
             renderer.setDocumentFromString(htmlContent);
             renderer.layout();
             renderer.createPDF(fileOutputStream, false);
             renderer.finishPDF();
+
+            return yourFile;
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage(), e);
         } catch (DocumentException e) {
             logger.error(e.getMessage(), e);
         }
+        return null;
     }
 
 
-    public void generateQuotation(Quotation quotation) throws Exception{
+    public File generateQuotation(Quotation quotation) throws Exception{
         User customer = quotation.getUser();
         UserDTO userDTO = new UserDTO();
         userDTO.setName(customer.getFirst_name() + " " + customer.getLast_name());
@@ -67,16 +74,15 @@ public class PdfGenerateService {
         for (QuotationItems item: quotationItems
              ) {
             QuotationMailDTO quotationMailDTO = new QuotationMailDTO();
-            quotationMailDTO.setPrice(100);
-            quotationMailDTO.setProductName(item.getProduct().getName());
+            quotationMailDTO.setId(item.getId());
+            quotationMailDTO.setDescription(item.getProduct().getName());
             quotationMailDTO.setQuantity(item.getQuantity());
-            quotationMailDTO.setSubTotal(quotationMailDTO.getPrice() * quotationMailDTO.getQuantity());
-            quotationTotal = quotationTotal + quotationMailDTO.getSubTotal();
+            quotationMailDTO.setPrice(item.getPrice());
             quotations.add(quotationMailDTO);
         }
         data.put("quotation", quotations);
         data.put("customer",userDTO);
         data.put("total", quotationTotal);
-        generatePdfFile("quotation", data,quotation.getId() + " - " + "quotation.pdf");
+        return generatePdfFile("newQuotation", data,quotation.getId() + "-" + "quotation.pdf");
     }
 }

@@ -24,6 +24,8 @@ public class Product {
 
     private String description;
 
+    private Integer cost;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     @JsonManagedReference
@@ -66,5 +68,7 @@ public class Product {
     public String toString(){
         return this.name;
     }
+
+
 }
 

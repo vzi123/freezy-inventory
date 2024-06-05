@@ -116,5 +116,5 @@ public class Constants {
             entry("0", "SHARED")
     );
 
-    public static final String FILE_LOCATION = "classpath:pdfs/";
+    public static final String FILE_LOCATION = "/src/resources/pdfs/";
 }

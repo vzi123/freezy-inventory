@@ -2,25 +2,25 @@ package freezy.dto;
 
 public class QuotationMailDTO {
 
-    String productName;
+    String id;
+    String description;
     Integer quantity;
     Integer price;
-    Integer subTotal;
 
-    public Integer getSubTotal() {
-        return subTotal;
+    public String getId() {
+        return id;
     }
 
-    public void setSubTotal(Integer subTotal) {
-        this.subTotal = subTotal;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getQuantity() {
