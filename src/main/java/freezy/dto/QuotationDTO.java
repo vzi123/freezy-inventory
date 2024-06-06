@@ -12,6 +12,19 @@ public class QuotationDTO {
     List<QuotationItemsDTO> quotationItems;
     String quotationId;
     String status;
+    Float discount;
+
+    public Integer getBudget() {
+        return budget;
+    }
+
+    public Float getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Float discount) {
+        this.discount = discount;
+    }
 
     public String getProjectName() {
         return projectName;

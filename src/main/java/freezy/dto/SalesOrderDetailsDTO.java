@@ -4,26 +4,8 @@ import java.util.List;
 
 public class SalesOrderDetailsDTO {
 
-    String userId;
-    String userPersona;
     String poId;
     List<SOItemsDTO> soItems;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserPersona() {
-        return userPersona;
-    }
-
-    public void setUserPersona(String userPersona) {
-        this.userPersona = userPersona;
-    }
 
     public String getPoId() {
         return poId;

@@ -19,6 +19,7 @@ public class Payable {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
+    @JsonIgnore
     private User createdBy;
 
     @JoinColumn(name = "created_at")
@@ -27,6 +28,7 @@ public class Payable {
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
+    @JsonIgnore
     private Project project;
 
     @Column(nullable = false)
@@ -34,6 +36,7 @@ public class Payable {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User vendor;
 
 
@@ -43,7 +46,7 @@ public class Payable {
     @Column
     private String comments;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "so_id")
     private SalesOrder salesOrder;
 

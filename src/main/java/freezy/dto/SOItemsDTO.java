@@ -4,7 +4,6 @@ public class SOItemsDTO {
 
     String productId;
     Integer quantity;
-    Integer price;
 
     public String getProductId() {
         return productId;
@@ -20,13 +19,5 @@ public class SOItemsDTO {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
     }
 }

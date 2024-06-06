@@ -62,6 +62,9 @@ public class SalesOrderService {
     @Autowired
     FreazySMSService freazySMSService;
 
+    @Autowired
+    PurchaseOrderItemsService purchaseOrderItemsService;
+
     public List<SalesOrder> getAllSalesOrders() {
         return salesOrderRepository.findAll();
     }
@@ -86,8 +89,8 @@ public class SalesOrderService {
         salesOrder.setCreatedAt(utilsService.generateDateFormat());
         salesOrder.setCreatedBy(utilsService.getSuperUser());
         salesOrder.setPurchaseOrder(purchaseOrder);
-        salesOrder.setUserPersona(salesOrderDetailsDTO.getUserPersona());
-        salesOrder.setUser(userService.getUserById(salesOrderDetailsDTO.getUserId()));
+        salesOrder.setUserPersona(purchaseOrder.getUserPersona());
+        salesOrder.setUser(purchaseOrder.getUser());
         salesOrder.setStatus(SalesOrderStatus.DEFAULT.toString());
         salesOrderRepository.saveAndFlush(salesOrder);
 
@@ -95,11 +98,12 @@ public class SalesOrderService {
         for (SOItemsDTO soItems: salesOrderDetailsDTO.getSoItems()
         ) {
             SalesOrderItems salesOrderItem = new SalesOrderItems();
+            Product product = productService.getProductById(soItems.getProductId());
             salesOrderItem.setId(utilsService.generateId(Constants.SALES_ORDER_ITEM_PREFIX));
             salesOrderItem.setCreatedAt(utilsService.generateDateFormat());
             salesOrderItem.setCreatedBy(utilsService.getSuperUser());
             salesOrderItem.setSalesOrder(salesOrder);
-            salesOrderItem.setProduct(productService.getProductById(soItems.getProductId()));
+            salesOrderItem.setProduct(product);
             salesOrderItem.setQuantity(soItems.getQuantity());
             InventoryDTO inventoryDTO = new InventoryDTO();
             inventoryDTO.setStock(soItems.getQuantity());
@@ -110,7 +114,8 @@ public class SalesOrderService {
             if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
                 inventoryService.incrementOrDecrementInventory(inventoryDTO, Constants.INVENTORY_INC, salesOrderItem.getId());
             }
-            salesOrderItem.setPrice(soItems.getPrice());
+            PurchaseOrderItems poItem = purchaseOrderItemsService.getByPurchaseOrderAndProduct(purchaseOrder, product);
+            salesOrderItem.setPrice(poItem.getPrice());
             salesOrderItems.add(salesOrderItem);
         }
         salesOrderItemsRepository.saveAllAndFlush(salesOrderItems);
@@ -236,7 +241,6 @@ public class SalesOrderService {
         PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
         List<PurchaseOrderItems> purchaseOrderItems = purchaseOrder.getPurchaseOrderItems();
         Integer poQuantity = 0;
-        Integer inputBudget = 0;
         Integer inputQuantity = 0;
         Map<String, Integer> poQuantityMap = new HashMap<>();
         for(PurchaseOrderItems item: purchaseOrderItems){
@@ -244,11 +248,9 @@ public class SalesOrderService {
         }
         List<SOItemsDTO> soItemsDTOS = salesOrderDetailsDTO.getSoItems();
         for (SOItemsDTO dto: soItemsDTOS){
-            inputBudget = inputBudget + (dto.getPrice() * dto.getQuantity());
             inputQuantity = dto.getQuantity();
             if(inputQuantity > poQuantityMap.get(dto.getProductId())) return Constants.PO_BUDGET_STOCK_ERROR;
         }
-        if(inputBudget > purchaseOrder.getBudget()) return Constants.PO_BUDGET_STOCK_ERROR;
         return null;
     }
 
@@ -257,7 +259,6 @@ public class SalesOrderService {
         List<PurchaseOrderItems> purchaseOrderItems = purchaseOrder.getPurchaseOrderItems();
         List<SalesOrder> salesOrders = purchaseOrder.getSalesOrders();
 
-        Integer inputBudget = 0;
         Integer inputQuantity = 0;
         Map<String, Integer> poQuantityMap = new HashMap<>();
         Map<String, Integer> soQuantityMap = new HashMap<>();
@@ -273,12 +274,10 @@ public class SalesOrderService {
                 else{
                     soQuantityMap.put(sItem.getProduct().getId(),sItem.getQuantity());
                 }
-                inputBudget = inputBudget + (sItem.getQuantity() * sItem.getPrice());
             }
         }
         List<SOItemsDTO> soItemsDTOS = salesOrderDetailsDTO.getSoItems();
         for (SOItemsDTO dto: soItemsDTOS){
-            inputBudget = inputBudget + (dto.getPrice() * dto.getQuantity());
             inputQuantity = (null != soQuantityMap.get(dto.getProductId())) ? soQuantityMap.get(dto.getProductId()) + dto.getQuantity() : dto.getQuantity();
             if(null != soQuantityMap.get(dto.getProductId())){
                 soQuantityMap.put(dto.getProductId(), soQuantityMap.get(dto.getProductId()) + dto.getQuantity());
@@ -288,7 +287,6 @@ public class SalesOrderService {
             }
             if(inputQuantity > poQuantityMap.get(dto.getProductId())) return Constants.PO_SO_BUDGET_STOCK_ERROR;
         }
-        if(inputBudget > purchaseOrder.getBudget()) return Constants.PO_SO_BUDGET_STOCK_ERROR;;
         return null;
     }
 

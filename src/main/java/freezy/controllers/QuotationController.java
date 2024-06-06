@@ -89,8 +89,9 @@ public class QuotationController {
     @PostMapping(value = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object saveStatus(@RequestBody QuotationStatusDTO statusDTO) {
 
-        if (statusDTO.getNewStatus().equalsIgnoreCase(QuotationStatus.APPROVED.name())) {
-            Quotation quotationObj = quotationService.getQuotationById(statusDTO.getId());
+        Quotation quotationObj = quotationService.getQuotationById(statusDTO.getId());
+        if (statusDTO.getNewStatus().equalsIgnoreCase(QuotationStatus.APPROVED.name()) &&
+                !quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.CONVERTED.name())) {
             if (quotationObj.getQuotationItems().size() > 0) {
                 quotationObj.setStatus(statusDTO.getNewStatus());
                 quotationService.saveQuotation(quotationObj);

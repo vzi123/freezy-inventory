@@ -36,6 +36,9 @@ public class Quotation {
     @Column(nullable = false)
     private String status;
 
+    @Column(nullable = true)
+    private Double discount;
+
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;

@@ -138,6 +138,7 @@ public class PurchaseOrderService {
             purchaseOrder.setUser(quotation.getUser());
             purchaseOrder.setBudget(quotation.getBudget());
             purchaseOrder.setProject(quotation.getProject());
+            purchaseOrder.setDiscount(quotation.getDiscount().intValue());
             purchaseOrderRepository.saveAndFlush(purchaseOrder);
 
             List<PurchaseOrderItems> purchaseOrderItems = new ArrayList<PurchaseOrderItems>();
@@ -150,7 +151,7 @@ public class PurchaseOrderService {
                 purchaseOrderItems.add(purchaseOrderItem);
             }
             purchaseOrderItemsService.savePurchaseOrderItems(purchaseOrderItems);
-            freazySMSService.sendSms(Constants.SEND_SMS, utilsService.generateQuoToPOMessage(quotation.getId(), purchaseOrder.getId()));
+            //freazySMSService.sendSms(Constants.SEND_SMS, utilsService.generateQuoToPOMessage(quotation.getId(), purchaseOrder.getId()));
             return purchaseOrder;
         }
         catch (Exception e){
@@ -202,4 +203,5 @@ public class PurchaseOrderService {
         dto.setPoId(purchaseOrder.getId());
         return dto;
     }
+
 }

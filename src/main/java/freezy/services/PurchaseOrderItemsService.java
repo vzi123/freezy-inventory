@@ -1,6 +1,7 @@
 package freezy.services;
 
 import freezy.entities.PurchaseOrder;
+import freezy.entities.Product;
 import freezy.entities.PurchaseOrderItems;
 import freezy.repository.PurchaseOrderItemsRepository;
 import freezy.repository.PurchaseOrderRepository;
@@ -32,6 +33,10 @@ public class PurchaseOrderItemsService {
 
     public void savePurchaseOrderItems(List<PurchaseOrderItems> items){
         purchaseOrderItemsRepository.saveAllAndFlush(items);
+    }
+
+    public PurchaseOrderItems getByPurchaseOrderAndProduct(PurchaseOrder purchaseOrder, Product product){
+        return purchaseOrderItemsRepository.findByPurchaseOrderAndProduct(purchaseOrder, product);
     }
 
 }

@@ -3,8 +3,11 @@ package freezy.controllers;
 
 import freezy.entities.Category;
 import freezy.entities.Payable;
+import freezy.entities.PurchaseOrder;
+import freezy.entities.Receivable;
 import freezy.services.CategoryService;
 import freezy.services.PayableService;
+import freezy.services.PurchaseOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,6 +22,9 @@ import java.util.List;
 public class PayablesController {
     @Autowired
     private PayableService payableService;
+
+    @Autowired
+    PurchaseOrderService purchaseOrderService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Payable> getAllPayables() {
@@ -48,5 +54,11 @@ public class PayablesController {
     @DeleteMapping("/{id}")
     public void deletePayable(@PathVariable String id) {
         payableService.deletePayable(id);
+    }
+
+    @GetMapping(value = "/po/{purchaseOrderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Payable> getAllPayablesByPO(@PathVariable String purchaseOrderId) {
+        PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(purchaseOrderId);
+        return payableService.getPayablesByPurchaseOrder(purchaseOrder);
     }
 }

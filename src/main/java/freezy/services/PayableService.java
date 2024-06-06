@@ -1,12 +1,11 @@
 package freezy.services;
 
-import freezy.entities.Category;
-import freezy.entities.Payable;
-import freezy.entities.SalesOrder;
+import freezy.entities.*;
 import freezy.repository.PayableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,5 +31,17 @@ public class PayableService {
 
     public Payable findBySalesOrder(SalesOrder salesOrder){
         return payableRepository.findBySalesOrder(salesOrder);
+    }
+
+    public List<Payable> getPayablesByPurchaseOrder(PurchaseOrder purchaseOrder) {
+        List<Payable> payables = new ArrayList<>();
+        List<SalesOrder> salesOrders = purchaseOrder.getSalesOrders();
+        for(SalesOrder salesOrder: salesOrders){
+            Payable payable = findBySalesOrder(salesOrder);
+            if(null != payable){
+                payables.add(payable);
+            }
+        }
+        return payables;
     }
 }

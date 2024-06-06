@@ -129,41 +129,12 @@
   <div style="text-align: center; margin-bottom: 20px;">
     <img src="company_logo.png" alt="Company Logo"></img>
   </div>
-  <div class="header">
-    <h1>Quotation</h1>
-  </div>
+  <h2>Quotation</h2>
   <!-- Customer Details -->
-  <div class="content">
-    <table>
-      <thead>
-      <tr>
-        <th>Customer Details</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>Project:</td>
-        <td th:text="${projectName}">1234567890</td>
-      </tr>
-      <tr>
-        <td>Name:</td>
-        <td th:text="${customer.name}">John Doe</td>
-      </tr>
-      <tr>
-        <td>Email:</td>
-        <td th:text="${customer.email}">john@example.com</td>
-      </tr>
-      <tr>
-        <td>Phone:</td>
-        <td th:text="${customer.phoneNumber}">1234567890</td>
-      </tr>
-      <!-- Add more customer details as needed -->
-      </tbody>
-    </table>
-
-    <hr></hr>
-    <p>Hello,</p>
+  <p><strong>Customer:</strong> <span th:text="${customer.name}"></span></p>
+  <p><strong>Email:</strong> <span th:text="${customer.email}"></span></p>
+  <p><strong>Phone No:</strong> <span th:text="${customer.phoneNumber}"></span></p>
+  <p>Hello,</p>
   <p>We are pleased to provide you with the following quotation for the requested inventory items:</p>
   <!-- Table for dynamic population -->
   <table class="item-table">
@@ -202,7 +173,6 @@
   </table>
   <p>If you have any questions or need further assistance, feel free to contact us.</p>
   <p>Best Regards,<br>Team Freazy</br></p>
-</div>
 </div>
 </body>
 </html>

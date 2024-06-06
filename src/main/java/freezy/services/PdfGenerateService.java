@@ -66,23 +66,33 @@ public class PdfGenerateService {
         userDTO.setEmail(customer.getEmail());
         userDTO.setPhoneNumber(customer.getPhone_number());
         userDTO.setAddress(customer.getAddress());
+        String projectName = quotation.getProject().getName();
 
         Map<String, Object> data = new HashMap<String, Object>();
         List<QuotationMailDTO> quotations = new ArrayList<QuotationMailDTO>();
         List<QuotationItems> quotationItems = quotation.getQuotationItems();
-        Integer quotationTotal = 0;
+        double grandTotal = 0;
+        double subTotal = 0;
+        double discount = 15;
         for (QuotationItems item: quotationItems
              ) {
             QuotationMailDTO quotationMailDTO = new QuotationMailDTO();
-            quotationMailDTO.setId(item.getId());
+            quotationMailDTO.setId(item.getProduct().getId());
             quotationMailDTO.setDescription(item.getProduct().getName());
             quotationMailDTO.setQuantity(item.getQuantity());
             quotationMailDTO.setPrice(item.getPrice());
             quotations.add(quotationMailDTO);
+            subTotal = subTotal + (item.getQuantity()) * item.getPrice();
         }
+        double discountAmount = subTotal * discount / 100;
+        grandTotal = subTotal - discountAmount;
         data.put("quotation", quotations);
         data.put("customer",userDTO);
-        data.put("total", quotationTotal);
+        data.put("grandTotal", grandTotal);
+        data.put("subTotal", subTotal);
+        data.put("discount", discountAmount);
+        data.put("discountPercentage", discount);
+        data.put("projectName", projectName);
         return generatePdfFile("newQuotation", data,quotation.getId() + "-" + "quotation.pdf");
     }
 }

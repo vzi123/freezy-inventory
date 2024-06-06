@@ -6,6 +6,7 @@ import freezy.dto.QuotationDTO;
 import freezy.dto.QuotationItemsDTO;
 import freezy.entities.Category;
 import freezy.entities.Quotation;
+import freezy.entities.Product;
 import freezy.entities.QuotationItems;
 import freezy.entities.QuotationStatus;
 import freezy.repository.CategoryRepository;
@@ -72,6 +73,8 @@ public class QuotationService {
         quotation.setCreatedBy(utilsService.getSuperUser());
         quotation.setUser(userService.getUserById(dto.getUserId()));
         quotation.setUserPersona(dto.getUserPersona());
+        quotation.setBudget(0);
+        quotation.setDiscount(dto.getDiscount().doubleValue());
 
         Integer budget = 0;
         if(dto.getQuotationItems().size() > 0  && quotation.getQuotationItems() != null && quotation.getQuotationItems().size() > 0){
@@ -82,21 +85,23 @@ public class QuotationService {
         for (QuotationItemsDTO items: dto.getQuotationItems()) {
             QuotationItems item = new QuotationItems();
             item.setQuotation(quotation);
-            item.setPrice(items.getPrice());
+            item.setPrice((int)(productService.getProductById(items.getProductId()).getCost() * (1 - (float)(dto.getDiscount())/100)));
+            //item.setPrice((int)((productService.getProductById(items.getProductId())).getPrice() * (1 - (float)(dto.getDiscount())/100)));
             item.setQuantity(items.getQuantity());
             item.setId(utilsService.generateId(Constants.QUOTATION_ITEM_PREFIX));
             item.setCreatedAt(utilsService.generateDateFormat());
             item.setCreatedBy(utilsService.getSuperUser());
             item.setProduct(productService.getProductById(items.getProductId()));
             quotationItemsService.saveQuotationItems(item);
-            budget = budget + (items.getPrice() * item.getQuantity());
+            budget = budget + (productService.getProductById(items.getProductId()).getCost() * item.getQuantity());
             itemsEntity.add(item);
         }
+        budget = (int)(budget * (1 - (float)(dto.getDiscount())/100));
         quotation.setQuotationItems(itemsEntity);
         quotation.setBudget(budget);
         quotationRepository.saveAndFlush(quotation);
-        String message = String.format(Constants.QUOTATION_CREATED_STRING, utilsService.getSuperUser().getFirst_name(),userService.getUserById(dto.getUserId()).getFirst_name());
-        freazyWhatsAppService.sendMessage(Constants.SEND_SMS, message);
+        //String message = String.format(Constants.QUOTATION_CREATED_STRING, utilsService.getSuperUser().getFirst_name(),userService.getUserById(dto.getUserId()).getFirst_name());
+        //freazyWhatsAppService.sendMessage(Constants.SEND_SMS, message);
         return quotation;
     }
 

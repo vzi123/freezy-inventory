@@ -4,11 +4,15 @@ import com.twilio.Twilio;
 import com.twilio.exception.ApiException;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class FreazyWhatsAppService {
 
+    Logger logger;
 
     public Object sendMessage(String phoneNumber, String message) {
         try {
@@ -22,8 +26,8 @@ public class FreazyWhatsAppService {
                         "Phone number [" + phoneNumber + "] is not a valid number"
                 );
             }
-        } catch (ApiException exception) {
-
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
         }
         return null;
     }
