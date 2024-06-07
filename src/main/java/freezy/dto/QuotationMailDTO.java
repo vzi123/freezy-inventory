@@ -6,6 +6,15 @@ public class QuotationMailDTO {
     String description;
     Integer quantity;
     Integer price;
+    Integer discountPrice;
+
+    public Integer getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public void setDiscountPrice(Integer discountPrice) {
+        this.discountPrice = discountPrice;
+    }
 
     public String getId() {
         return id;

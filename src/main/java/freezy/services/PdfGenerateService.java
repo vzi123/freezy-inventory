@@ -73,16 +73,17 @@ public class PdfGenerateService {
         List<QuotationItems> quotationItems = quotation.getQuotationItems();
         double grandTotal = 0;
         double subTotal = 0;
-        double discount = 15;
+        double discount = quotation.getDiscount();
         for (QuotationItems item: quotationItems
              ) {
             QuotationMailDTO quotationMailDTO = new QuotationMailDTO();
             quotationMailDTO.setId(item.getProduct().getId());
             quotationMailDTO.setDescription(item.getProduct().getName());
             quotationMailDTO.setQuantity(item.getQuantity());
-            quotationMailDTO.setPrice(item.getPrice());
+            quotationMailDTO.setPrice(item.getProduct().getCost());
+            quotationMailDTO.setDiscountPrice((int)(item.getProduct().getCost() * discount / 100));
             quotations.add(quotationMailDTO);
-            subTotal = subTotal + (item.getQuantity()) * item.getPrice();
+            subTotal = subTotal + (item.getQuantity() * item.getProduct().getCost());
         }
         double discountAmount = subTotal * discount / 100;
         grandTotal = subTotal - discountAmount;

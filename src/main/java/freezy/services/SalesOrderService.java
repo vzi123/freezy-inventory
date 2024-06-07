@@ -303,4 +303,11 @@ public class SalesOrderService {
         if(!products.containsAll(incomingProducts)) return Constants.PO_SO_PRODUCT_ERROR;
         return null;
     }
+
+    public void clonePOtoSO(PurchaseOrder purchaseOrder) {
+        SalesOrder salesOrder = null;
+        if(null != purchaseOrder){
+
+        }
+    }
 }

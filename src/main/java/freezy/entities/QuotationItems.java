@@ -33,7 +33,13 @@ public class QuotationItems {
     private Integer quantity;
 
     @Column(nullable = false)
-    private Integer price;
+    private Integer unitPrice;
+
+    @Column(nullable = false)
+    private Integer discountAmount;
+
+    @Column(nullable = false)
+    private Integer effectivePrice;
 
     @ManyToOne
     @JoinColumn(name = "quo_id", nullable = false)

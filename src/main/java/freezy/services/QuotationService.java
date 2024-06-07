@@ -4,11 +4,8 @@ package freezy.services;
 
 import freezy.dto.QuotationDTO;
 import freezy.dto.QuotationItemsDTO;
-import freezy.entities.Category;
-import freezy.entities.Quotation;
+import freezy.entities.*;
 import freezy.entities.Product;
-import freezy.entities.QuotationItems;
-import freezy.entities.QuotationStatus;
 import freezy.repository.CategoryRepository;
 import freezy.repository.ProductRepository;
 import freezy.repository.QuotationRepository;
@@ -68,13 +65,31 @@ public class QuotationService {
             quotation.setStatus(QuotationStatus.DRAFT.toString());
         }
 
-        quotation.setProject(projectService.getProjectById(dto.getProjectId()));
+        Project project = null;
+        if(null != dto.getProjectId()){
+            project = projectService.getProjectById(dto.getProjectId());
+        }
+        if(null != project){
+            quotation.setProject(project);
+            quotation.setUser(project.getCustomer());
+            quotation.setUserPersona(project.getCustomer().getRole().name());
+        }
+        else {
+            quotation.setProject(null);
+            quotation.setUser(userService.getUserById(dto.getUserId()));
+            quotation.setUserPersona(dto.getUserPersona());
+        }
+
         quotation.setCreatedAt(utilsService.generateDateFormat());
         quotation.setCreatedBy(utilsService.getSuperUser());
-        quotation.setUser(userService.getUserById(dto.getUserId()));
-        quotation.setUserPersona(dto.getUserPersona());
         quotation.setBudget(0);
-        quotation.setDiscount(dto.getDiscount().doubleValue());
+        if(null != dto.getDiscount()){
+            quotation.setDiscount(dto.getDiscount().doubleValue());
+        }
+        else{
+            quotation.setDiscount(0.00);
+        }
+
 
         Integer budget = 0;
         if(dto.getQuotationItems().size() > 0  && quotation.getQuotationItems() != null && quotation.getQuotationItems().size() > 0){
@@ -85,7 +100,17 @@ public class QuotationService {
         for (QuotationItemsDTO items: dto.getQuotationItems()) {
             QuotationItems item = new QuotationItems();
             item.setQuotation(quotation);
-            item.setPrice((int)(productService.getProductById(items.getProductId()).getCost() * (1 - (float)(dto.getDiscount())/100)));
+            item.setDiscountAmount(items.getDiscountAmount());
+            if(null != items.getEffectivePrice() && items.getEffectivePrice() > 0){
+                item.setUnitPrice(items.getUnitPrice());
+                item.setEffectivePrice(items.getEffectivePrice());
+                budget = budget + (items.getEffectivePrice() * items.getQuantity());
+            }
+            else{
+                item.setEffectivePrice((int)(productService.getProductById(items.getProductId()).getCost()));
+                item.setUnitPrice(items.getUnitPrice());
+                budget = budget + (productService.getProductById(items.getProductId()).getCost() * items.getQuantity());
+            }
             //item.setPrice((int)((productService.getProductById(items.getProductId())).getPrice() * (1 - (float)(dto.getDiscount())/100)));
             item.setQuantity(items.getQuantity());
             item.setId(utilsService.generateId(Constants.QUOTATION_ITEM_PREFIX));
@@ -93,10 +118,10 @@ public class QuotationService {
             item.setCreatedBy(utilsService.getSuperUser());
             item.setProduct(productService.getProductById(items.getProductId()));
             quotationItemsService.saveQuotationItems(item);
-            budget = budget + (productService.getProductById(items.getProductId()).getCost() * item.getQuantity());
+
             itemsEntity.add(item);
         }
-        budget = (int)(budget * (1 - (float)(dto.getDiscount())/100));
+//        budget = (int)(budget * (1 - (float)(dto.getDiscount())/100));
         quotation.setQuotationItems(itemsEntity);
         quotation.setBudget(budget);
         quotationRepository.saveAndFlush(quotation);

@@ -110,7 +110,7 @@
     }
     .item-table tfoot td {
       padding: 8px;
-      text-align: right;
+      text-align: left;
     }
     .item-table tfoot .label {
       font-weight: bold;
@@ -121,17 +121,21 @@
       color: #777777;
       font-size: 12px;
     }
+    img {
+      max-width: 40%;
+      height: auto;
+    }
   </style>
 </head>
 <body>
 <div id="container">
   <!-- Company Logo -->
   <div style="text-align: center; margin-bottom: 20px;">
-    <img src="company_logo.png" alt="Company Logo"></img>
+    <img th:src="@{classpath:static/images/kc-icon.png}" alt="Company Logo" />
   </div>
-  <div class="header">
+  <!--<div class="header">
     <h1>Quotation</h1>
-  </div>
+  </div>-->
   <!-- Customer Details -->
   <div class="content">
     <table>
@@ -182,12 +186,12 @@
       <td th:text="${item.description}"></td>
       <td th:text="${item.quantity}"></td>
       <td th:text="${item.price}"></td>
-      <td th:text="${item.price * item.quantity}"></td>
+      <td th:text="${(item.price) * item.quantity}"></td>
     </tr>
     </tbody>
     <tfoot>
     <tr>
-      <td colspan="4" class="label">Sub Total:</td>
+      <td colspan="4" class="label">Total:</td>
       <td th:text="${subTotal}">Subtotal</td>
     </tr>
     <tr>

@@ -147,7 +147,7 @@ public class PurchaseOrderService {
                 purchaseOrderItem.setPurchaseOrder(purchaseOrder);
                 purchaseOrderItem.setProduct(item.getProduct());
                 purchaseOrderItem.setQuantity(item.getQuantity());
-                purchaseOrderItem.setPrice(item.getPrice());
+                purchaseOrderItem.setPrice((int)(item.getEffectivePrice() * (float)(1 - (quotation.getDiscount())/100)));
                 purchaseOrderItems.add(purchaseOrderItem);
             }
             purchaseOrderItemsService.savePurchaseOrderItems(purchaseOrderItems);

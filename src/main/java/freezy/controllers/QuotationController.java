@@ -7,10 +7,7 @@ import freezy.entities.Category;
 import freezy.entities.PurchaseOrder;
 import freezy.entities.Quotation;
 import freezy.entities.QuotationStatus;
-import freezy.services.CategoryService;
-import freezy.services.PdfGenerateService;
-import freezy.services.PurchaseOrderService;
-import freezy.services.QuotationService;
+import freezy.services.*;
 import freezy.utils.Constants;
 import freezy.utils.FreazyEmailService;
 import freezy.utils.UtilsService;
@@ -47,6 +44,9 @@ public class QuotationController {
 
     @Autowired
     FreazyEmailService freazyEmailService;
+
+    @Autowired
+    SalesOrderService salesOrderService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Quotation> getAllQuotations() {
@@ -96,11 +96,20 @@ public class QuotationController {
                 quotationObj.setStatus(statusDTO.getNewStatus());
                 quotationService.saveQuotation(quotationObj);
                 PurchaseOrder purchaseOrder = purchaseOrderService.createPOFromQuotation(quotationObj);
+                salesOrderService.clonePOtoSO(purchaseOrder);
                 quotationObj.setStatus(QuotationStatus.CONVERTED.name());
                 return purchaseOrder;
             }
             return utilsService.sendResponse("Cannot Approve Quotation without items", HttpStatus.OK);
         }
+        /*if(statusDTO.getNewStatus().equalsIgnoreCase(QuotationStatus.DRAFT.name()){
+            if (quotationObj.getQuotationItems().size() > 0) {
+                quotationObj.setStatus(statusDTO.getNewStatus());
+                quotationService.saveQuotation(quotationObj);
+
+            }
+            return utilsService.sendResponse("Cannot Approve Quotation without items", HttpStatus.OK);
+        }*/
         return null;
     }
 

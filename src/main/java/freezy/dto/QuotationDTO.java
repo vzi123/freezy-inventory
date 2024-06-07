@@ -14,20 +14,32 @@ public class QuotationDTO {
     String status;
     Float discount;
 
-    public Integer getBudget() {
-        return budget;
+    public String getUserId() {
+        return userId;
     }
 
-    public Float getDiscount() {
-        return discount;
+    public String getUserPersona() {
+        return userPersona;
+    }
+
+    public void setUserPersona(String userPersona) {
+        this.userPersona = userPersona;
+    }
+
+    public String getProjectName() {
+        return projectName;
     }
 
     public void setDiscount(Float discount) {
         this.discount = discount;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public Integer getBudget() {
+        return budget;
+    }
+
+    public Float getDiscount() {
+        return discount;
     }
 
     public void setProjectName(String projectName) {
@@ -42,20 +54,8 @@ public class QuotationDTO {
         this.status = status;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getUserPersona() {
-        return userPersona;
-    }
-
-    public void setUserPersona(String userPersona) {
-        this.userPersona = userPersona;
     }
 
     public void setBudget(Integer budget) {

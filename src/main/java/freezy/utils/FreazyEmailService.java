@@ -49,9 +49,10 @@ public class FreazyEmailService {
 
     private StringBuilder generateCommonHtmlHead() {
         StringBuilder stringBuilder = new StringBuilder();
-        return stringBuilder.append("<head>Hi Admin</head>")
-                .append("<p>There is a new Quotation Created. Please find the details in the attachment.</p>")
-                .append("<p>Thanks</p>\\n\\ <p>Freazy Admin</p>");
+        return stringBuilder.append("<head>Hello</head>")
+                .append("<p>We are pleased to provide you with the following quotation. Please find the details in the attachment.</p>")
+                .append("<p>Thanks</p>")
+                .append("<p>Freazy Admin</p>");
     }
 
 

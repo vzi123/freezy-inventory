@@ -4,15 +4,9 @@ public class QuotationItemsDTO {
 
     String productId;
     Integer quantity;
-    Integer price;
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
+    Integer unitPrice;
+    Integer discountAmount;
+    Integer effectivePrice;
 
     public String getProductId() {
         return productId;
@@ -28,5 +22,29 @@ public class QuotationItemsDTO {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Integer getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Integer unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public Integer getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(Integer discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public Integer getEffectivePrice() {
+        return effectivePrice;
+    }
+
+    public void setEffectivePrice(Integer effectivePrice) {
+        this.effectivePrice = effectivePrice;
     }
 }

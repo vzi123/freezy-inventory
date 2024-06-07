@@ -5,6 +5,15 @@ public class QuotationStatusDTO {
     String id;
     String oldStatus;
     String newStatus;
+    Boolean isCreateSO;
+
+    public Boolean getCreateSO() {
+        return isCreateSO;
+    }
+
+    public void setCreateSO(Boolean createSO) {
+        isCreateSO = createSO;
+    }
 
     public String getId() {
         return id;
