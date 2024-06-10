@@ -85,9 +85,7 @@ public class SalesOrderService {
         log.info(" in service");
         SalesOrder salesOrder = new SalesOrder();
         PurchaseOrder purchaseOrder =  purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
-        salesOrder.setId(utilsService.generateId(Constants.SALES_ORDER_PREFIX));
-        salesOrder.setCreatedAt(utilsService.generateDateFormat());
-        salesOrder.setCreatedBy(utilsService.getSuperUser());
+        getDefaultSO(salesOrder);
         salesOrder.setPurchaseOrder(purchaseOrder);
         salesOrder.setUserPersona(purchaseOrder.getUserPersona());
         salesOrder.setUser(purchaseOrder.getUser());
@@ -99,36 +97,54 @@ public class SalesOrderService {
         ) {
             SalesOrderItems salesOrderItem = new SalesOrderItems();
             Product product = productService.getProductById(soItems.getProductId());
-            salesOrderItem.setId(utilsService.generateId(Constants.SALES_ORDER_ITEM_PREFIX));
-            salesOrderItem.setCreatedAt(utilsService.generateDateFormat());
-            salesOrderItem.setCreatedBy(utilsService.getSuperUser());
+            getDefaultSOI(salesOrderItem);
             salesOrderItem.setSalesOrder(salesOrder);
             salesOrderItem.setProduct(product);
             salesOrderItem.setQuantity(soItems.getQuantity());
-            InventoryDTO inventoryDTO = new InventoryDTO();
-            inventoryDTO.setStock(soItems.getQuantity());
-            inventoryDTO.setProductId(soItems.getProductId());
-            if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)){
-                inventoryService.incrementOrDecrementInventory(inventoryDTO, Constants.INVENTORY_DEDUCT, salesOrderItem.getId());
-            }
-            if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
-                inventoryService.incrementOrDecrementInventory(inventoryDTO, Constants.INVENTORY_INC, salesOrderItem.getId());
-            }
+            createInventoryLogEntry(purchaseOrder, salesOrderItem);
             PurchaseOrderItems poItem = purchaseOrderItemsService.getByPurchaseOrderAndProduct(purchaseOrder, product);
             salesOrderItem.setPrice(poItem.getPrice());
             salesOrderItems.add(salesOrderItem);
         }
         salesOrderItemsRepository.saveAllAndFlush(salesOrderItems);
-        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)){
+        createCashEntries(salesOrder);
+        salesOrderRepository.saveAndFlush(salesOrder);
+        return salesOrder;
+    }
+
+    private void createCashEntries(SalesOrder salesOrder) {
+        if(salesOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)){
             salesOrder.setStatus(SalesOrderStatus.RAISED.toString());
             saveReceivable(salesOrder, ReceivableStatus.TO_BE_RECEIVED, "Raised a Receivable");
         }
-        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
+        if(salesOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
             salesOrder.setStatus(SalesOrderStatus.STOCK_TO_BE_RECEIVED.name());
             savePayable(salesOrder, PayableStatus.TO_BE_PAID, "Raised a Payable");
         }
-        salesOrderRepository.saveAndFlush(salesOrder);
-        return salesOrder;
+    }
+
+    private void createInventoryLogEntry(PurchaseOrder purchaseOrder, SalesOrderItems salesOrderItem) {
+        InventoryDTO inventoryDTO = new InventoryDTO();
+        inventoryDTO.setStock(salesOrderItem.getQuantity());
+        inventoryDTO.setProductId(salesOrderItem.getProduct().getId());
+        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)){
+            inventoryService.incrementOrDecrementInventory(inventoryDTO, Constants.INVENTORY_DEDUCT, salesOrderItem.getId());
+        }
+        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
+            inventoryService.incrementOrDecrementInventory(inventoryDTO, Constants.INVENTORY_INC, salesOrderItem.getId());
+        }
+    }
+
+    private void getDefaultSO(SalesOrder salesOrder) {
+        salesOrder.setId(utilsService.generateId(Constants.SALES_ORDER_PREFIX));
+        salesOrder.setCreatedAt(utilsService.generateDateFormat());
+        salesOrder.setCreatedBy(utilsService.getSuperUser());
+    }
+
+    private void getDefaultSOI(SalesOrderItems salesOrderItem) {
+        salesOrderItem.setId(utilsService.generateId(Constants.SALES_ORDER_ITEM_PREFIX));
+        salesOrderItem.setCreatedAt(utilsService.generateDateFormat());
+        salesOrderItem.setCreatedBy(utilsService.getSuperUser());
     }
 
     public Map<String, CompareDTO> getBudgetAndStock(SalesOrder salesOrder){
@@ -305,9 +321,36 @@ public class SalesOrderService {
     }
 
     public void clonePOtoSO(PurchaseOrder purchaseOrder) {
-        SalesOrder salesOrder = null;
+        SalesOrder salesOrder;
         if(null != purchaseOrder){
-
+            salesOrder = new SalesOrder();
+            getDefaultSO(salesOrder);
+            salesOrder.setPurchaseOrder(purchaseOrder);
+            salesOrder.setStatus(SalesOrderStatus.STOCK_TO_BE_DELIVERED.name());
+            salesOrder.setUser(purchaseOrder.getUser());
+            salesOrder.setUserPersona(purchaseOrder.getUserPersona());
+            salesOrderRepository.saveAndFlush(salesOrder);
+            List<SalesOrderItems> salesOrderItems = new ArrayList<>();
+            for(PurchaseOrderItems purchaseItem: purchaseOrder.getPurchaseOrderItems()){
+                SalesOrderItems salesOrderItem = new SalesOrderItems();
+                getDefaultSOI(salesOrderItem);
+                salesOrderItem.setSalesOrder(salesOrder);
+                clonePOItoSOI(purchaseItem, salesOrderItem);
+                salesOrderItems.add(salesOrderItem);
+                createInventoryLogEntry(purchaseOrder, salesOrderItem);
+            }
+            salesOrderItemsRepository.saveAllAndFlush(salesOrderItems);
+            salesOrder.setSalesOrderItems(salesOrderItems);
+            salesOrderRepository.saveAndFlush(salesOrder);
+            createCashEntries(salesOrder);
         }
+    }
+
+    public void clonePOItoSOI(PurchaseOrderItems poItem, SalesOrderItems soItem){
+        soItem.setQuantity(poItem.getQuantity());
+        soItem.setPrice(poItem.getPrice());
+        soItem.setProduct(poItem.getProduct());
+        soItem.setCreatedAt(poItem.getCreatedAt());
+        soItem.setCreatedBy(poItem.getCreatedBy());
     }
 }

@@ -151,6 +151,8 @@ public class PurchaseOrderService {
                 purchaseOrderItems.add(purchaseOrderItem);
             }
             purchaseOrderItemsService.savePurchaseOrderItems(purchaseOrderItems);
+            purchaseOrder.setPurchaseOrderItems(purchaseOrderItems);
+            purchaseOrderRepository.saveAndFlush(purchaseOrder);
             //freazySMSService.sendSms(Constants.SEND_SMS, utilsService.generateQuoToPOMessage(quotation.getId(), purchaseOrder.getId()));
             return purchaseOrder;
         }

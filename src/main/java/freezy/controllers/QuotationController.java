@@ -96,7 +96,9 @@ public class QuotationController {
                 quotationObj.setStatus(statusDTO.getNewStatus());
                 quotationService.saveQuotation(quotationObj);
                 PurchaseOrder purchaseOrder = purchaseOrderService.createPOFromQuotation(quotationObj);
-                salesOrderService.clonePOtoSO(purchaseOrder);
+                if(null != statusDTO.getCreateSO() && statusDTO.getCreateSO().booleanValue() == Boolean.TRUE){
+                    salesOrderService.clonePOtoSO(purchaseOrder);
+                }
                 quotationObj.setStatus(QuotationStatus.CONVERTED.name());
                 return purchaseOrder;
             }

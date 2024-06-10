@@ -11,7 +11,7 @@ public class QuotationStatusDTO {
         return isCreateSO;
     }
 
-    public void setCreateSO(Boolean createSO) {
+    public void setIsCreateSO(Boolean createSO) {
         isCreateSO = createSO;
     }
 
