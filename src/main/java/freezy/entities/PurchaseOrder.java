@@ -43,7 +43,6 @@ public class PurchaseOrder {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    @JsonIgnore
     private User createdBy;
 
     @JoinColumn(name = "created_at")

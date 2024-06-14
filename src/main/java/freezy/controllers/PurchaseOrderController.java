@@ -122,7 +122,13 @@ public class PurchaseOrderController {
         if(null != state && state.length() > 0){
             states = state.split(",");
         }
-        List<String> orderStates = Arrays.asList(states);
+        List<String> orderStates;
+        if(null != state){
+            orderStates = Arrays.asList(states);
+        }
+        else{
+            orderStates = new ArrayList<String>((Constants.PO_STATUSES_CUSTOMER).values());
+        }
         List<PurchaseOrder> purchaseOrders = purchaseOrderService.getAllPurchaseOrdersByPersonaAndStates(persona, orderStates);
         return purchaseOrders;
     }

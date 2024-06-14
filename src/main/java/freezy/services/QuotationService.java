@@ -6,6 +6,7 @@ import freezy.dto.QuotationDTO;
 import freezy.dto.QuotationItemsDTO;
 import freezy.entities.*;
 import freezy.entities.Product;
+import freezy.events.QuotationCreatedPublisher;
 import freezy.repository.CategoryRepository;
 import freezy.repository.ProductRepository;
 import freezy.repository.QuotationRepository;
@@ -45,6 +46,9 @@ public class QuotationService {
 
     @Autowired
     StringUtils stringUtils;
+
+    @Autowired
+    QuotationCreatedPublisher quotationCreatedPublisher;
 
     public List<Quotation> getAllQuotations() {
         return quotationRepository.findAll();
@@ -127,6 +131,7 @@ public class QuotationService {
         quotationRepository.saveAndFlush(quotation);
         //String message = String.format(Constants.QUOTATION_CREATED_STRING, utilsService.getSuperUser().getFirst_name(),userService.getUserById(dto.getUserId()).getFirst_name());
         //freazyWhatsAppService.sendMessage(Constants.SEND_SMS, message);
+        quotationCreatedPublisher.publishEvent(quotation.getId());
         return quotation;
     }
 

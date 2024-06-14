@@ -3,6 +3,7 @@ package freezy.controllers;
 import freezy.entities.CategoryUOMMap;
 import freezy.services.CategoryUOMMapService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class CategoryUOMMapController {
     @Autowired
     private CategoryUOMMapService categoryUOMMapService;
 
-    @GetMapping
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<CategoryUOMMap> getAllCategoryUOMMaps() {
         return categoryUOMMapService.getAllCategoryUOMMaps();
     }
