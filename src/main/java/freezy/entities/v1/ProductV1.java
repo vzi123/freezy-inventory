@@ -2,6 +2,7 @@ package freezy.entities.v1;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class ProductV1 {
 
     private String description;
 
+    @JsonIgnore
     private Integer cost;
 
     @ManyToOne
