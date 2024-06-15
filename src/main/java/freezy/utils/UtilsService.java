@@ -1,7 +1,9 @@
 package freezy.utils;
 
 import freezy.entities.User;
+import freezy.entities.v1.UserV1;
 import freezy.services.UserService;
+import freezy.services.v1.UserServiceV1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -19,6 +21,9 @@ public class UtilsService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserServiceV1 userServiceV1;
+
     public String generateId(String prefix){
         return prefix+((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
     }
@@ -29,6 +34,10 @@ public class UtilsService {
 
     public User getSuperUser(){
         return userService.getUserById("U0001");
+    }
+
+    public UserV1 getSuperUserV1(){
+        return userServiceV1.getUserById("U0001");
     }
 
     public ResponseEntity sendResponse(String message, HttpStatusCode statusCode) {

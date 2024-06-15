@@ -6,6 +6,8 @@ import static java.util.Map.entry;
 
 public class Constants {
     public static final String PURCHASE_ORDER_PREFIX = "PO";
+    public static final String CATEGORY_ORDER_PREFIX = "CAT";
+    public static final String UOM_ORDER_PREFIX = "UOM";
     public static final String USER_PREFIX = "US";
     public static final String PURCHASE_ORDER_ITEM_PREFIX = "POI";
     public static final String SALES_ORDER_PREFIX = "SO";
