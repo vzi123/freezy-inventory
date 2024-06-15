@@ -7,6 +7,7 @@ import freezy.entities.SalesOrder;
 import freezy.repository.PayableRepository;
 import freezy.repository.ReceivableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class ReceivableService {
     PurchaseOrderService purchaseOrderService;
 
     public List<Receivable> getAllReceivables() {
-        return receivableRepository.findAll();
+        return receivableRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
     public Receivable getReceivableById(String id) {

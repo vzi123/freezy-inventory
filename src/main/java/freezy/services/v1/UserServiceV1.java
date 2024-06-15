@@ -8,6 +8,7 @@ import freezy.entities.v1.UserV1;
 import freezy.repository.UserRepository;
 import freezy.repository.v1.UserRepositoryV1;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class UserServiceV1 {
     private UserRepositoryV1 userRepositoryV1;
 
     public List<UserV1> getAllUsers() {
-        return userRepositoryV1.findAll();
+        return userRepositoryV1.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
     public UserV1 getUserById(String id) {

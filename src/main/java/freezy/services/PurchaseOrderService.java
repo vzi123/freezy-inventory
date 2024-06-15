@@ -15,6 +15,7 @@ import freezy.utils.UtilsService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.LinkOption;
@@ -55,7 +56,7 @@ public class PurchaseOrderService {
     SalesOrderItemsRepository salesOrderItemsRepository;
 
     public List<PurchaseOrder> getAllPurchaseOrders() {
-        return purchaseOrderRepository.findAll();
+        return purchaseOrderRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
     public List<PurchaseOrder> getAllPurchaseOrdersByPersona(String persona) {

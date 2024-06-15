@@ -28,6 +28,9 @@ public class InventoryLogV1 {
     @Column(nullable = false)
     private String comments;
 
+    @Column
+    private Integer quantity;
+
     @Column(nullable = false)
     @JoinColumn(name = "created_at")
     private String createdAt;

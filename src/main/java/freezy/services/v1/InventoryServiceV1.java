@@ -14,6 +14,7 @@ import freezy.repository.v1.InventoryRepositoryV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,7 +38,8 @@ public class InventoryServiceV1 {
     UserServiceV1 userServiceV1;
 
     public List<InventoryV1> getAllInventory() {
-        return inventoryRepositoryV1.findAllByOrderByIdAsc();
+
+        return inventoryRepositoryV1.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
     public InventoryV1 getInventoryById(String id) {
@@ -119,6 +121,7 @@ public class InventoryServiceV1 {
                 inventoryLog.setInventory(inventory);
                 inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
                 inventoryLog.setAmount(inventoryDTO.getUnitPrice());
+                inventoryLog.setQuantity(inventoryDTO.getQuantity());
                 if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
                     inventoryLog.setInOut(InventoryLogEntryV1.IN);
                     inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " on " + utilsService.generateDateFormat());

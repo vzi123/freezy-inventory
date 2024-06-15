@@ -7,6 +7,7 @@ import freezy.entities.QuotationItems;
 import freezy.repository.QuotationItemsRepository;
 import freezy.repository.QuotationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class QuotationItemsService {
     private QuotationItemsRepository quotationItemsRepository;
 
     public List<QuotationItems> getAllQuotationItems() {
-        return quotationItemsRepository.findAll();
+        return quotationItemsRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
     public QuotationItems getQuotationItemById(String id) {

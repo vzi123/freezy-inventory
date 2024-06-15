@@ -15,6 +15,7 @@ import freezy.utils.UtilsService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -66,7 +67,7 @@ public class SalesOrderService {
     PurchaseOrderItemsService purchaseOrderItemsService;
 
     public List<SalesOrder> getAllSalesOrders() {
-        return salesOrderRepository.findAll();
+        return salesOrderRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
     public SalesOrder getSalesOrderById(String id) {

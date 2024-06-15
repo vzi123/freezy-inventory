@@ -3,6 +3,7 @@ package freezy.services;
 import freezy.entities.*;
 import freezy.repository.PayableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class PayableService {
     @Autowired
     PayableRepository payableRepository;
     public List<Payable> getAllPayables() {
-        return payableRepository.findAll();
+        return payableRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
     public Payable getPayableById(String id) {

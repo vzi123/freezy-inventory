@@ -15,6 +15,7 @@ import freezy.utils.FreazyWhatsAppService;
 import freezy.utils.StringUtils;
 import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class QuotationService {
     QuotationCreatedPublisher quotationCreatedPublisher;
 
     public List<Quotation> getAllQuotations() {
-        return quotationRepository.findAll();
+        return quotationRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
     public Quotation getQuotationById(String id) {
