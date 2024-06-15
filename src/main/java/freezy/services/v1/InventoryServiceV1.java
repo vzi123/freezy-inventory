@@ -105,10 +105,10 @@ public class InventoryServiceV1 {
                 inventory.setCreatedBy(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
                 inventory.setProduct(product);
                 if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
-                    inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) + inventoryDTO.getStock());
+                    inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) + inventoryDTO.getQuantity());
                 }
                 else{
-                    inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) - inventoryDTO.getStock());
+                    inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) - inventoryDTO.getQuantity());
                 }
                 inventory.setUpdatedAt(utilsService.generateDateFormat());
                 inventory.setUpdatedBy(utilsService.getSuperUserV1());
@@ -118,14 +118,14 @@ public class InventoryServiceV1 {
                 InventoryLogV1 inventoryLog = new InventoryLogV1();
                 inventoryLog.setInventory(inventory);
                 inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-                inventoryLog.setAmount(inventoryDTO.getAmount());
+                inventoryLog.setAmount(inventoryDTO.getUnitPrice());
                 if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
                     inventoryLog.setInOut(InventoryLogEntryV1.IN);
-                    inventoryLog.setComments("Procured " + inventoryDTO.getStock() + " on " + utilsService.generateDateFormat());
+                    inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " on " + utilsService.generateDateFormat());
                 }
                 else{
                     inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-                    inventoryLog.setComments("Deducted " + inventoryDTO.getStock() + " on " + utilsService.generateDateFormat() + " for " + inventoryEntryV1.getComments());
+                    inventoryLog.setComments("Deducted " + inventoryDTO.getQuantity() + " on " + utilsService.generateDateFormat() + " for " + inventoryEntryV1.getComments());
                 }
 
                 inventoryLog.setCreatedAt(utilsService.generateDateFormat());

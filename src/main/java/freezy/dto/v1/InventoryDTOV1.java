@@ -3,16 +3,8 @@ package freezy.dto.v1;
 public class InventoryDTOV1 {
 
     String productId;
-    Integer stock;
-    Integer amount;
-
-    public Integer getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Integer amount) {
-        this.amount = amount;
-    }
+    Integer quantity;
+    Integer unitPrice;
 
     public String getProductId() {
         return productId;
@@ -22,11 +14,19 @@ public class InventoryDTOV1 {
         this.productId = productId;
     }
 
-    public Integer getStock() {
-        return stock;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Integer getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Integer unitPrice) {
+        this.unitPrice = unitPrice;
     }
 }
