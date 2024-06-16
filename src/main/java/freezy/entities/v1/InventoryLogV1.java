@@ -31,6 +31,9 @@ public class InventoryLogV1 {
     @Column
     private Integer quantity;
 
+    @Column
+    private Integer updatedStock;
+
     @Column(nullable = false)
     @JoinColumn(name = "created_at")
     private String createdAt;

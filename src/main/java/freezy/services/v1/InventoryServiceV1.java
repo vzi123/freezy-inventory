@@ -6,10 +6,7 @@ import freezy.dto.InventoryDTO;
 import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.InventoryEntryV1;
 import freezy.entities.Product;
-import freezy.entities.v1.InventoryLogEntryV1;
-import freezy.entities.v1.InventoryLogV1;
-import freezy.entities.v1.InventoryV1;
-import freezy.entities.v1.ProductV1;
+import freezy.entities.v1.*;
 import freezy.repository.v1.InventoryRepositoryV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
@@ -39,7 +36,7 @@ public class InventoryServiceV1 {
 
     public List<InventoryV1> getAllInventory() {
 
-        return inventoryRepositoryV1.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
+        return inventoryRepositoryV1.findAll();
     }
 
     public InventoryV1 getInventoryById(String id) {
@@ -118,17 +115,23 @@ public class InventoryServiceV1 {
                 inventoryRepositoryV1.saveAndFlush(inventory);
 
                 InventoryLogV1 inventoryLog = new InventoryLogV1();
+                UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
+                String userFirstName = (null != user.getFirst_name())?user.getFirst_name():" ";
+                String userLastName = " ";
                 inventoryLog.setInventory(inventory);
                 inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
                 inventoryLog.setAmount(inventoryDTO.getUnitPrice());
                 inventoryLog.setQuantity(inventoryDTO.getQuantity());
+                inventoryLog.setUpdatedStock(inventory.getInventory());
                 if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
                     inventoryLog.setInOut(InventoryLogEntryV1.IN);
-                    inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " on " + utilsService.generateDateFormat());
+                    inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " on " + utilsService.generateDateFormat() + " from " +
+                            userFirstName + " " + userLastName + " , Comments: " + inventoryEntryV1.getComments());
                 }
                 else{
                     inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-                    inventoryLog.setComments("Deducted " + inventoryDTO.getQuantity() + " on " + utilsService.generateDateFormat() + " for " + inventoryEntryV1.getComments());
+                    inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + " on " + utilsService.generateDateFormat() + " for " +
+                            userFirstName + " " + userLastName + " , Comments: " + inventoryEntryV1.getComments());
                 }
 
                 inventoryLog.setCreatedAt(utilsService.generateDateFormat());

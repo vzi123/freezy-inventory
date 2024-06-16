@@ -23,7 +23,7 @@ public class ReceivableService {
     PurchaseOrderService purchaseOrderService;
 
     public List<Receivable> getAllReceivables() {
-        return receivableRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
+        return receivableRepository.findAll();
     }
 
     public Receivable getReceivableById(String id) {

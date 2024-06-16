@@ -15,7 +15,7 @@ public class PayableService {
     @Autowired
     PayableRepository payableRepository;
     public List<Payable> getAllPayables() {
-        return payableRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
+        return payableRepository.findAll();
     }
 
     public Payable getPayableById(String id) {

@@ -19,7 +19,7 @@ public class QuotationItemsService {
     private QuotationItemsRepository quotationItemsRepository;
 
     public List<QuotationItems> getAllQuotationItems() {
-        return quotationItemsRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
+        return quotationItemsRepository.findAll();
     }
 
     public QuotationItems getQuotationItemById(String id) {

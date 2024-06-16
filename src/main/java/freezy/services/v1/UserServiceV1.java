@@ -1,11 +1,7 @@
 package freezy.services.v1;
-
-
-import freezy.entities.User;
 import freezy.entities.UserRole;
 import freezy.entities.v1.UserRoleV1;
 import freezy.entities.v1.UserV1;
-import freezy.repository.UserRepository;
 import freezy.repository.v1.UserRepositoryV1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -20,7 +16,7 @@ public class UserServiceV1 {
     private UserRepositoryV1 userRepositoryV1;
 
     public List<UserV1> getAllUsers() {
-        return userRepositoryV1.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
+        return userRepositoryV1.findAll();
     }
 
     public UserV1 getUserById(String id) {

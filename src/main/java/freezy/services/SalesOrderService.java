@@ -67,7 +67,7 @@ public class SalesOrderService {
     PurchaseOrderItemsService purchaseOrderItemsService;
 
     public List<SalesOrder> getAllSalesOrders() {
-        return salesOrderRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
+        return salesOrderRepository.findAll();
     }
 
     public SalesOrder getSalesOrderById(String id) {

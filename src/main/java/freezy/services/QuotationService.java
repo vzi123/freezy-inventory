@@ -52,7 +52,7 @@ public class QuotationService {
     QuotationCreatedPublisher quotationCreatedPublisher;
 
     public List<Quotation> getAllQuotations() {
-        return quotationRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
+        return quotationRepository.findAll();
     }
 
     public Quotation getQuotationById(String id) {

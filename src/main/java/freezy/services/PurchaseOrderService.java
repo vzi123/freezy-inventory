@@ -56,7 +56,7 @@ public class PurchaseOrderService {
     SalesOrderItemsRepository salesOrderItemsRepository;
 
     public List<PurchaseOrder> getAllPurchaseOrders() {
-        return purchaseOrderRepository.findAll((Sort.by(Sort.Direction.DESC, "createdAt")));
+        return purchaseOrderRepository.findAll();
     }
 
     public List<PurchaseOrder> getAllPurchaseOrdersByPersona(String persona) {
