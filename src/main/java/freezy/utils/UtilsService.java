@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 
 @Service
@@ -29,7 +30,10 @@ public class UtilsService {
     }
 
     public String generateDateFormat(){
-        return new SimpleDateFormat(Constants.DATE_FORMAT).format(new Timestamp(System.currentTimeMillis()));
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata")); // Set timezone to IST
+        String formattedDate = dateFormat.format(new Timestamp(System.currentTimeMillis()));
+        return formattedDate;
     }
 
     public User getSuperUser(){

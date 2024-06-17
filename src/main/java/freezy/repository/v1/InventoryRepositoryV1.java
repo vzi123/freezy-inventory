@@ -15,4 +15,5 @@ public interface InventoryRepositoryV1 extends JpaRepository<InventoryV1, String
 
     public InventoryV1 findByProduct(ProductV1 product);
     public List<InventoryV1> findAllByOrderByIdAsc();
+    public List<InventoryV1> findAllByOrderByCreatedAtDesc();
 }

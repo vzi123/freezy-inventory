@@ -40,7 +40,7 @@ public class InventoryServiceV1 {
 
     public List<InventoryListV1> getAllInventory() {
 
-        List<InventoryV1> inventoryV1s = inventoryRepositoryV1.findAll();
+        List<InventoryV1> inventoryV1s = inventoryRepositoryV1.findAllByOrderByCreatedAtDesc();
         List<InventoryListV1> inventories = new ArrayList<>();
         for(InventoryV1 v1: inventoryV1s){
             if(v1.getProduct() != null){
