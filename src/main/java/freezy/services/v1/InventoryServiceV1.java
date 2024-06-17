@@ -5,6 +5,7 @@ import freezy.dto.InventoryCountDTO;
 import freezy.dto.InventoryDTO;
 import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.InventoryEntryV1;
+import freezy.dto.v1.InventoryListV1;
 import freezy.entities.Product;
 import freezy.entities.v1.*;
 import freezy.repository.v1.InventoryRepositoryV1;
@@ -34,9 +35,30 @@ public class InventoryServiceV1 {
     @Autowired
     UserServiceV1 userServiceV1;
 
-    public List<InventoryV1> getAllInventory() {
+    @Autowired
+    CategoryUOMMapServiceV1 categoryUOMMapServiceV1;
 
-        return inventoryRepositoryV1.findAll();
+    public List<InventoryListV1> getAllInventory() {
+
+        List<InventoryV1> inventoryV1s = inventoryRepositoryV1.findAll();
+        List<InventoryListV1> inventories = new ArrayList<>();
+        for(InventoryV1 v1: inventoryV1s){
+            if(v1.getProduct() != null){
+                InventoryListV1 listV1 = new InventoryListV1();
+                listV1.setInventory(v1.getInventory());
+                listV1.setId(v1.getId());
+                listV1.setProduct(v1.getProduct());
+                CategoryUOMMapV1 categoryUOMMapV1 = categoryUOMMapServiceV1.getUOMByCategory(v1.getProduct().getCategory().getId());
+                if(!categoryUOMMapV1.getMultiple().equalsIgnoreCase("1")){
+                    listV1.setUom(categoryUOMMapV1.getMultiple() + " " + categoryUOMMapV1.getUomv1().name());
+                }
+                else{
+                    listV1.setUom(categoryUOMMapV1.getUomv1().name());
+                }
+                inventories.add(listV1);
+            }
+        }
+        return inventories;
     }
 
     public InventoryV1 getInventoryById(String id) {

@@ -39,6 +39,7 @@ public class ProductServiceV1 {
             productV1.setName(dto.getName());
             productV1.setCategory(categoryServiceV1.getCategoryById(dto.getCategoryId()));
             productV1.setDescription(dto.getDescription());
+            productV1.setHsnNo(dto.getHsnNo());
             if(null != dto.getCost()){
                 productV1.setCost(dto.getCost());
             }

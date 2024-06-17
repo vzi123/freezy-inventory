@@ -4,6 +4,7 @@ package freezy.controllers.v1;
 import freezy.dto.InventoryCountDTO;
 import freezy.dto.InventoryDTO;
 import freezy.dto.v1.InventoryEntryV1;
+import freezy.dto.v1.InventoryListV1;
 import freezy.entities.Inventory;
 import freezy.entities.v1.InventoryV1;
 import freezy.services.InventoryService;
@@ -23,7 +24,7 @@ public class InventoryControllerV1 {
     private InventoryServiceV1 inventoryServiceV1;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<InventoryV1> getAllInventory() {
+    public List<InventoryListV1> getAllInventory() {
         return inventoryServiceV1.getAllInventory();
     }
 

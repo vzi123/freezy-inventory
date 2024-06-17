@@ -6,6 +6,15 @@ public class ProductDTOV1 {
     String description;
     String categoryId;
     Integer cost;
+    String hsnNo;
+
+    public String getHsnNo() {
+        return hsnNo;
+    }
+
+    public void setHsnNo(String hsnNo) {
+        this.hsnNo = hsnNo;
+    }
 
     public String getName() {
         return name;

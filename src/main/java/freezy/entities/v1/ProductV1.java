@@ -24,8 +24,10 @@ public class ProductV1 {
 
     private String description;
 
-    @JsonIgnore
     private Integer cost;
+
+    @Column
+    private String hsnNo;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

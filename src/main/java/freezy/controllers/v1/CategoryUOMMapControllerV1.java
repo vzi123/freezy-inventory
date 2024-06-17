@@ -1,5 +1,6 @@
 package freezy.controllers.v1;
 
+import freezy.dto.v1.UOMDTOV1;
 import freezy.entities.CategoryUOMMap;
 import freezy.entities.v1.CategoryUOMMapV1;
 import freezy.services.CategoryUOMMapService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
 import java.util.List;
 
 @RestController
@@ -27,15 +29,15 @@ public class CategoryUOMMapControllerV1 {
         return categoryUOMMapServiceV1.getCategoryUOMMapById(id);
     }
 
-    @PostMapping
-    public void addCategoryUOMMap(@RequestBody CategoryUOMMapV1 categoryUOMMap) {
-        categoryUOMMapServiceV1.saveCategoryUOMMap(categoryUOMMap);
+    @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void addCategoryUOMMap(@RequestBody UOMDTOV1 uomdtov1) {
+        categoryUOMMapServiceV1.saveCategoryUOMMap(uomdtov1);
     }
 
     @PutMapping("/{id}")
-    public void updateCategoryUOMMap(@PathVariable String id, @RequestBody CategoryUOMMapV1 categoryUOMMap) {
+    public void updateCategoryUOMMap(@PathVariable String id, @RequestBody UOMDTOV1 uomdtov1) {
         if (categoryUOMMapServiceV1.getCategoryUOMMapById(id) != null) {
-            categoryUOMMapServiceV1.saveCategoryUOMMap(categoryUOMMap);
+            categoryUOMMapServiceV1.saveCategoryUOMMap(uomdtov1);
         }
     }
 
