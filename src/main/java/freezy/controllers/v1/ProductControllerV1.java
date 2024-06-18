@@ -8,7 +8,10 @@ import freezy.entities.v1.ProductV1;
 import freezy.services.ProductService;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.services.v1.ProductServiceV1;
+import freezy.utils.Constants;
+import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +27,9 @@ public class ProductControllerV1 {
     @Autowired
     InventoryServiceV1 inventoryServiceV1;
 
+    @Autowired
+    UtilsService utilsService;
+
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ProductV1> getAllProducts() {
         return productServiceV1.getAllProducts();
@@ -35,13 +41,19 @@ public class ProductControllerV1 {
     }
 
     @PostMapping(value = "/save",produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void addProduct(@RequestBody ProductDTOV1 productDTO) {
-        ProductV1 product = productServiceV1.saveProduct(productDTO);
-        InventoryDTOV1 dto = new InventoryDTOV1();
-        dto.setProductId(product.getId());
-        dto.setQuantity(0);
-        dto.setUnitPrice(0);
-        inventoryServiceV1.saveInventory(dto);
+    public Object addProduct(@RequestBody ProductDTOV1 productDTO) {
+        if(null == productDTO.getCategoryId()){
+            return utilsService.sendResponse(Constants.CATEGORY_NULL, HttpStatus.OK);
+        }
+        else{
+            ProductV1 product = productServiceV1.saveProduct(productDTO);
+            InventoryDTOV1 dto = new InventoryDTOV1();
+            dto.setProductId(product.getId());
+            dto.setQuantity(0);
+            dto.setUnitPrice(0);
+            inventoryServiceV1.saveInventory(dto);
+        }
+        return null;
     }
 
     @PutMapping("/{id}")
