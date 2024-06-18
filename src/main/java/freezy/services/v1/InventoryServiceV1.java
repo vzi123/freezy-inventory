@@ -65,17 +65,17 @@ public class InventoryServiceV1 {
         return inventoryRepositoryV1.findById(id).orElse(null);
     }
 
-    public void saveInventory(InventoryDTO inventoryDTO) {
+    public void saveInventory(InventoryDTOV1 inventoryDTO) {
 
         ProductV1 product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
         InventoryV1 inventory = inventoryRepositoryV1.findByProduct(product);
         if(null == inventory){
             inventory = new InventoryV1();
             inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-            inventory.setInventory(inventoryDTO.getStock());
+            inventory.setInventory(inventoryDTO.getQuantity());
         }
         else{
-            inventory.setInventory(inventory.getInventory() + inventoryDTO.getStock());
+            inventory.setInventory(inventory.getInventory() + inventoryDTO.getQuantity());
         }
         inventory.setCreatedAt(utilsService.generateDateFormat());
         inventory.setCreatedBy(utilsService.getSuperUserV1());
@@ -85,13 +85,13 @@ public class InventoryServiceV1 {
 
         inventoryRepositoryV1.saveAndFlush(inventory);
 
-        InventoryLogV1 inventoryLog = new InventoryLogV1();
-        inventoryLog.setInventory(inventory);
-        inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-        inventoryLog.setInOut(InventoryLogEntryV1.IN);
-        inventoryLog.setComments("Procured " + inventoryDTO.getStock() + " on " + utilsService.generateDateFormat());
-        inventoryLog.setCreatedAt(utilsService.generateDateFormat());
-        inventoryLogServiceV1.saveInventoryLog(inventoryLog);
+//        InventoryLogV1 inventoryLog = new InventoryLogV1();
+//        inventoryLog.setInventory(inventory);
+//        inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+//        inventoryLog.setInOut(InventoryLogEntryV1.IN);
+//        inventoryLog.setComments("Procured " + inventoryDTO.getStock() + " on " + utilsService.generateDateFormat());
+//        inventoryLog.setCreatedAt(utilsService.generateDateFormat());
+//        inventoryLogServiceV1.saveInventoryLog(inventoryLog);
     }
 
     public void deleteInventory(String id) {

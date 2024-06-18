@@ -32,7 +32,7 @@ public class ProductServiceV1 {
         return productRepositoryV1.findById(id).orElse(null);
     }
 
-    public void saveProduct(ProductDTOV1 dto) {
+    public ProductV1 saveProduct(ProductDTOV1 dto) {
         ProductV1 productV1 = new ProductV1();
         if(null != dto){
             productV1.setId(utilsService.generateId(Constants.PRODUCT_ORDER_PREFIX));
@@ -48,6 +48,7 @@ public class ProductServiceV1 {
             }
             productRepositoryV1.saveAndFlush(productV1);
         }
+        return productV1;
     }
 
     public void deleteProduct(String id) {

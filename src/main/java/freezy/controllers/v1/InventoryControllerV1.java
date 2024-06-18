@@ -3,6 +3,7 @@ package freezy.controllers.v1;
 
 import freezy.dto.InventoryCountDTO;
 import freezy.dto.InventoryDTO;
+import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.InventoryEntryV1;
 import freezy.dto.v1.InventoryListV1;
 import freezy.entities.Inventory;
@@ -48,12 +49,12 @@ public class InventoryControllerV1 {
         inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_DEDUCT);
     }
 
-    @PutMapping("/{id}")
-    public void updateInventory(@PathVariable String id, @RequestBody InventoryDTO inventoryDTO) {
-        if (inventoryServiceV1.getInventoryById(id) != null) {
-            inventoryServiceV1.saveInventory(inventoryDTO);
-        }
-    }
+//    @PutMapping("/{id}")
+//    public void updateInventory(@PathVariable String id, @RequestBody InventoryDTOV1 inventoryDTO) {
+//        if (inventoryServiceV1.getInventoryById(id) != null) {
+//            inventoryServiceV1.saveInventory(inventoryDTO);
+//        }
+//    }
 
     @GetMapping(value = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<InventoryCountDTO> getInventoryNumbers() {
