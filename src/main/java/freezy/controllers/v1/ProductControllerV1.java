@@ -30,8 +30,8 @@ public class ProductControllerV1 {
     }
 
     @PostMapping(value = "/save",produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ProductV1 addProduct(@RequestBody ProductDTOV1 productDTO) {
-        return productServiceV1.saveProduct(productDTO);
+    public void addProduct(@RequestBody ProductDTOV1 productDTO) {
+        productServiceV1.saveProduct(productDTO);
     }
 
     @PutMapping("/{id}")
