@@ -38,6 +38,9 @@ public class InventoryServiceV1 {
     @Autowired
     CategoryUOMMapServiceV1 categoryUOMMapServiceV1;
 
+    @Autowired
+    ConsignmentServiceV1 consignmentServiceV1;
+
     public List<InventoryListV1> getAllInventory() {
 
         List<InventoryV1> inventoryV1s = inventoryRepositoryV1.findAllByOrderByCreatedAtDesc();
@@ -115,6 +118,9 @@ public class InventoryServiceV1 {
     public void incrementOrDecrementInventory(InventoryEntryV1 inventoryEntryV1, String inOrOut){
 //        try{
         if(null != inventoryEntryV1 && inventoryEntryV1.getInventories().size() > 0){
+            ConsignmentV1 consignmentV1 = createConsignment(inventoryEntryV1, inOrOut);
+            Integer totalAmount = 0;
+
             for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getInventories()){
                 ProductV1 product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
                 InventoryV1 inventory = inventoryRepositoryV1.findByProduct(product);
@@ -133,6 +139,7 @@ public class InventoryServiceV1 {
                 }
                 inventory.setUpdatedAt(utilsService.generateDateFormat());
                 inventory.setUpdatedBy(utilsService.getSuperUserV1());
+                totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
 
                 inventoryRepositoryV1.saveAndFlush(inventory);
 
@@ -157,13 +164,48 @@ public class InventoryServiceV1 {
                 }
 
                 inventoryLog.setCreatedAt(utilsService.generateDateFormat());
+                inventoryLog.setConsignment(consignmentV1);
                 inventoryLogServiceV1.saveInventoryLog(inventoryLog);
             }
+            consignmentV1.setTotalAmount(totalAmount);
+            consignmentServiceV1.saveConsignment(consignmentV1);
         }
 
 //        }
 //        catch (Exception e){
 //
 //        }
+    }
+
+    private ConsignmentV1 createConsignment(InventoryEntryV1 inventoryEntryV1, String inOrOut) {
+        ConsignmentV1 consignmentV1;
+        try{
+            consignmentV1 = new ConsignmentV1();
+            InventoryLogEntryV1 direction = null;
+            consignmentV1.setComments(inventoryEntryV1.getComments());
+            consignmentV1.setCreatedAt(utilsService.generateDateFormat());
+            consignmentV1.setId(utilsService.generateId(Constants.CONSIGNMENT_PREFIX));
+            if(null != inOrOut && inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
+                direction = InventoryLogEntryV1.IN;
+            }
+            else{
+                direction = InventoryLogEntryV1.OUT;
+            }
+            consignmentV1.setInOut(direction);
+            consignmentV1.setProductCount(inventoryEntryV1.getInventories().size());
+            consignmentV1.setCreatedFor(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
+            consignmentV1.setTotalAmount(0);
+            consignmentServiceV1.saveConsignment(consignmentV1);
+            return consignmentV1;
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public List<InventoryLogV1> getLogsByConsignment(String consignmentId) {
+        ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
+        return inventoryLogServiceV1.getAllLogsByConsignment(consignmentV1);
     }
 }

@@ -48,4 +48,7 @@ public class User {
     @Column
     @JsonIgnore
     private String city;
+
+    @Column
+    private String gstId;
 }

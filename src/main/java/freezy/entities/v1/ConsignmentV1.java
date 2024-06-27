@@ -1,25 +1,20 @@
 package freezy.entities.v1;
 
-
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
-@Table(name = "inventory_log_v1")
+@Table(name = "consignment_v1")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InventoryLogV1 {
+public class ConsignmentV1 {
+
     @Id
     private String id;
-
-    @ManyToOne
-    @JoinColumn(name = "inventory_id")
-    private InventoryV1 inventory;
 
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "in_out")
@@ -29,21 +24,17 @@ public class InventoryLogV1 {
     private String comments;
 
     @Column
-    private Integer quantity;
-
-    @Column
-    private Integer updatedStock;
+    private Integer productCount;
 
     @Column(nullable = false)
     @JoinColumn(name = "created_at")
     private String createdAt;
 
     @Column(nullable = false)
-    private Integer amount;
+    private Integer totalAmount;
 
     @ManyToOne
-    @JoinColumn(name = "consignment_id")
-    private ConsignmentV1 consignment;
-
-
+    @JoinColumn(name = "created_for")
+    @JsonIgnore
+    private UserV1 createdFor;
 }

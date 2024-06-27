@@ -7,6 +7,7 @@ import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.InventoryEntryV1;
 import freezy.dto.v1.InventoryListV1;
 import freezy.entities.Inventory;
+import freezy.entities.v1.InventoryLogV1;
 import freezy.entities.v1.InventoryV1;
 import freezy.services.InventoryService;
 import freezy.services.v1.InventoryServiceV1;
@@ -47,6 +48,11 @@ public class InventoryControllerV1 {
     @PostMapping(value = "/outward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void saveOuwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
         inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_DEDUCT);
+    }
+
+    @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<InventoryLogV1> getLogsByConsignment(@PathVariable String consignmentId) {
+        return inventoryServiceV1.getLogsByConsignment(consignmentId);
     }
 
 //    @PutMapping("/{id}")

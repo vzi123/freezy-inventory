@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+  <title>Inventory Quotation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #6183cb;
+      margin: 0;
+      padding: 0;
+    }
+
+    #container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      align-self: center;
+    }
+
+    h2 {
+      color: #333;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #dddddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #949FB6FF;
+    }
+
+    .item-table tfoot td {
+      width: 100%;
+      background-color: #69b7d7;
+      text-align: right;
+    }
+    .item-table tfoot .label {
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      padding: 10px;
+      color: #777777;
+      font-size: 12px;
+    }
+
+    p {
+      margin-top: 20px;
+    }
+
+    img {
+      max-width: 200px;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #007bff;
+      color: #ffffff;
+      padding: 10px;
+      text-align: center;
+      border-radius: 8px 8px 0 0;
+    }
+    .content {
+      padding: 20px;
+    }
+    .item-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .item-table th, .item-table td {
+      border: 1px solid #48518f;
+      padding: 8px;
+      text-align: left;
+    }
+    .item-table th {
+      background-color: #8ba5e3;
+    }
+    .item-table tfoot td {
+      padding: 8px;
+      text-align: left;
+    }
+    .item-table tfoot .label {
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      padding: 10px;
+      color: #777777;
+      font-size: 12px;
+    }
+    img {
+      max-width: 40%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+<div id="container">
+  <!-- Company Logo -->
+  <div style="text-align: center; margin-bottom: 20px;">
+    <img th:src="@{classpath:static/images/kc-icon.png}" alt="Company Logo" />
+  </div>
+  <!--<div class="header">
+    <h1>Quotation</h1>
+  </div>-->
+  <!-- Customer Details -->
+  <div class="content">
+    <table>
+      <thead>
+      <tr>
+        <th style="text-align: center">Delivery Challan</th>
+
+      </tr>
+      </thead>
+    </table>
+    <table>
+      <tbody style="width:100%">
+      <tr>
+        <td>Delivery Challan No:</td>
+        <td th:text="${dcId}">John Doe</td>
+      </tr>
+      <tr>
+        <td>Customer Name:</td>
+        <td th:text="${customer.name}">John Doe</td>
+      </tr>
+      <tr>
+        <td>Customer Phone No.:</td>
+        <td th:text="${customer.phoneNumber}">john@example.com</td>
+      </tr>
+      <tr>
+        <td>Address:</td>
+        <td th:text="${customer.address}">1234567890</td>
+      </tr>
+      <!-- Add more customer details as needed -->
+      </tbody>
+    </table>
+
+    <hr></hr>
+
+    <!-- Table for dynamic population -->
+    <table class="item-table">
+      <thead>
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Quantity</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item : ${dcs}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.description}"></td>
+        <td th:text="${item.quantity}"></td>
+      </tr>
+      </tbody>
+
+    </table>
+    <p>If you have any questions or need further assistance, feel free to contact us.</p>
+    <p>Best Regards,<br>Team Freazy</br></p>
+  </div>
+</div>
+</body>
+</html>

@@ -46,4 +46,7 @@ public class UserV1 {
 
     @Column
     private String city;
+
+    @Column
+    private String gstId;
 }

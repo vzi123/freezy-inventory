@@ -2,7 +2,12 @@ package freezy.services;
 
 import freezy.dto.QuotationMailDTO;
 import freezy.dto.UserDTO;
+import freezy.dto.v1.DCDTOV1;
 import freezy.entities.*;
+import freezy.entities.v1.ConsignmentV1;
+import freezy.entities.v1.InventoryLogV1;
+import freezy.entities.v1.UserV1;
+import freezy.repository.v1.InventoryLogRepositoryV1;
 import freezy.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +35,9 @@ public class PdfGenerateService {
 
     @Autowired
     private TemplateEngine templateEngine;
+
+    @Autowired
+    InventoryLogRepositoryV1 inventoryLogRepositoryV1;
 
 
     public File generatePdfFile(String templateName, Map<String, Object> data, String pdfFileName) throws Exception{
@@ -95,5 +103,30 @@ public class PdfGenerateService {
         data.put("discountPercentage", discount);
         data.put("projectName", projectName);
         return generatePdfFile("newQuotation", data,quotation.getId() + "-" + "quotation.pdf");
+    }
+
+    public File generateDeliveryChallan(ConsignmentV1 consignmentV1) throws Exception{
+        UserV1 customer = consignmentV1.getCreatedFor();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName(customer.getFirst_name());
+        userDTO.setEmail(customer.getEmail());
+        userDTO.setPhoneNumber(customer.getPhone_number());
+        userDTO.setAddress(customer.getAddress());
+
+        Map<String, Object> data = new HashMap<String, Object>();
+        List<DCDTOV1> logs = new ArrayList<DCDTOV1>();
+        List<InventoryLogV1> inventoryLogV1s = inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
+        for (InventoryLogV1 log: inventoryLogV1s
+        ) {
+            DCDTOV1 dcdto = new DCDTOV1();
+            dcdto.setId(log.getInventory().getProduct().getId());
+            dcdto.setDescription(log.getInventory().getProduct().getName());
+            dcdto.setQuantity(log.getQuantity().toString());
+            logs.add(dcdto);
+        }
+        data.put("dcs", logs);
+        data.put("customer",userDTO);
+        data.put("dcId", consignmentV1.getId());
+        return generatePdfFile("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
     }
 }

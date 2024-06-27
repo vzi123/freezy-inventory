@@ -1,6 +1,7 @@
 package freezy.services.v1;
 
 import freezy.entities.InventoryLog;
+import freezy.entities.v1.ConsignmentV1;
 import freezy.entities.v1.InventoryLogV1;
 import freezy.repository.InventoryLogRepository;
 import freezy.repository.v1.InventoryLogRepositoryV1;
@@ -29,6 +30,10 @@ public class InventoryLogServiceV1 {
 
     public void deleteInventoryLog(String id) {
         inventoryLogRepositoryV1.deleteById(id);
+    }
+
+    public List<InventoryLogV1> getAllLogsByConsignment(ConsignmentV1 consignmentV1){
+        return inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
     }
 
 
