@@ -48,8 +48,7 @@ public class InventoryControllerV1 {
     @PostMapping(value = "/inward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Object saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
-        Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
-        if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
+         if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
             return utilsService.sendResponse(Constants.INVALID_IDU, HttpStatus.OK);
         }
         if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
