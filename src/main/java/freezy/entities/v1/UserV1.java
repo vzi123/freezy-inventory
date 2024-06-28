@@ -49,4 +49,7 @@ public class UserV1 {
 
     @Column
     private String gstId;
+
+    @Column
+    private String pincode;
 }

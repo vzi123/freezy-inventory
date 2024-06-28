@@ -45,5 +45,11 @@ public class InventoryLogV1 {
     @JoinColumn(name = "consignment_id")
     private ConsignmentV1 consignment;
 
+    @Column
+    private String iduSerial;
+
+    @Column
+    private String oduSerial;
+
 
 }

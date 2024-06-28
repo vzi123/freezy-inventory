@@ -7,6 +7,7 @@ import static java.util.Map.entry;
 public class Constants {
     public static final String PURCHASE_ORDER_PREFIX = "PO";
     public static final String CATEGORY_ORDER_PREFIX = "CAT";
+    public static final String BRAND_ORDER_PREFIX = "BR";
     public static final String CONSIGNMENT_PREFIX = "DC";
     public static final String UOM_ORDER_PREFIX = "UOM";
     public static final String USER_PREFIX = "US";
@@ -31,6 +32,9 @@ public class Constants {
     public static final String VENDOR = "supplier";
     public static final String PO_BUDGET_STOCK_ERROR = "The Budget or Stock of new Sales Order is more than the ones in Purchase Order";
     public static final String CATEGORY_NULL = "The Category for a Product cannot be null";
+    public static final String SUCCESS = "Success";
+    public static final String INVALID_ODU = "The entered ODU Serial does not exist";
+    public static final String INVALID_IDU = "The entered IDU Serial already exists";
     public static final String PO_SO_BUDGET_STOCK_ERROR = "The total Budget and Stock of all Sales Orders in this Purchase Order is more than the one in Purchase Order";
     public static final String PO_SO_PRODUCT_ERROR = "The Products in the new Sales Order do not match the products in the Purchase Order";
     public static final String PO_STATE_NOT_ALLOWED = "Sales Order can be created only after the Purchase Order is approved";

@@ -36,6 +36,10 @@ public class InventoryLogServiceV1 {
         return inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
     }
 
+    public List<InventoryLogV1> getAllLogsByIduSerial(String iduSerial){
+        return inventoryLogRepositoryV1.findAllByIduSerial(iduSerial);
+    }
+
 
 
 }

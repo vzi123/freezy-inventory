@@ -7,6 +7,15 @@ public class ProductDTOV1 {
     String categoryId;
     Integer cost;
     String hsnNo;
+    String brandId;
+
+    public String getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(String brandId) {
+        this.brandId = brandId;
+    }
 
     public String getHsnNo() {
         return hsnNo;

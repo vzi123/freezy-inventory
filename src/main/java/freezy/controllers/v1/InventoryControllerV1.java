@@ -12,7 +12,9 @@ import freezy.entities.v1.InventoryV1;
 import freezy.services.InventoryService;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.utils.Constants;
+import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,9 @@ import java.util.List;
 public class InventoryControllerV1 {
     @Autowired
     private InventoryServiceV1 inventoryServiceV1;
+
+    @Autowired
+    UtilsService utilsService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<InventoryListV1> getAllInventory() {
@@ -41,13 +46,27 @@ public class InventoryControllerV1 {
     }
 
     @PostMapping(value = "/inward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
+    public Object saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
+        Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
+        Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
+        if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
+            return utilsService.sendResponse(Constants.INVALID_IDU, HttpStatus.OK);
+        }
+        if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
+            return utilsService.sendResponse(Constants.INVALID_IDU, HttpStatus.OK);
+        }
         inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC);
+        return utilsService.sendResponse(Constants.SUCCESS, HttpStatus.OK);
     }
 
     @PostMapping(value = "/outward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void saveOuwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
+    public Object saveOuwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
+        Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
+        if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
+            return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
+        }
         inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_DEDUCT);
+        return utilsService.sendResponse(Constants.SUCCESS, HttpStatus.OK);
     }
 
     @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

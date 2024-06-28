@@ -24,6 +24,9 @@ public class ProductServiceV1 {
     @Autowired
     CategoryServiceV1 categoryServiceV1;
 
+    @Autowired
+    BrandServiceV1 brandServiceV1;
+
     public List<ProductV1> getAllProducts() {
         return productRepositoryV1.findAll();
     }
@@ -40,6 +43,7 @@ public class ProductServiceV1 {
             productV1.setCategory(categoryServiceV1.getCategoryById(dto.getCategoryId()));
             productV1.setDescription(dto.getDescription());
             productV1.setHsnNo(dto.getHsnNo());
+            productV1.setBrand(brandServiceV1.getBrandById(dto.getBrandId()));
             if(null != dto.getCost()){
                 productV1.setCost(dto.getCost());
             }

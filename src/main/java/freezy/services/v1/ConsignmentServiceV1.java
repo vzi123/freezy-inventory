@@ -31,7 +31,6 @@ public class ConsignmentServiceV1 {
     }
 
     public void saveConsignment(ConsignmentV1 consignmentV1) {
-//        consignmentV1.setId(utilsService.generateId(Constants.CONSIGNMENT_PREFIX));
         consignmentRepositoryV1.saveAndFlush(consignmentV1);
     }
 

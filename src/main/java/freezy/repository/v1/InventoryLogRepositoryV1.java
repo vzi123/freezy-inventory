@@ -13,4 +13,6 @@ public interface InventoryLogRepositoryV1 extends JpaRepository<InventoryLogV1, 
     List<InventoryLogV1> findAllByOrderByCreatedAtDesc();
 
     List<InventoryLogV1> findAllByConsignment(ConsignmentV1 consignmentV1);
+
+    List<InventoryLogV1> findAllByIduSerial(String iduSerial);
 }

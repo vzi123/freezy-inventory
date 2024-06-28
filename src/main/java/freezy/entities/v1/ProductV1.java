@@ -34,5 +34,10 @@ public class ProductV1 {
     @JsonManagedReference
     private CategoryV1 category;
 
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    @JsonManagedReference
+    private BrandV1 brand;
+
 }
 

@@ -154,13 +154,15 @@ public class InventoryServiceV1 {
                 inventoryLog.setUpdatedStock(inventory.getInventory());
                 if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
                     inventoryLog.setInOut(InventoryLogEntryV1.IN);
-                    inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " on " + utilsService.generateDateFormat() + " from " +
-                            userFirstName + " " + userLastName + " , Comments: " + inventoryEntryV1.getComments());
+                    inventoryLog.setIduSerial(inventoryDTO.getIduSerial());
+                    inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + "(IDU: " + inventoryDTO.getIduSerial() + ") on " + utilsService.generateDateFormat() + " from " +
+                            userFirstName + ", Notes: " + inventoryEntryV1.getComments());
                 }
                 else{
                     inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-                    inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + " on " + utilsService.generateDateFormat() + " for " +
-                            userFirstName + " " + userLastName + " , Comments: " + inventoryEntryV1.getComments());
+                    inventoryLog.setOduSerial(inventoryDTO.getOduSerial());
+                    inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + "(ODU: " + inventoryDTO.getOduSerial() + ") on " + utilsService.generateDateFormat() + " for " +
+                            userFirstName + ", Notes: " + inventoryEntryV1.getComments());
                 }
 
                 inventoryLog.setCreatedAt(utilsService.generateDateFormat());
@@ -207,5 +209,28 @@ public class InventoryServiceV1 {
     public List<InventoryLogV1> getLogsByConsignment(String consignmentId) {
         ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
         return inventoryLogServiceV1.getAllLogsByConsignment(consignmentV1);
+    }
+
+    public Boolean validateODU(InventoryEntryV1 inventoryEntryV1) {
+        for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getOduSerial());
+            if(null == logs || logs.size() ==0) return false;
+        }
+        return true;
+    }
+
+    public Boolean validateIDU(InventoryEntryV1 inventoryEntryV1) {
+        for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getIduSerial());
+            if(null != logs && logs.size() > 0) return false;
+        }
+        return true;
+    }
+
+    public Boolean validateQuantity(InventoryEntryV1 inventoryEntryV1) {
+        for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
+            if(null != dto && dto.getQuantity() > 1) return false;
+        }
+        return true;
     }
 }
