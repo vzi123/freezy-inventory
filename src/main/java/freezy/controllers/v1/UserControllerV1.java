@@ -50,6 +50,8 @@ public class UserControllerV1 {
         user.setCity(dto.getCity());
         user.setId(utilsService.generateId(Constants.USER_PREFIX));
         user.setCreated_at(utilsService.generateDateFormat());
+        user.setPincode(dto.getPincode());
+        user.setGstId(dto.getGstId());
         userServiceV1.saveUser(user);
     }
 
@@ -65,6 +67,8 @@ public class UserControllerV1 {
         user.setCity(dto.getCity());
         user.setId(utilsService.generateId(Constants.USER_PREFIX));
         user.setCreated_at(utilsService.generateDateFormat());
+        user.setPincode(dto.getPincode());
+        user.setGstId(dto.getGstId());
         userServiceV1.saveUser(user);
     }
 

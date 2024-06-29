@@ -6,6 +6,24 @@ public class UserDTO {
     String phoneNumber;
     String address;
     String city;
+    String pincode;
+    String gstId;
+
+    public String getPincode() {
+        return pincode;
+    }
+
+    public void setPincode(String pincode) {
+        this.pincode = pincode;
+    }
+
+    public String getGstId() {
+        return gstId;
+    }
+
+    public void setGstId(String gstId) {
+        this.gstId = gstId;
+    }
 
     public String getCity() {
         return city;

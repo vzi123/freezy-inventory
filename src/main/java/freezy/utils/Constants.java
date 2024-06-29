@@ -35,6 +35,7 @@ public class Constants {
     public static final String SUCCESS = "Success";
     public static final String INVALID_ODU = "The entered ODU Serial does not exist";
     public static final String INVALID_IDU = "The entered IDU Serial already exists";
+    public static final String INVALID_QUANTITY_IDU = "Two units cannot have the same IDU number";
     public static final String PO_SO_BUDGET_STOCK_ERROR = "The total Budget and Stock of all Sales Orders in this Purchase Order is more than the one in Purchase Order";
     public static final String PO_SO_PRODUCT_ERROR = "The Products in the new Sales Order do not match the products in the Purchase Order";
     public static final String PO_STATE_NOT_ALLOWED = "Sales Order can be created only after the Purchase Order is approved";
