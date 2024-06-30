@@ -29,12 +29,19 @@ public class CategoryServiceV1 {
         return categoryRepositoryV1.findById(id).orElse(null);
     }
 
-    public void saveCategory(CategoryV1 category) {
+    public Boolean saveCategory(CategoryV1 category) {
+        CategoryV1 categoryV1 = categoryRepositoryV1.findByName(category.getName());
+        if(null != categoryV1)return false;
         category.setId(utilsService.generateId(Constants.CATEGORY_ORDER_PREFIX));
         categoryRepositoryV1.saveAndFlush(category);
+        return true;
     }
 
     public void deleteCategory(String id) {
         categoryRepositoryV1.deleteById(id);
+    }
+
+    public CategoryV1 getCategoriesByType(String type){
+        return categoryRepositoryV1.findByName(type);
     }
 }

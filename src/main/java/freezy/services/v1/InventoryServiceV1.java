@@ -154,14 +154,14 @@ public class InventoryServiceV1 {
                 inventoryLog.setUpdatedStock(inventory.getInventory());
                 if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
                     inventoryLog.setInOut(InventoryLogEntryV1.IN);
-                    inventoryLog.setIduSerial(inventoryDTO.getIduSerial());
-                    inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + "(IDU: " + inventoryDTO.getIduSerial() + ") on " + utilsService.generateDateFormat() + " from " +
+                    inventoryLog.setIduSerial(inventoryDTO.getSerialNo());
+                    inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + "(IDU: " + inventoryDTO.getSerialNo() + ") on " + utilsService.generateDateFormat() + " from " +
                             userFirstName + ", Notes: " + inventoryEntryV1.getComments());
                 }
                 else{
                     inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-                    inventoryLog.setOduSerial(inventoryDTO.getOduSerial());
-                    inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + "(ODU: " + inventoryDTO.getOduSerial() + ") on " + utilsService.generateDateFormat() + " for " +
+                    inventoryLog.setOduSerial(inventoryDTO.getSerialNo());
+                    inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + "(ODU: " + inventoryDTO.getSerialNo() + ") on " + utilsService.generateDateFormat() + " for " +
                             userFirstName + ", Notes: " + inventoryEntryV1.getComments());
                 }
 
@@ -213,7 +213,7 @@ public class InventoryServiceV1 {
 
     public Boolean validateODU(InventoryEntryV1 inventoryEntryV1) {
         for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
-            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getOduSerial());
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
             if(null == logs || logs.size() ==0) return false;
         }
         return true;
@@ -221,7 +221,7 @@ public class InventoryServiceV1 {
 
     public Boolean validateIDU(InventoryEntryV1 inventoryEntryV1) {
         for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
-            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getIduSerial());
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
             if(null != logs && logs.size() > 0) return false;
         }
         return true;

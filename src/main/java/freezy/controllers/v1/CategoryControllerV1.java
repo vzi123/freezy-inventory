@@ -8,9 +8,12 @@ import freezy.services.v1.CategoryServiceV1;
 import freezy.utils.Constants;
 import freezy.utils.FreazyWhatsAppService;
 import freezy.utils.StockAlertEmailService;
+import freezy.utils.UtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +32,9 @@ public class CategoryControllerV1 {
     @Autowired
     StockAlertEmailService stockAlertEmailService;
 
+    @Autowired
+    UtilsService utilsService;
+
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CategoryV1> getAllCategories() {
 
@@ -43,8 +49,12 @@ public class CategoryControllerV1 {
     }
 
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void addCategory(@RequestBody CategoryV1 category) {
-        categoryServiceV1.saveCategory(category);
+    public ResponseEntity addCategory(@RequestBody CategoryV1 category) {
+        Boolean isValidCategory  = categoryServiceV1.saveCategory(category);
+        if(isValidCategory != null && isValidCategory.equals(Boolean.FALSE)){
+            return utilsService.sendResponse(Constants.INVALID_CATEGORY, HttpStatus.OK);
+        }
+        return utilsService.sendResponse(Constants.SUCCESS, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

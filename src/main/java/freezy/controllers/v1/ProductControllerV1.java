@@ -5,6 +5,7 @@ import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.ProductDTOV1;
 import freezy.entities.Product;
 import freezy.entities.v1.ProductV1;
+import freezy.entities.v1.UserV1;
 import freezy.services.ProductService;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.services.v1.ProductServiceV1;
@@ -66,5 +67,11 @@ public class ProductControllerV1 {
     @DeleteMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public void deleteProduct(@PathVariable String id) {
         productServiceV1.deleteProduct(id);
+    }
+
+    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ProductV1> getProductsByCategory(@RequestParam(required = false) String type) {
+
+        return productServiceV1.getProductsByCategory(type);
     }
 }

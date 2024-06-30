@@ -34,6 +34,7 @@ public class Constants {
     public static final String CATEGORY_NULL = "The Category for a Product cannot be null";
     public static final String SUCCESS = "Success";
     public static final String INVALID_ODU = "The entered ODU Serial does not exist";
+    public static final String INVALID_CATEGORY = "The entered Category Name already exists";
     public static final String INVALID_IDU = "The entered IDU Serial already exists";
     public static final String INVALID_QUANTITY_IDU = "Two units cannot have the same IDU number";
     public static final String PO_SO_BUDGET_STOCK_ERROR = "The total Budget and Stock of all Sales Orders in this Purchase Order is more than the one in Purchase Order";

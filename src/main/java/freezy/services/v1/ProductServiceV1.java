@@ -3,14 +3,15 @@ package freezy.services.v1;
 
 import freezy.dto.v1.ProductDTOV1;
 import freezy.entities.Product;
+import freezy.entities.v1.CategoryV1;
 import freezy.entities.v1.ProductV1;
-import freezy.repository.ProductRepository;
 import freezy.repository.v1.ProductRepositoryV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,6 +58,15 @@ public class ProductServiceV1 {
 
     public void deleteProduct(String id) {
         productRepositoryV1.deleteById(id);
+    }
+
+    public List<ProductV1> getProductsByCategory(String type) {
+        List<ProductV1> productV1s = new ArrayList<>();
+        CategoryV1 categoryV1 = categoryServiceV1.getCategoriesByType(type);
+        if(null != categoryV1){
+            productV1s = productRepositoryV1.findAllByCategory(categoryV1);
+        }
+        return productV1s;
     }
 
     // Other methods as needed
