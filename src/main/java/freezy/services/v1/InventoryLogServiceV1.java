@@ -4,6 +4,7 @@ import freezy.entities.InventoryLog;
 import freezy.entities.v1.ConsignmentV1;
 import freezy.entities.v1.InventoryLogV1;
 import freezy.repository.InventoryLogRepository;
+import freezy.repository.v1.ConsignmentRepositoryV1;
 import freezy.repository.v1.InventoryLogRepositoryV1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,16 @@ public class InventoryLogServiceV1 {
     @Autowired
     private InventoryLogRepositoryV1 inventoryLogRepositoryV1;
 
+    @Autowired
+    ConsignmentRepositoryV1 consignmentRepositoryV1;
+
     public List<InventoryLogV1> getAllInventoryLogs() {
         return inventoryLogRepositoryV1.findAllByOrderByCreatedAtDesc();
+    }
+
+    public List<InventoryLogV1> getAllInventoryLogsByConsignment(String consignmentId) {
+        ConsignmentV1 consignmentV1 = consignmentRepositoryV1.findById(consignmentId).orElse(null);
+        return inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
     }
 
     public InventoryLogV1 getInventoryLogById(String id) {

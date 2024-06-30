@@ -23,7 +23,7 @@ public class ConsignmentServiceV1 {
     UtilsService utilsService;
 
     public List<ConsignmentV1> getAllConsignments() {
-        return consignmentRepositoryV1.findAll();
+        return consignmentRepositoryV1.findAllByOrderByCreatedAtDesc();
     }
 
     public ConsignmentV1 getConsignmentById(String id) {

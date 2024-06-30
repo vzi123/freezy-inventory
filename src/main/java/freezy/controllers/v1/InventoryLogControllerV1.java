@@ -32,4 +32,9 @@ public class InventoryLogControllerV1 {
       return inventoryLogServiceV1.getInventoryLogById(id);
 
     }
+
+    @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<InventoryLogV1> getLogsByConsignment(@PathVariable String consignmentId) {
+        return inventoryLogServiceV1.getAllInventoryLogsByConsignment(consignmentId);
+    }
 }
