@@ -6,6 +6,7 @@ import freezy.dto.InventoryDTO;
 import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.InventoryEntryV1;
 import freezy.dto.v1.InventoryListV1;
+import freezy.entities.Inventory;
 import freezy.entities.Product;
 import freezy.entities.v1.*;
 import freezy.repository.v1.InventoryRepositoryV1;
@@ -41,22 +42,37 @@ public class InventoryServiceV1 {
     @Autowired
     ConsignmentServiceV1 consignmentServiceV1;
 
+    @Autowired
+    AccessoryServiceV1 accessoryServiceV1;
+
+    @Autowired
+    ServicesServiceV1 servicesServiceV1;
+
     public List<InventoryListV1> getAllInventory() {
 
         List<InventoryV1> inventoryV1s = inventoryRepositoryV1.findAllByOrderByCreatedAtDesc();
         List<InventoryListV1> inventories = new ArrayList<>();
         for(InventoryV1 v1: inventoryV1s){
-            if(v1.getProduct() != null){
+            if(v1.getProduct() != null || v1.getAccessory() != null){
                 InventoryListV1 listV1 = new InventoryListV1();
+                CategoryUOMMapV1 categoryUOMMapV1 = null;
                 listV1.setInventory(v1.getInventory());
                 listV1.setId(v1.getId());
-                listV1.setProduct(v1.getProduct());
-                CategoryUOMMapV1 categoryUOMMapV1 = categoryUOMMapServiceV1.getUOMByCategory(v1.getProduct().getCategory().getId());
-                if(!categoryUOMMapV1.getMultiple().equalsIgnoreCase("1")){
+                if(null != v1.getProduct()){
+                    listV1.setProduct(v1.getProduct());
+                    listV1.setType(InventoryTypeV1.PRODUCT.name());
+                    categoryUOMMapV1 = categoryUOMMapServiceV1.getUOMByCategory(v1.getProduct().getCategory().getId());
+                }
+                if(null != v1.getAccessory()){
+                    listV1.setAccessory(v1.getAccessory());
+                    listV1.setType(InventoryTypeV1.ACCESSORY.name());
+                    categoryUOMMapV1 = categoryUOMMapServiceV1.getUOMByCategory(v1.getAccessory().getCategory().getId());
+                }
+                if(null != categoryUOMMapV1 && !categoryUOMMapV1.getMultiple().equalsIgnoreCase("1")){
                     listV1.setUom(categoryUOMMapV1.getMultiple() + " " + categoryUOMMapV1.getUomv1().name());
                 }
                 else{
-                    listV1.setUom(categoryUOMMapV1.getUomv1().name());
+                    if(null != categoryUOMMapV1)listV1.setUom(categoryUOMMapV1.getUomv1().name());
                 }
                 inventories.add(listV1);
             }
@@ -70,21 +86,41 @@ public class InventoryServiceV1 {
 
     public void saveInventory(InventoryDTOV1 inventoryDTO) {
 
-        ProductV1 product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
-        InventoryV1 inventory = inventoryRepositoryV1.findByProduct(product);
-        if(null == inventory){
-            inventory = new InventoryV1();
-            inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-            inventory.setInventory(inventoryDTO.getQuantity());
+        InventoryV1 inventory = null;
+        if(inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
+            ProductV1 product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
+            inventory = inventoryRepositoryV1.findByProduct(product);
+            if(null == inventory){
+                inventory = new InventoryV1();
+                inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+                inventory.setInventory(inventoryDTO.getQuantity());
+            }
+            else{
+                inventory.setInventory(inventory.getInventory() + inventoryDTO.getQuantity());
+            }
+            inventory.setCreatedAt(utilsService.generateDateFormat());
+            inventory.setCreatedBy(utilsService.getSuperUserV1());
+            inventory.setProduct(product);
+            inventory.setUpdatedAt(utilsService.generateDateFormat());
+            inventory.setUpdatedBy(utilsService.getSuperUserV1());
         }
-        else{
-            inventory.setInventory(inventory.getInventory() + inventoryDTO.getQuantity());
+        if(inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.ACCESSORY.name())){
+            AccessoryV1 accessoryV1 = accessoryServiceV1.getAccessoryById(inventoryDTO.getAccessoryId());
+            inventory = inventoryRepositoryV1.findByAccessory(accessoryV1);
+            if(null == inventory){
+                inventory = new InventoryV1();
+                inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+                inventory.setInventory(inventoryDTO.getQuantity());
+            }
+            else{
+                inventory.setInventory(inventory.getInventory() + inventoryDTO.getQuantity());
+            }
+            inventory.setCreatedAt(utilsService.generateDateFormat());
+            inventory.setCreatedBy(utilsService.getSuperUserV1());
+            inventory.setAccessory(accessoryV1);
+            inventory.setUpdatedAt(utilsService.generateDateFormat());
+            inventory.setUpdatedBy(utilsService.getSuperUserV1());
         }
-        inventory.setCreatedAt(utilsService.generateDateFormat());
-        inventory.setCreatedBy(utilsService.getSuperUserV1());
-        inventory.setProduct(product);
-        inventory.setUpdatedAt(utilsService.generateDateFormat());
-        inventory.setUpdatedBy(utilsService.getSuperUserV1());
 
         inventoryRepositoryV1.saveAndFlush(inventory);
 
@@ -122,52 +158,16 @@ public class InventoryServiceV1 {
             Integer totalAmount = 0;
 
             for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getInventories()){
-                ProductV1 product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
-                InventoryV1 inventory = inventoryRepositoryV1.findByProduct(product);
-                if(null == inventory){
-                    inventory = new InventoryV1();
-                    inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+                if(null != inventoryDTO && inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
+                    createProductEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
-                inventory.setCreatedAt(utilsService.generateDateFormat());
-                inventory.setCreatedBy(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
-                inventory.setProduct(product);
-                if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
-                    inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) + inventoryDTO.getQuantity());
+                else if(null != inventoryDTO && inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.ACCESSORY.name()))
+                {
+                    createAccessoryEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
-                else{
-                    inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) - inventoryDTO.getQuantity());
+                else if(null != inventoryDTO && inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.SERVICE.name())){
+                    createServiceEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
-                inventory.setUpdatedAt(utilsService.generateDateFormat());
-                inventory.setUpdatedBy(utilsService.getSuperUserV1());
-                totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
-
-                inventoryRepositoryV1.saveAndFlush(inventory);
-
-                InventoryLogV1 inventoryLog = new InventoryLogV1();
-                UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
-                String userFirstName = (null != user.getFirst_name())?user.getFirst_name():" ";
-                String userLastName = " ";
-                inventoryLog.setInventory(inventory);
-                inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-                inventoryLog.setAmount(inventoryDTO.getUnitPrice());
-                inventoryLog.setQuantity(inventoryDTO.getQuantity());
-                inventoryLog.setUpdatedStock(inventory.getInventory());
-                if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
-                    inventoryLog.setInOut(InventoryLogEntryV1.IN);
-                    inventoryLog.setIduSerial(inventoryDTO.getSerialNo());
-                    inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + "(IDU: " + inventoryDTO.getSerialNo() + ") on " + utilsService.generateDateFormat() + " from " +
-                            userFirstName + ", Notes: " + inventoryEntryV1.getComments());
-                }
-                else{
-                    inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-                    inventoryLog.setOduSerial(inventoryDTO.getSerialNo());
-                    inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + "(ODU: " + inventoryDTO.getSerialNo() + ") on " + utilsService.generateDateFormat() + " for " +
-                            userFirstName + ", Notes: " + inventoryEntryV1.getComments());
-                }
-
-                inventoryLog.setCreatedAt(utilsService.generateDateFormat());
-                inventoryLog.setConsignment(consignmentV1);
-                inventoryLogServiceV1.saveInventoryLog(inventoryLog);
             }
             consignmentV1.setTotalAmount(totalAmount);
             consignmentServiceV1.saveConsignment(consignmentV1);
@@ -194,7 +194,7 @@ public class InventoryServiceV1 {
                 direction = InventoryLogEntryV1.OUT;
             }
             consignmentV1.setInOut(direction);
-            consignmentV1.setProductCount(inventoryEntryV1.getInventories().size());
+            consignmentV1.setItemCount(inventoryEntryV1.getInventories().size());
             consignmentV1.setCreatedFor(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
             consignmentV1.setTotalAmount(0);
             consignmentServiceV1.saveConsignment(consignmentV1);
@@ -221,16 +221,173 @@ public class InventoryServiceV1 {
 
     public Boolean validateIDU(InventoryEntryV1 inventoryEntryV1) {
         for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
-            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
-            if(null != logs && logs.size() > 0) return false;
+            if(dto.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
+                List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
+                if(null != logs && logs.size() > 0) return false;
+            }
         }
         return true;
     }
 
     public Boolean validateQuantity(InventoryEntryV1 inventoryEntryV1) {
         for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
-            if(null != dto && dto.getQuantity() > 1) return false;
+            if(dto.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
+                if(null != dto && dto.getQuantity() > 1) return false;
+            }
         }
         return true;
     }
+
+    public void createProductEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
+
+        Integer totalAmount = 0;
+        ProductV1 product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
+        InventoryV1 inventory = inventoryRepositoryV1.findByProduct(product);
+        if(null == inventory){
+            inventory = new InventoryV1();
+            inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+        }
+        inventory.setType(InventoryTypeV1.valueOf(inventoryDTO.getType()));
+        inventory.setCreatedAt(utilsService.generateDateFormat());
+        inventory.setCreatedBy(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
+        inventory.setProduct(product);
+        if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
+            inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) + inventoryDTO.getQuantity());
+        }
+        else{
+            inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) - inventoryDTO.getQuantity());
+        }
+        inventory.setUpdatedAt(utilsService.generateDateFormat());
+        inventory.setUpdatedBy(utilsService.getSuperUserV1());
+        totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
+
+        inventoryRepositoryV1.saveAndFlush(inventory);
+
+        InventoryLogV1 inventoryLog = new InventoryLogV1();
+        UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
+        String userFirstName = (null != user.getFirst_name())?user.getFirst_name():" ";
+        String userLastName = " ";
+        inventoryLog.setInventory(inventory);
+        inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+        inventoryLog.setAmount(inventoryDTO.getUnitPrice());
+        inventoryLog.setQuantity(inventoryDTO.getQuantity());
+        inventoryLog.setUpdatedStock(inventory.getInventory());
+        inventoryLog.setType(InventoryTypeV1.PRODUCT);
+        if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
+            inventoryLog.setInOut(InventoryLogEntryV1.IN);
+            inventoryLog.setIduSerial(inventoryDTO.getSerialNo());
+            inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " " + product.getName() + " (IDU: " + inventoryDTO.getSerialNo() + ") on " + utilsService.generateDateFormat() + " from " +
+                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+        }
+        else{
+            inventoryLog.setInOut(InventoryLogEntryV1.OUT);
+            inventoryLog.setOduSerial(inventoryDTO.getSerialNo());
+            inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + " " + product.getName() + "(ODU: " + inventoryDTO.getSerialNo() + ") on " + utilsService.generateDateFormat() + " for " +
+                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+        }
+
+        inventoryLog.setCreatedAt(utilsService.generateDateFormat());
+        inventoryLog.setConsignment(consignmentV1);
+        inventoryLogServiceV1.saveInventoryLog(inventoryLog);
+
+    }
+    public void createAccessoryEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
+        Integer totalAmount = 0;
+        AccessoryV1 accessoryV1 = accessoryServiceV1.getAccessoryById(inventoryDTO.getAccessoryId());
+        InventoryV1 inventory = inventoryRepositoryV1.findByAccessory(accessoryV1);
+        if(null == inventory){
+            inventory = new InventoryV1();
+            inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+        }
+        inventory.setType(InventoryTypeV1.valueOf(inventoryDTO.getType()));
+        inventory.setCreatedAt(utilsService.generateDateFormat());
+        inventory.setCreatedBy(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
+        inventory.setAccessory(accessoryV1);
+        if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
+            inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) + inventoryDTO.getQuantity());
+        }
+        else{
+            inventory.setInventory(((null != inventory.getInventory())?inventory.getInventory():0) - inventoryDTO.getQuantity());
+        }
+        inventory.setUpdatedAt(utilsService.generateDateFormat());
+        inventory.setUpdatedBy(utilsService.getSuperUserV1());
+        totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
+
+        inventoryRepositoryV1.saveAndFlush(inventory);
+
+        InventoryLogV1 inventoryLog = new InventoryLogV1();
+        UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
+        String userFirstName = (null != user.getFirst_name())?user.getFirst_name():" ";
+        String userLastName = " ";
+        inventoryLog.setInventory(inventory);
+        inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+        inventoryLog.setAmount(inventoryDTO.getUnitPrice());
+        inventoryLog.setQuantity(inventoryDTO.getQuantity());
+        inventoryLog.setUpdatedStock(inventory.getInventory());
+        inventoryLog.setType(InventoryTypeV1.ACCESSORY);
+        if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
+            inventoryLog.setInOut(InventoryLogEntryV1.IN);
+            inventoryLog.setIduSerial(inventoryDTO.getSerialNo());
+            inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " " +  accessoryV1.getName() + " on " + utilsService.generateDateFormat() + " from " +
+                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+        }
+        else{
+            inventoryLog.setInOut(InventoryLogEntryV1.OUT);
+            inventoryLog.setOduSerial(inventoryDTO.getSerialNo());
+            inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + " " +  accessoryV1.getName() + " on " + utilsService.generateDateFormat() + " for " +
+                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+        }
+
+        inventoryLog.setCreatedAt(utilsService.generateDateFormat());
+        inventoryLog.setConsignment(consignmentV1);
+        inventoryLogServiceV1.saveInventoryLog(inventoryLog);
+    }
+
+    public void createServiceEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
+        Integer totalAmount = 0;
+        ServiceV1 serviceV1 = servicesServiceV1.getServiceById(inventoryDTO.getServiceId());
+//        InventoryV1 inventory = inventoryRepositoryV1.findByService(serviceV1);
+//        if(null == inventory){
+//            inventory = new InventoryV1();
+//            inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+//        }
+//        inventory.setType(InventoryTypeV1.valueOf(inventoryDTO.getType()));
+//        inventory.setCreatedAt(utilsService.generateDateFormat());
+//        inventory.setCreatedBy(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
+//        inventory.setService(serviceV1);
+//        inventory.setInventory(0);
+//        inventory.setUpdatedAt(utilsService.generateDateFormat());
+//        inventory.setUpdatedBy(utilsService.getSuperUserV1());
+//        totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
+//
+//        inventoryRepositoryV1.saveAndFlush(inventory);
+
+        InventoryLogV1 inventoryLog = new InventoryLogV1();
+        UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
+        String userFirstName = (null != user.getFirst_name())?user.getFirst_name():" ";
+        String userLastName = " ";
+        inventoryLog.setInventory(null);
+        inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+        inventoryLog.setAmount(inventoryDTO.getUnitPrice());
+        inventoryLog.setQuantity(inventoryDTO.getQuantity());
+        inventoryLog.setUpdatedStock(0);
+        inventoryLog.setType(InventoryTypeV1.SERVICE);
+        if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_DEDUCT)){
+            inventoryLog.setInOut(InventoryLogEntryV1.OUT);
+            inventoryLog.setOduSerial("NA");
+            inventoryLog.setComments("Service of " + serviceV1.getName() + " offered on " + utilsService.generateDateFormat() + " for " +
+                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+        }
+        if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
+            inventoryLog.setInOut(InventoryLogEntryV1.IN);
+            inventoryLog.setOduSerial("NA");
+            inventoryLog.setComments("Service of " + serviceV1.getName() + " added on " + utilsService.generateDateFormat() + " for " +
+                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+        }
+
+        inventoryLog.setCreatedAt(utilsService.generateDateFormat());
+        inventoryLog.setConsignment(consignmentV1);
+        inventoryLogServiceV1.saveInventoryLog(inventoryLog);
+    }
+
 }

@@ -44,5 +44,15 @@ public class CategoryV1 {
     @JsonIgnore
     private List<ProductV1> products;
 
+    @OneToMany(mappedBy = "category")
+    @JsonBackReference
+    @JsonIgnore
+    private List<AccessoryV1> accessories;
+
+    @OneToMany(mappedBy = "category")
+    @JsonBackReference
+    @JsonIgnore
+    private List<ServiceV1> services;
+
     // Getters and setters
 }

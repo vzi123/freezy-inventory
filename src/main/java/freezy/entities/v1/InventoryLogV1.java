@@ -29,6 +29,9 @@ public class InventoryLogV1 {
     private String comments;
 
     @Column
+    private InventoryTypeV1 type;
+
+    @Column
     private Integer quantity;
 
     @Column

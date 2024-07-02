@@ -16,6 +16,8 @@ public class Constants {
     public static final String SALES_ORDER_ITEM_PREFIX = "SOI";
     public static final String INVENTORY_ORDER_PREFIX = "I";
     public static final String PRODUCT_ORDER_PREFIX = "PRO";
+    public static final String ACCESSORY_ORDER_PREFIX = "ACC";
+    public static final String SERVICE_ORDER_PREFIX = "SER";
     public static final String PROJECT_ORDER_PREFIX = "PR";
     public static final String PAYABLE_PREFIX = "PA";
     public static final String RECEIVABLE_PREFIX = "RE";

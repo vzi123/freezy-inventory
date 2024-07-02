@@ -6,6 +6,33 @@ public class InventoryDTOV1 {
     Integer quantity;
     Integer unitPrice;
     String serialNo;
+    String type;
+    String accessoryId;
+    String serviceId;
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getAccessoryId() {
+        return accessoryId;
+    }
+
+    public void setAccessoryId(String accessoryId) {
+        this.accessoryId = accessoryId;
+    }
 
     public String getSerialNo() {
         return serialNo;

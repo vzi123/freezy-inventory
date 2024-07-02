@@ -26,6 +26,17 @@ public class InventoryV1 {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private ProductV1 product;
+
+    @ManyToOne
+    @JoinColumn(name = "accessory_id")
+    private AccessoryV1 accessory;
+
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private ServiceV1 service;
+
+    @Column
+    private InventoryTypeV1 type;
 //
 //    @ManyToOne
 //    @JoinColumn(name = "created_by")

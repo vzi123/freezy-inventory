@@ -24,7 +24,7 @@ public class ConsignmentV1 {
     private String comments;
 
     @Column
-    private Integer productCount;
+    private Integer itemCount;
 
     @Column(nullable = false)
     @JoinColumn(name = "created_at")

@@ -118,11 +118,11 @@ public class PdfGenerateService {
         List<InventoryLogV1> inventoryLogV1s = inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
         for (InventoryLogV1 log: inventoryLogV1s
         ) {
-            DCDTOV1 dcdto = new DCDTOV1();
-            dcdto.setId(log.getInventory().getProduct().getId());
-            dcdto.setDescription(log.getInventory().getProduct().getName());
-            dcdto.setQuantity(log.getQuantity().toString());
-            logs.add(dcdto);
+//            DCDTOV1 dcdto = new DCDTOV1();
+//            dcdto.setId(log.getInventory().getProduct().getId());
+//            dcdto.setDescription(log.getInventory().getProduct().getName());
+//            dcdto.setQuantity(log.getQuantity().toString());
+//            logs.add(dcdto);
         }
         data.put("dcs", logs);
         data.put("customer",userDTO);

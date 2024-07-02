@@ -4,6 +4,7 @@ package freezy.controllers.v1;
 import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.ProductDTOV1;
 import freezy.entities.Product;
+import freezy.entities.v1.InventoryTypeV1;
 import freezy.entities.v1.ProductV1;
 import freezy.entities.v1.UserV1;
 import freezy.services.ProductService;
@@ -50,6 +51,7 @@ public class ProductControllerV1 {
             ProductV1 product = productServiceV1.saveProduct(productDTO);
             InventoryDTOV1 dto = new InventoryDTOV1();
             dto.setProductId(product.getId());
+            dto.setType(InventoryTypeV1.PRODUCT.name());
             dto.setQuantity(0);
             dto.setUnitPrice(0);
             inventoryServiceV1.saveInventory(dto);
