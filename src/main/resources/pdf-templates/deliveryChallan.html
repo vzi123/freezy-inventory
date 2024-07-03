@@ -137,15 +137,18 @@
     <h1>Quotation</h1>
   </div>-->
   <!-- Customer Details -->
+  <div class="heading">
+    <h2>Delivery Challan</h2>
+  </div>
   <div class="content">
-    <table>
-      <thead>
-      <tr>
-        <th style="text-align: center">Delivery Challan</th>
+<!--    <table>-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--<<th style="text-align: center">Delivery Challan</th>-->
 
-      </tr>
-      </thead>
-    </table>
+<!--      </tr>-->
+<!--      </thead>-->
+<!--    </table>-->
     <table>
       <tbody style="width:100%">
       <tr>
@@ -171,8 +174,28 @@
     <hr></hr>
 
     <!-- Table for dynamic population -->
+    <h3 th:if="${not #lists.isEmpty(products)}">Products</h3>
     <table class="item-table">
-      <thead>
+      <thead th:if="${not #lists.isEmpty(products)}">
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>HSN No.</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item : ${products}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.description}"></td>
+        <td th:text="${item.hsnNo}"></td>
+      </tr>
+      </tbody>
+
+    </table>
+
+    <h3 th:if="${not #lists.isEmpty(accessories)}">Accessories</h3>
+    <table class="item-table">
+      <thead th:if="${not #lists.isEmpty(accessories)}">
       <tr>
         <th>Item</th>
         <th>Description</th>
@@ -180,7 +203,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="item : ${dcs}">
+      <tr th:each="item : ${accessories}">
         <td th:text="${item.id}"></td>
         <td th:text="${item.description}"></td>
         <td th:text="${item.quantity}"></td>

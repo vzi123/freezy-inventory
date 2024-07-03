@@ -4,6 +4,15 @@ public class DCDTOV1 {
     String id;
     String description;
     String quantity;
+    String hsnNo;
+
+    public String getHsnNo() {
+        return hsnNo;
+    }
+
+    public void setHsnNo(String hsnNo) {
+        this.hsnNo = hsnNo;
+    }
 
     public String getId() {
         return id;

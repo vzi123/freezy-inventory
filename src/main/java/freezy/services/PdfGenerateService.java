@@ -4,9 +4,7 @@ import freezy.dto.QuotationMailDTO;
 import freezy.dto.UserDTO;
 import freezy.dto.v1.DCDTOV1;
 import freezy.entities.*;
-import freezy.entities.v1.ConsignmentV1;
-import freezy.entities.v1.InventoryLogV1;
-import freezy.entities.v1.UserV1;
+import freezy.entities.v1.*;
 import freezy.repository.v1.InventoryLogRepositoryV1;
 import freezy.utils.Constants;
 import org.slf4j.Logger;
@@ -114,17 +112,30 @@ public class PdfGenerateService {
         userDTO.setAddress(customer.getAddress());
 
         Map<String, Object> data = new HashMap<String, Object>();
-        List<DCDTOV1> logs = new ArrayList<DCDTOV1>();
+        List<DCDTOV1> products = new ArrayList<DCDTOV1>();
+        List<DCDTOV1> accessories = new ArrayList<DCDTOV1>();
         List<InventoryLogV1> inventoryLogV1s = inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
-        for (InventoryLogV1 log: inventoryLogV1s
-        ) {
-//            DCDTOV1 dcdto = new DCDTOV1();
-//            dcdto.setId(log.getInventory().getProduct().getId());
-//            dcdto.setDescription(log.getInventory().getProduct().getName());
-//            dcdto.setQuantity(log.getQuantity().toString());
-//            logs.add(dcdto);
+        for (InventoryLogV1 log: inventoryLogV1s) {
+            if(null != log.getType() && log.getType().equals(InventoryTypeV1.PRODUCT)){
+                DCDTOV1 dcdto = new DCDTOV1();
+                ProductV1 productV1 = log.getInventory().getProduct();
+                dcdto.setId(productV1.getId());
+                dcdto.setDescription(productV1.getName());
+                dcdto.setHsnNo(productV1.getHsnNo());
+                products.add(dcdto);
+            }
+            if(null != log.getType() && log.getType().equals(InventoryTypeV1.ACCESSORY)){
+                DCDTOV1 dcdto = new DCDTOV1();
+                AccessoryV1 accessory = log.getInventory().getAccessory();
+                dcdto.setId(accessory.getId());
+                dcdto.setDescription(accessory.getName());
+                dcdto.setQuantity(log.getQuantity().toString());
+                accessories.add(dcdto);
+            }
+
         }
-        data.put("dcs", logs);
+        data.put("products", products);
+        data.put("accessories", accessories);
         data.put("customer",userDTO);
         data.put("dcId", consignmentV1.getId());
         return generatePdfFile("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
