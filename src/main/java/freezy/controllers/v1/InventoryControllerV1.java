@@ -7,6 +7,7 @@ import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.InventoryEntryV1;
 import freezy.dto.v1.InventoryListV1;
 import freezy.entities.Inventory;
+import freezy.entities.v1.ConsignmentV1;
 import freezy.entities.v1.InventoryLogV1;
 import freezy.entities.v1.InventoryV1;
 import freezy.services.InventoryService;
@@ -55,8 +56,8 @@ public class InventoryControllerV1 {
         if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
             return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
         }
-        inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC);
-        return utilsService.sendResponse(Constants.SUCCESS, HttpStatus.OK);
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC);
+        return consignmentV1;
     }
 
     @PostMapping(value = "/outward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -65,8 +66,8 @@ public class InventoryControllerV1 {
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
             return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
         }
-        inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_DEDUCT);
-        return utilsService.sendResponse(Constants.SUCCESS, HttpStatus.OK);
+        ConsignmentV1 consignmentV1 =inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_DEDUCT);
+        return consignmentV1;
     }
 
     @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

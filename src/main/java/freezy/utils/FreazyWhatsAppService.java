@@ -17,7 +17,7 @@ public class FreazyWhatsAppService {
     public Object sendMessage(String phoneNumber, String message) {
         try {
             if (isPhoneNumberValid(phoneNumber)) {
-                Twilio.init("AC8903c55131234b42768cc0f4c60360b2", "81d1c5678e917439be647ef6e2ef1313");
+                Twilio.init("AC8903c55131234b42768cc0f4c60360b2", "c100e5a1308afeac424e89673db5f8f5");
                 PhoneNumber to = new PhoneNumber("whatsapp:"+phoneNumber);
                 PhoneNumber from = new PhoneNumber("whatsapp:+19705000909");
                 return Message.creator(to,from,"Welcome to Freazy. Your one-stop solution for all your cooling solutions.").create();

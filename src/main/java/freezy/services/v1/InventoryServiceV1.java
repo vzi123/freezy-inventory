@@ -151,36 +151,45 @@ public class InventoryServiceV1 {
         return countList;
     }
 
-    public void incrementOrDecrementInventory(InventoryEntryV1 inventoryEntryV1, String inOrOut){
+    public ConsignmentV1 incrementOrDecrementInventory(InventoryEntryV1 inventoryEntryV1, String inOrOut){
 //        try{
-        if(null != inventoryEntryV1 && inventoryEntryV1.getInventories().size() > 0){
-            ConsignmentV1 consignmentV1 = createConsignment(inventoryEntryV1, inOrOut);
+        ConsignmentV1 consignmentV1 = null;
+        if(null != inventoryEntryV1 && (inventoryEntryV1.getProducts().size() > 0 || inventoryEntryV1.getAccessories().size() > 0
+                || inventoryEntryV1.getServices().size() > 0)){
+            consignmentV1 = createConsignment(inventoryEntryV1, inOrOut);
             Integer totalAmount = 0;
 
-            for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getInventories()){
-                if(null != inventoryDTO && inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
+            for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getProducts()){
+                if(null != inventoryDTO){
                     createProductEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
-                else if(null != inventoryDTO && inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.ACCESSORY.name()))
+            }
+            for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getAccessories()){
+                if(null != inventoryDTO)
                 {
                     createAccessoryEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
-                else if(null != inventoryDTO && inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.SERVICE.name())){
+            }
+            for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getServices()){
+                if(null != inventoryDTO){
                     createServiceEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
             }
             consignmentV1.setTotalAmount(totalAmount);
             consignmentServiceV1.saveConsignment(consignmentV1);
+
         }
 
 //        }
 //        catch (Exception e){
 //
 //        }
+        return consignmentV1;
     }
 
     private ConsignmentV1 createConsignment(InventoryEntryV1 inventoryEntryV1, String inOrOut) {
         ConsignmentV1 consignmentV1;
+        Integer itemCount = 0;
         try{
             consignmentV1 = new ConsignmentV1();
             InventoryLogEntryV1 direction = null;
@@ -194,7 +203,10 @@ public class InventoryServiceV1 {
                 direction = InventoryLogEntryV1.OUT;
             }
             consignmentV1.setInOut(direction);
-            consignmentV1.setItemCount(inventoryEntryV1.getInventories().size());
+            if(null != inventoryEntryV1.getProducts())itemCount = itemCount + inventoryEntryV1.getProducts().size();
+            if(null != inventoryEntryV1.getAccessories())itemCount = itemCount + inventoryEntryV1.getAccessories().size();
+            if(null != inventoryEntryV1.getServices())itemCount = itemCount + inventoryEntryV1.getServices().size();
+            consignmentV1.setItemCount(itemCount);
             consignmentV1.setCreatedFor(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
             consignmentV1.setTotalAmount(0);
             consignmentServiceV1.saveConsignment(consignmentV1);
@@ -212,7 +224,7 @@ public class InventoryServiceV1 {
     }
 
     public Boolean validateODU(InventoryEntryV1 inventoryEntryV1) {
-        for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
+        for(InventoryDTOV1 dto: inventoryEntryV1.getProducts()){
             List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
             if(null == logs || logs.size() ==0) return false;
         }
@@ -220,20 +232,16 @@ public class InventoryServiceV1 {
     }
 
     public Boolean validateIDU(InventoryEntryV1 inventoryEntryV1) {
-        for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
-            if(dto.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
-                List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
-                if(null != logs && logs.size() > 0) return false;
-            }
+        for(InventoryDTOV1 dto: inventoryEntryV1.getProducts()){
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
+            if(null != logs && logs.size() > 0) return false;
         }
         return true;
     }
 
     public Boolean validateQuantity(InventoryEntryV1 inventoryEntryV1) {
-        for(InventoryDTOV1 dto: inventoryEntryV1.getInventories()){
-            if(dto.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
-                if(null != dto && dto.getQuantity() > 1) return false;
-            }
+        for(InventoryDTOV1 dto: inventoryEntryV1.getProducts()){
+            if(null != dto && dto.getQuantity() > 1) return false;
         }
         return true;
     }
@@ -247,7 +255,7 @@ public class InventoryServiceV1 {
             inventory = new InventoryV1();
             inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
         }
-        inventory.setType(InventoryTypeV1.valueOf(inventoryDTO.getType()));
+        inventory.setType(InventoryTypeV1.PRODUCT);
         inventory.setCreatedAt(utilsService.generateDateFormat());
         inventory.setCreatedBy(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
         inventory.setProduct(product);
@@ -299,7 +307,7 @@ public class InventoryServiceV1 {
             inventory = new InventoryV1();
             inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
         }
-        inventory.setType(InventoryTypeV1.valueOf(inventoryDTO.getType()));
+        inventory.setType(InventoryTypeV1.ACCESSORY);
         inventory.setCreatedAt(utilsService.generateDateFormat());
         inventory.setCreatedBy(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
         inventory.setAccessory(accessoryV1);
