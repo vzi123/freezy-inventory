@@ -40,7 +40,7 @@ public class ConsignmentControllerV1 {
         return consignmentServiceV1.getAllConsignments();
     }
 
-    @GetMapping(value = "/dc/{consignmentId}", produces = MediaType.APPLICATION_PDF_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/dc/{consignmentId}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> generateDC(@PathVariable String consignmentId) throws Exception {
         File dcFile = pdfGenerateService.generateDeliveryChallan(consignmentServiceV1.getConsignmentById(consignmentId));
         HttpHeaders headers = new HttpHeaders();

@@ -45,10 +45,18 @@ public class PdfGenerateService {
         String htmlContent = templateEngine.process(templateName, context);
         try {
             Resource resource = new ClassPathResource("/pdfs/");
-            resource.getURL().getPath();
-            File yourFile = new File((resource.getURL().getPath() + pdfFileName));
+
+            String resourcePath = resource.getFile().getAbsolutePath();
+            File directory = new File(resourcePath);
+
+            // Ensure the directory exists
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            File yourFile = new File(directory, pdfFileName);
             yourFile.createNewFile();
-            FileOutputStream fileOutputStream = new FileOutputStream((resource.getURL().getPath() + pdfFileName));
+            FileOutputStream fileOutputStream = new FileOutputStream((yourFile));
             ITextRenderer renderer = new ITextRenderer();
             renderer.setDocumentFromString(htmlContent);
             renderer.layout();
