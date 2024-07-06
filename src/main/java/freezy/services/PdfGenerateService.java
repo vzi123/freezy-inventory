@@ -19,6 +19,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -73,6 +74,29 @@ public class PdfGenerateService {
     }
 
 
+
+    public byte[] generatePdfFileContents(String templateName, Map<String, Object> data, String pdfFileName) throws Exception{
+        Context context = new Context();
+        context.setVariables(data);
+
+        String htmlContent = templateEngine.process(templateName, context);
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            ITextRenderer renderer = new ITextRenderer();
+            renderer.setDocumentFromString(htmlContent);
+            renderer.layout();
+            renderer.createPDF(byteArrayOutputStream, false);
+            renderer.finishPDF();
+
+            return byteArrayOutputStream.toByteArray();
+        }  catch (FileNotFoundException e) {
+            logger.error(e.getMessage(), e);
+        } catch (DocumentException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return null;
+    }
+
+
     public File generateQuotation(Quotation quotation) throws Exception{
         User customer = quotation.getUser();
         UserDTO userDTO = new UserDTO();
@@ -111,7 +135,7 @@ public class PdfGenerateService {
         return generatePdfFile("newQuotation", data,quotation.getId() + "-" + "quotation.pdf");
     }
 
-    public File generateDeliveryChallan(ConsignmentV1 consignmentV1) throws Exception{
+    public byte[] generateDeliveryChallan(ConsignmentV1 consignmentV1) throws Exception{
         UserV1 customer = consignmentV1.getCreatedFor();
         UserDTO userDTO = new UserDTO();
         userDTO.setName(customer.getFirst_name());
@@ -146,6 +170,6 @@ public class PdfGenerateService {
         data.put("accessories", accessories);
         data.put("customer",userDTO);
         data.put("dcId", consignmentV1.getId());
-        return generatePdfFile("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
+        return generatePdfFileContents("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
     }
 }
