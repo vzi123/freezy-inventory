@@ -52,7 +52,7 @@ public class InventoryControllerV1 {
     }
 
     @PostMapping(value = "/inward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<byte[]> saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception{
+    public Object saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1){
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
         Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
         if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
@@ -62,17 +62,17 @@ public class InventoryControllerV1 {
             return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC);
-        return consignmentServiceV1.generateDC(consignmentV1.getId());
+        return consignmentV1;
     }
 
     @PostMapping(value = "/outward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object saveOuwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
+    public Object saveOuwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception {
         Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
             return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
         }
-        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_DEDUCT);
-        return consignmentV1;
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC);
+        return consignmentServiceV1.generateDC(consignmentV1.getId());
     }
 
     @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
