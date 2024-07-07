@@ -35,6 +35,5 @@ public class ConsignmentV1 {
 
     @ManyToOne
     @JoinColumn(name = "created_for")
-    @JsonIgnore
     private UserV1 createdFor;
 }
