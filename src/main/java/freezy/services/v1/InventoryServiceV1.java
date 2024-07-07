@@ -161,18 +161,18 @@ public class InventoryServiceV1 {
 
             for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getProducts()){
                 if(null != inventoryDTO){
-                    createProductEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
+                    totalAmount = totalAmount + createProductEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
             }
             for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getAccessories()){
                 if(null != inventoryDTO)
                 {
-                    createAccessoryEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
+                    totalAmount = totalAmount + createAccessoryEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
             }
             for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getServices()){
                 if(null != inventoryDTO){
-                    createServiceEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
+                    totalAmount = totalAmount + createServiceEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
             }
             consignmentV1.setTotalAmount(totalAmount);
@@ -246,7 +246,7 @@ public class InventoryServiceV1 {
         return true;
     }
 
-    public void createProductEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
+    public Integer createProductEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
 
         Integer totalAmount = 0;
         ProductV1 product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
@@ -297,9 +297,10 @@ public class InventoryServiceV1 {
         inventoryLog.setCreatedAt(utilsService.generateDateFormat());
         inventoryLog.setConsignment(consignmentV1);
         inventoryLogServiceV1.saveInventoryLog(inventoryLog);
+        return totalAmount;
 
     }
-    public void createAccessoryEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
+    public Integer createAccessoryEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
         Integer totalAmount = 0;
         AccessoryV1 accessoryV1 = accessoryServiceV1.getAccessoryById(inventoryDTO.getAccessoryId());
         InventoryV1 inventory = inventoryRepositoryV1.findByAccessory(accessoryV1);
@@ -349,9 +350,10 @@ public class InventoryServiceV1 {
         inventoryLog.setCreatedAt(utilsService.generateDateFormat());
         inventoryLog.setConsignment(consignmentV1);
         inventoryLogServiceV1.saveInventoryLog(inventoryLog);
+        return totalAmount;
     }
 
-    public void createServiceEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
+    public Integer createServiceEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
         Integer totalAmount = 0;
         ServiceV1 serviceV1 = servicesServiceV1.getServiceById(inventoryDTO.getServiceId());
 //        InventoryV1 inventory = inventoryRepositoryV1.findByService(serviceV1);
@@ -396,6 +398,7 @@ public class InventoryServiceV1 {
         inventoryLog.setCreatedAt(utilsService.generateDateFormat());
         inventoryLog.setConsignment(consignmentV1);
         inventoryLogServiceV1.saveInventoryLog(inventoryLog);
+        return totalAmount;
     }
 
 }
