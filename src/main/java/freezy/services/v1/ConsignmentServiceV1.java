@@ -6,9 +6,14 @@ import freezy.entities.v1.CategoryV1;
 import freezy.entities.v1.ConsignmentV1;
 import freezy.repository.v1.CategoryRepositoryV1;
 import freezy.repository.v1.ConsignmentRepositoryV1;
+import freezy.services.PdfGenerateService;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +26,9 @@ public class ConsignmentServiceV1 {
 
     @Autowired
     UtilsService utilsService;
+
+    @Autowired
+    PdfGenerateService pdfGenerateService;
 
     public List<ConsignmentV1> getAllConsignments() {
         return consignmentRepositoryV1.findAllByOrderByCreatedAtDesc();
@@ -36,5 +44,13 @@ public class ConsignmentServiceV1 {
 
     public void deleteConsignment(String id) {
         consignmentRepositoryV1.deleteById(id);
+    }
+
+    public ResponseEntity<byte[]> generateDC(String consignmentId) throws Exception{
+        byte[] dcFile = pdfGenerateService.generateDeliveryChallan(getConsignmentById(consignmentId));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "document.pdf");
+        return new ResponseEntity<>(dcFile, headers, HttpStatus.OK);
     }
 }

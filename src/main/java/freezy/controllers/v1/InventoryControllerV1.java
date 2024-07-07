@@ -11,12 +11,14 @@ import freezy.entities.v1.ConsignmentV1;
 import freezy.entities.v1.InventoryLogV1;
 import freezy.entities.v1.InventoryV1;
 import freezy.services.InventoryService;
+import freezy.services.v1.ConsignmentServiceV1;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +32,9 @@ public class InventoryControllerV1 {
 
     @Autowired
     UtilsService utilsService;
+
+    @Autowired
+    ConsignmentServiceV1 consignmentServiceV1;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<InventoryListV1> getAllInventory() {
@@ -47,7 +52,7 @@ public class InventoryControllerV1 {
     }
 
     @PostMapping(value = "/inward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
+    public ResponseEntity<byte[]> saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception{
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
         Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
         if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
@@ -57,7 +62,7 @@ public class InventoryControllerV1 {
             return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC);
-        return consignmentV1;
+        return consignmentServiceV1.generateDC(consignmentV1.getId());
     }
 
     @PostMapping(value = "/outward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -66,7 +71,7 @@ public class InventoryControllerV1 {
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
             return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
         }
-        ConsignmentV1 consignmentV1 =inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_DEDUCT);
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_DEDUCT);
         return consignmentV1;
     }
 

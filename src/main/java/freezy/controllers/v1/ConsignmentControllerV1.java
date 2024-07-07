@@ -42,11 +42,6 @@ public class ConsignmentControllerV1 {
 
     @GetMapping(value = "/dc/{consignmentId}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> generateDC(@PathVariable String consignmentId) throws Exception {
-        byte[] dcFile = pdfGenerateService.generateDeliveryChallan(consignmentServiceV1.getConsignmentById(consignmentId));
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("inline", "document.pdf");
-
-        return new ResponseEntity<>(dcFile, headers, HttpStatus.OK);
+        return consignmentServiceV1.generateDC(consignmentId);
     }
 }
