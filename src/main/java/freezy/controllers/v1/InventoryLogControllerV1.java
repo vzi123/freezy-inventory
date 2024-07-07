@@ -1,6 +1,7 @@
 package freezy.controllers.v1;
 
 
+import freezy.dto.v1.ConsignmentDetailsDTOV1;
 import freezy.entities.InventoryLog;
 import freezy.entities.v1.InventoryLogV1;
 import freezy.services.InventoryLogService;
@@ -34,7 +35,7 @@ public class InventoryLogControllerV1 {
     }
 
     @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<InventoryLogV1> getLogsByConsignment(@PathVariable String consignmentId) {
-        return inventoryLogServiceV1.getAllInventoryLogsByConsignment(consignmentId);
+    public ConsignmentDetailsDTOV1 getLogsByConsignment(@PathVariable String consignmentId) {
+        return inventoryLogServiceV1.getInventoryLogsByConsignment(consignmentId);
     }
 }

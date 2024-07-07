@@ -356,27 +356,27 @@ public class InventoryServiceV1 {
     public Integer createServiceEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
         Integer totalAmount = 0;
         ServiceV1 serviceV1 = servicesServiceV1.getServiceById(inventoryDTO.getServiceId());
-//        InventoryV1 inventory = inventoryRepositoryV1.findByService(serviceV1);
-//        if(null == inventory){
-//            inventory = new InventoryV1();
-//            inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-//        }
-//        inventory.setType(InventoryTypeV1.valueOf(inventoryDTO.getType()));
-//        inventory.setCreatedAt(utilsService.generateDateFormat());
-//        inventory.setCreatedBy(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
-//        inventory.setService(serviceV1);
-//        inventory.setInventory(0);
-//        inventory.setUpdatedAt(utilsService.generateDateFormat());
-//        inventory.setUpdatedBy(utilsService.getSuperUserV1());
-//        totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
-//
-//        inventoryRepositoryV1.saveAndFlush(inventory);
+        InventoryV1 inventory = inventoryRepositoryV1.findByService(serviceV1);
+        if(null == inventory){
+            inventory = new InventoryV1();
+            inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
+        }
+        inventory.setType(InventoryTypeV1.SERVICE);
+        inventory.setCreatedAt(utilsService.generateDateFormat());
+        inventory.setCreatedBy(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
+        inventory.setService(serviceV1);
+        inventory.setInventory(0);
+        inventory.setUpdatedAt(utilsService.generateDateFormat());
+        inventory.setUpdatedBy(utilsService.getSuperUserV1());
+        totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
+
+        inventoryRepositoryV1.saveAndFlush(inventory);
 
         InventoryLogV1 inventoryLog = new InventoryLogV1();
         UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
         String userFirstName = (null != user.getFirst_name())?user.getFirst_name():" ";
         String userLastName = " ";
-        inventoryLog.setInventory(null);
+        inventoryLog.setInventory(inventory);
         inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
         inventoryLog.setAmount(inventoryDTO.getUnitPrice());
         inventoryLog.setQuantity(inventoryDTO.getQuantity());
