@@ -103,4 +103,44 @@ public class UserControllerV1 {
 
         return userServiceV1.getUsersByType(type);
     }
+
+    @PostMapping(value = "/customer/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserV1 updateCustomer(@PathVariable String customerId, @RequestBody UserDTO dto) {
+        UserV1 user = userServiceV1.getUserById(customerId);
+        if(null != user){
+            user.setFirst_name(dto.getName());
+            user.setLast_name(dto.getName());
+            user.setPhone_number(dto.getPhoneNumber());
+            user.setAddress(dto.getAddress());
+            user.setEmail(dto.getEmail());
+            user.setRole(UserRoleV1.CUSTOMER);
+            user.setCity(dto.getCity());
+//            user.setId(utilsService.generateId(Constants.USER_PREFIX));
+            user.setCreated_at(utilsService.generateDateFormat());
+            user.setPincode(dto.getPincode());
+            user.setGstId(dto.getGstId());
+            userServiceV1.saveUser(user);
+        }
+        return user;
+    }
+
+    @PostMapping(value = "/supplier/{supplierId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserV1 updateSupplier(@PathVariable String supplierId, @RequestBody UserDTO dto) {
+        UserV1 user = userServiceV1.getUserById(supplierId);
+        if(null != user){
+            user.setFirst_name(dto.getName());
+            user.setLast_name(dto.getName());
+            user.setPhone_number(dto.getPhoneNumber());
+            user.setAddress(dto.getAddress());
+            user.setEmail(dto.getEmail());
+            user.setRole(UserRoleV1.SUPPLIER);
+            user.setCity(dto.getCity());
+//            user.setId(utilsService.generateId(Constants.USER_PREFIX));
+            user.setCreated_at(utilsService.generateDateFormat());
+            user.setPincode(dto.getPincode());
+            user.setGstId(dto.getGstId());
+            userServiceV1.saveUser(user);
+        }
+        return user;
+    }
 }

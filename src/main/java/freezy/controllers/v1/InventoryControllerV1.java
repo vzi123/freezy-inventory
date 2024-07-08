@@ -48,7 +48,7 @@ public class InventoryControllerV1 {
 
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
-        inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, null);
+        inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, null, null);
     }
 
     @PostMapping(value = "/inward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +61,7 @@ public class InventoryControllerV1 {
         if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
             return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
         }
-        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC);
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
         return consignmentV1;
     }
 
@@ -71,7 +71,7 @@ public class InventoryControllerV1 {
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
             return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
         }
-        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC);
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
         return consignmentServiceV1.generateDC(consignmentV1.getId());
     }
 
@@ -96,6 +96,50 @@ public class InventoryControllerV1 {
     @DeleteMapping("/{id}")
     public void deleteInventory(@PathVariable String id) {
         inventoryServiceV1.deleteInventory(id);
+    }
+
+    @PostMapping(value = "/inward/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Object editInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1, @PathVariable String consignmentId){
+        if(null != consignmentId){
+            ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
+            if(null == consignmentV1){
+                return utilsService.sendResponse(Constants.INVALID_CONSIGNMENT, HttpStatus.OK);
+            }
+            else{
+                Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
+                Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
+                if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
+                    return utilsService.sendResponse(Constants.INVALID_IDU, HttpStatus.OK);
+                }
+                if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
+                    return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
+                }
+            }
+            inventoryServiceV1.undoConsignment(consignmentV1);
+            ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, consignmentV1);
+            return consignment;
+        }
+        return null;
+    }
+
+    @PostMapping(value = "/outward/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Object editOutwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1, @PathVariable String consignmentId) throws Exception{
+        if(null != consignmentId){
+            ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
+            if(null == consignmentV1){
+                return utilsService.sendResponse(Constants.INVALID_CONSIGNMENT, HttpStatus.OK);
+            }
+            else{
+                Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
+                if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
+                    return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
+                }
+            }
+            inventoryServiceV1.undoConsignment(consignmentV1);
+            ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, consignmentV1);
+            return consignmentServiceV1.generateDC(consignmentV1.getId());
+        }
+        return null;
     }
 
 }

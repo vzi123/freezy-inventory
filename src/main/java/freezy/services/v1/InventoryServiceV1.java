@@ -12,12 +12,16 @@ import freezy.entities.v1.*;
 import freezy.repository.v1.InventoryRepositoryV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class InventoryServiceV1 {
@@ -47,6 +51,7 @@ public class InventoryServiceV1 {
 
     @Autowired
     ServicesServiceV1 servicesServiceV1;
+
 
     public List<InventoryListV1> getAllInventory() {
 
@@ -151,12 +156,12 @@ public class InventoryServiceV1 {
         return countList;
     }
 
-    public ConsignmentV1 incrementOrDecrementInventory(InventoryEntryV1 inventoryEntryV1, String inOrOut){
+    public ConsignmentV1 incrementOrDecrementInventory(InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 existingConsignment){
 //        try{
-        ConsignmentV1 consignmentV1 = null;
+        ConsignmentV1 consignmentV1 = existingConsignment;
         if(null != inventoryEntryV1 && (inventoryEntryV1.getProducts().size() > 0 || inventoryEntryV1.getAccessories().size() > 0
                 || inventoryEntryV1.getServices().size() > 0)){
-            consignmentV1 = createConsignment(inventoryEntryV1, inOrOut);
+            if(null == consignmentV1)consignmentV1 = createConsignment(inventoryEntryV1, inOrOut);
             Integer totalAmount = 0;
 
             for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getProducts()){
@@ -399,6 +404,35 @@ public class InventoryServiceV1 {
         inventoryLog.setConsignment(consignmentV1);
         inventoryLogServiceV1.saveInventoryLog(inventoryLog);
         return totalAmount;
+    }
+
+    public void undoConsignment(ConsignmentV1 consignmentV1){
+        try{
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByConsignment(consignmentV1);
+            Map<String, Integer> deltaMap = new HashMap<>();
+            for(InventoryLogV1 log: logs){
+                if(log.getInOut().equals(InventoryLogEntryV1.IN)){
+                    deltaMap.put(log.getInventory().getId(), (-1) * log.getQuantity());
+                }
+                else{
+                    deltaMap.put(log.getInventory().getId(), log.getQuantity());
+                }
+                inventoryLogServiceV1.deleteInventoryLog(log.getId());
+            }
+            List<InventoryV1> updatedInventories = new ArrayList<>();
+            for(String inventoryId: deltaMap.keySet()){
+                InventoryV1 inventory = getInventoryById(inventoryId);
+                Integer currentStock = inventory.getInventory();
+                currentStock = currentStock + deltaMap.get(inventoryId);
+                inventory.setInventory(currentStock);
+                updatedInventories.add(inventory);
+            }
+            if(updatedInventories.size() > 0)inventoryRepositoryV1.saveAllAndFlush(updatedInventories);
+        }
+        catch (Exception e){
+
+        }
+
     }
 
 }
