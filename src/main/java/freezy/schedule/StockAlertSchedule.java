@@ -1,39 +1,47 @@
 package freezy.schedule;
 
-import freezy.entities.Inventory;
-import freezy.entities.StockAlerts;
-import freezy.repository.InventoryRepository;
-import freezy.repository.StockAlertsRepository;
-import freezy.utils.Constants;
-import freezy.utils.StockAlertEmailService;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
-import org.hibernate.annotations.Comment;
+import freezy.dto.v1.InventoryListV1;
+import freezy.entities.v1.InventoryTypeV1;
+import freezy.entities.v1.UserV1;
+import freezy.events.StockDetailsPublisher;
+import freezy.services.v1.InventoryServiceV1;
+import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class StockAlertSchedule {
 
     @Autowired
-    StockAlertEmailService stockAlertEmailService;
+    InventoryServiceV1 inventoryServiceV1;
+
+    @Autowired
+    StockDetailsPublisher stockDetailsPublisher;
+
+    @Autowired
+    UtilsService utilsService;
 
 
-    @Scheduled(cron = "0 */5 * ? * *")
+    @Scheduled(cron = "0 */60 * ? * *")
     public void runEvey5Minutes() {
+        System.out.println(" Here to calculate stock");
+        List<InventoryListV1> stockDetails = inventoryServiceV1.getAllInventory();
+        UserV1 superUser = utilsService.getSuperUserV1();
+        for(InventoryListV1 item: stockDetails){
+            if(null != item){
+                if(item.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
+                    stockDetailsPublisher.publishEvent(superUser.getId(), item.getProduct().getName(), item.getInventory());
+                }
+                if(item.getType().equalsIgnoreCase(InventoryTypeV1.ACCESSORY.name())){
+                    stockDetailsPublisher.publishEvent(superUser.getId(), item.getAccessory().getName(), item.getInventory());
+                }
+            }
+        }
+
         System.out.println("Current time is :: " + LocalDate.now());
     }
 

@@ -1,14 +1,20 @@
 package freezy.services.v1;
+import freezy.dto.UserDTO;
 import freezy.entities.UserRole;
 import freezy.entities.v1.UserRoleV1;
 import freezy.entities.v1.UserV1;
 import freezy.repository.v1.UserRepositoryV1;
+import freezy.utils.Constants;
+import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class UserServiceV1 {
@@ -55,5 +61,25 @@ public class UserServiceV1 {
             return userRepositoryV1.findAllByRole(role);
         }
         return null;
+    }
+
+    public UserV1 createOrUpdateUser(String userId, UserDTO dto,UserRoleV1 role){
+        UserV1 user = getUserById(userId);
+        if(null == user){
+            user = new UserV1();
+            user.setId(userId);
+        }
+        user.setFirst_name(dto.getName());
+        user.setLast_name(dto.getName());
+        user.setPhone_number(dto.getPhoneNumber());
+        user.setAddress(dto.getAddress());
+        user.setEmail(dto.getEmail());
+        user.setRole(UserRoleV1.CUSTOMER);
+        user.setCity(dto.getCity());
+        user.setCreated_at(UtilsService.generateDateFormat());
+        user.setPincode(dto.getPincode());
+        user.setGstId(dto.getGstId());
+        saveUser(user);
+        return user;
     }
 }

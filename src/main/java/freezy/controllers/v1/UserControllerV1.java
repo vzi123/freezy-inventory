@@ -38,38 +38,16 @@ public class UserControllerV1 {
         return userServiceV1.getUserById(id);
     }
 
-    @PostMapping(value = "/saveCustomer", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void saveCustomer(@RequestBody UserDTO dto) {
-        UserV1 user = new UserV1();
-        user.setFirst_name(dto.getName());
-        user.setLast_name(dto.getName());
-        user.setPhone_number(dto.getPhoneNumber());
-        user.setAddress(dto.getAddress());
-        user.setEmail(dto.getEmail());
-        user.setRole(UserRoleV1.CUSTOMER);
-        user.setCity(dto.getCity());
-        user.setId(utilsService.generateId(Constants.USER_PREFIX));
-        user.setCreated_at(utilsService.generateDateFormat());
-        user.setPincode(dto.getPincode());
-        user.setGstId(dto.getGstId());
-        userServiceV1.saveUser(user);
+    @PostMapping(value = "/customer", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserV1 saveCustomer(@RequestBody UserDTO dto) {
+        String userId = utilsService.generateId(Constants.USER_PREFIX);
+        return userServiceV1.createOrUpdateUser(userId, dto, UserRoleV1.CUSTOMER);
     }
 
-    @PostMapping(value = "/saveSupplier", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void saveSupplier(@RequestBody UserDTO dto) {
-        UserV1 user = new UserV1();
-        user.setFirst_name(dto.getName());
-        user.setLast_name(dto.getName());
-        user.setPhone_number(dto.getPhoneNumber());
-        user.setAddress(dto.getAddress());
-        user.setEmail(dto.getEmail());
-        user.setRole(UserRoleV1.SUPPLIER);
-        user.setCity(dto.getCity());
-        user.setId(utilsService.generateId(Constants.USER_PREFIX));
-        user.setCreated_at(utilsService.generateDateFormat());
-        user.setPincode(dto.getPincode());
-        user.setGstId(dto.getGstId());
-        userServiceV1.saveUser(user);
+    @PostMapping(value = "/supplier", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserV1 saveSupplier(@RequestBody UserDTO dto) {
+        String userId = utilsService.generateId(Constants.USER_PREFIX);
+        return userServiceV1.createOrUpdateUser(userId, dto, UserRoleV1.SUPPLIER);
     }
 
     @PutMapping("/{id}")
@@ -106,41 +84,11 @@ public class UserControllerV1 {
 
     @PostMapping(value = "/customer/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserV1 updateCustomer(@PathVariable String customerId, @RequestBody UserDTO dto) {
-        UserV1 user = userServiceV1.getUserById(customerId);
-        if(null != user){
-            user.setFirst_name(dto.getName());
-            user.setLast_name(dto.getName());
-            user.setPhone_number(dto.getPhoneNumber());
-            user.setAddress(dto.getAddress());
-            user.setEmail(dto.getEmail());
-            user.setRole(UserRoleV1.CUSTOMER);
-            user.setCity(dto.getCity());
-//            user.setId(utilsService.generateId(Constants.USER_PREFIX));
-            user.setCreated_at(utilsService.generateDateFormat());
-            user.setPincode(dto.getPincode());
-            user.setGstId(dto.getGstId());
-            userServiceV1.saveUser(user);
-        }
-        return user;
+        return userServiceV1.createOrUpdateUser(customerId, dto, UserRoleV1.CUSTOMER);
     }
 
     @PostMapping(value = "/supplier/{supplierId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserV1 updateSupplier(@PathVariable String supplierId, @RequestBody UserDTO dto) {
-        UserV1 user = userServiceV1.getUserById(supplierId);
-        if(null != user){
-            user.setFirst_name(dto.getName());
-            user.setLast_name(dto.getName());
-            user.setPhone_number(dto.getPhoneNumber());
-            user.setAddress(dto.getAddress());
-            user.setEmail(dto.getEmail());
-            user.setRole(UserRoleV1.SUPPLIER);
-            user.setCity(dto.getCity());
-//            user.setId(utilsService.generateId(Constants.USER_PREFIX));
-            user.setCreated_at(utilsService.generateDateFormat());
-            user.setPincode(dto.getPincode());
-            user.setGstId(dto.getGstId());
-            userServiceV1.saveUser(user);
-        }
-        return user;
+        return userServiceV1.createOrUpdateUser(supplierId, dto, UserRoleV1.SUPPLIER);
     }
 }

@@ -17,10 +17,10 @@ public class FreazyWhatsAppService {
     public Object sendMessage(String phoneNumber, String message) {
         try {
             if (isPhoneNumberValid(phoneNumber)) {
-                Twilio.init("AC8903c55131234b42768cc0f4c60360b2", "c100e5a1308afeac424e89673db5f8f5");
+                Twilio.init("AC8903c55131234b42768cc0f4c60360b2", "c15ffda4a11cf6bce82abb32e79e324a");
                 PhoneNumber to = new PhoneNumber("whatsapp:"+phoneNumber);
-                PhoneNumber from = new PhoneNumber("whatsapp:+19705000909");
-                return Message.creator(to,from,"Welcome to Freazy. Your one-stop solution for all your cooling solutions.").create();
+                PhoneNumber from = new PhoneNumber("whatsapp:+14052679902");
+                return Message.creator(to,from,message).create();
             } else {
                 throw new IllegalArgumentException(
                         "Phone number [" + phoneNumber + "] is not a valid number"

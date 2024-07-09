@@ -10,11 +10,13 @@ import freezy.entities.Inventory;
 import freezy.entities.v1.ConsignmentV1;
 import freezy.entities.v1.InventoryLogV1;
 import freezy.entities.v1.InventoryV1;
+import freezy.events.InwardCreatedPublisher;
 import freezy.services.InventoryService;
 import freezy.services.v1.ConsignmentServiceV1;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
+import org.hibernate.annotations.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,6 +37,9 @@ public class InventoryControllerV1 {
 
     @Autowired
     ConsignmentServiceV1 consignmentServiceV1;
+
+    @Autowired
+    InwardCreatedPublisher inwardCreatedPublisher;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<InventoryListV1> getAllInventory() {
@@ -62,6 +67,7 @@ public class InventoryControllerV1 {
             return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
+        inwardCreatedPublisher.publishEvent(inventoryEntryV1.getUserId(), consignmentV1.getItemCount());
         return consignmentV1;
     }
 
