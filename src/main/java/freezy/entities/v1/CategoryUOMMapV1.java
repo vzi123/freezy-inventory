@@ -25,5 +25,17 @@ public class CategoryUOMMapV1 {
 
     private String multiple;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private ProductV1 product;
+
+    @ManyToOne
+    @JoinColumn(name = "accessory_id")
+    private AccessoryV1 accessory;
+
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private ServiceV1 service;
+
     // Getters and setters
 }

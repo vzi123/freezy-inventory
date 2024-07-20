@@ -37,6 +37,10 @@ public class CategoryServiceV1 {
         return true;
     }
 
+    public CategoryV1 getCategoryByType(String type) {
+        return categoryRepositoryV1.findByName(type);
+    }
+
     public void deleteCategory(String id) {
         categoryRepositoryV1.deleteById(id);
     }

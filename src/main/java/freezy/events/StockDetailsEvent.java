@@ -2,26 +2,28 @@ package freezy.events;
 
 import org.springframework.context.ApplicationEvent;
 
+import java.util.List;
+
 public class StockDetailsEvent extends ApplicationEvent {
     String adminUserId;
-    Integer currentStock;
-    String inventoryName;
-    public StockDetailsEvent(Object source, String adminUserId, String inventoryName, Integer currentStock) {
+    List<String> header;
+    List<List<String>> inventory;
+    public StockDetailsEvent(Object source, String adminUserId, List<String> header, List<List<String>> inventory) {
         super(source);
         this.adminUserId = adminUserId;
-        this.inventoryName = inventoryName;
-        this.currentStock = currentStock;
+        this.header = header;
+        this.inventory = inventory;
     }
 
     public String getAdminUserId() {
         return adminUserId;
     }
 
-    public Integer getCurrentStock() {
-        return currentStock;
+    public List<String> getHeader() {
+        return header;
     }
 
-    public String getInventoryName() {
-        return inventoryName;
+    public List<List<String>> getInventory() {
+        return inventory;
     }
 }

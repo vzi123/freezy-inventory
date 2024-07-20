@@ -26,6 +26,15 @@ public class CategoryUOMMapServiceV1 {
     @Autowired
     CategoryServiceV1 categoryServiceV1;
 
+    @Autowired
+    ProductServiceV1 productServiceV1;
+
+    @Autowired
+    AccessoryServiceV1 accessoryServiceV1;
+
+    @Autowired
+    ServicesServiceV1 servicesServiceV1;
+
     public List<CategoryUOMMapV1> getAllCategoryUOMMaps() {
         return categoryUOMMapRepositoryV1.findAll();
     }
@@ -43,7 +52,20 @@ public class CategoryUOMMapServiceV1 {
             categoryUOMMap = new CategoryUOMMapV1();
             categoryUOMMap.setId(utilsService.generateId(Constants.UOM_ORDER_PREFIX));
         }
-        categoryUOMMap.setCategory(categoryServiceV1.getCategoryById(uomdtov1.getCategoryId()));
+        String type = null;
+        if(null != uomdtov1.getProductId()) {
+            type = Constants.PRODUCTS;
+            categoryUOMMap.setProduct(productServiceV1.getProductV1ById(uomdtov1.getProductId()));
+        }
+        if(null != uomdtov1.getAccessoryId()) {
+            type = Constants.ACCESSORIES;
+            categoryUOMMap.setAccessory(accessoryServiceV1.getAccessoryById(uomdtov1.getAccessoryId()));
+        }
+        if(null != uomdtov1.getServiceId()) {
+            type = Constants.SERVICES;
+            categoryUOMMap.setService(servicesServiceV1.getServiceById(uomdtov1.getServiceId()));
+        }
+        categoryUOMMap.setCategory(categoryServiceV1.getCategoryByType(type));
         categoryUOMMap.setUomv1(UOMV1.valueOf(uomdtov1.getUom()));
         categoryUOMMap.setMultiple(uomdtov1.getMultiple());
         categoryUOMMapRepositoryV1.saveAndFlush(categoryUOMMap);

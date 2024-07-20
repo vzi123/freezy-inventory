@@ -39,7 +39,7 @@ public class UserV1 {
 
     @Column(nullable = false)
     @JsonIgnore
-    private String created_at;
+    private String createdAt;
 
     @Column
     private String address;

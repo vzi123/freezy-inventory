@@ -1,7 +1,9 @@
 package freezy.dto.v1;
 
 public class UOMDTOV1 {
-    String categoryId;
+    String productId;
+    String accessoryId;
+    String serviceId;
     String uom;
     String multiple;
     String uomId;
@@ -14,12 +16,28 @@ public class UOMDTOV1 {
         this.uomId = uomId;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getAccessoryId() {
+        return accessoryId;
+    }
+
+    public void setAccessoryId(String accessoryId) {
+        this.accessoryId = accessoryId;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
     }
 
     public String getUom() {

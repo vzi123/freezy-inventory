@@ -130,4 +130,17 @@ public class Constants {
     );
 
     public static final String FILE_LOCATION = "/src/resources/pdfs/";
+    public static final String STOCK_TABLE = "HX396ce57994a3787587d373c6c1e88b96";
+    public static final String INWARD_CREATED = "HX6aca93cdbfddd73facce332b9b896bdf";
+    public static final String STOCK_ALERT = "HX55af1578da5f98421d2c541cc2290b39";
+    public static final String INWARD_DETAILS = "HX5bf71fc32848cbad7dfce20adf112729";
+    public static final String STOCK_DETAILS = "HX6b97eb9e92da354d12a2cd8e30715aae";
+    public static final String OUTWARD_CREATE = "HXad54e34a99658d55ef975745708c8088";
+    public static final String WELCOME_TO_FREAZY = "HX33fb0070c3cdb64f388e1cd7ea167680";
+
+    public static final String PRODUCTS = "ACs";
+    public static final String ACCESSORIES = "Accessories";
+    public static final String SERVICES = "Services";
+
+
 }

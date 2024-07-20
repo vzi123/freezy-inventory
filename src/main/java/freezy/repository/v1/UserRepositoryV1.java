@@ -21,5 +21,5 @@ public interface UserRepositoryV1 extends JpaRepository<UserV1, String>, JpaSpec
     public List<UserV1> searchByParams(@Param("firstName") String firstName, @Param("lastName") String lastName,
                                      @Param("phNo") String phNo, @Param("email") String email);
 
-    public List<UserV1> findAllByRole(UserRoleV1 userRole);
+    public List<UserV1> findAllByRoleOrderByCreatedAtDesc(UserRoleV1 userRole);
 }

@@ -11,10 +11,13 @@ import freezy.entities.v1.ConsignmentV1;
 import freezy.entities.v1.InventoryLogV1;
 import freezy.entities.v1.InventoryV1;
 import freezy.events.InwardCreatedPublisher;
+import freezy.events.OutwardCreatedEvent;
+import freezy.events.OutwardCreatedPublisher;
 import freezy.services.InventoryService;
 import freezy.services.v1.ConsignmentServiceV1;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.utils.Constants;
+import freezy.utils.StringUtils;
 import freezy.utils.UtilsService;
 import org.hibernate.annotations.Array;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,9 @@ public class InventoryControllerV1 {
 
     @Autowired
     InwardCreatedPublisher inwardCreatedPublisher;
+
+    @Autowired
+    OutwardCreatedPublisher outwardCreatedPublisher;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<InventoryListV1> getAllInventory() {
@@ -67,7 +73,7 @@ public class InventoryControllerV1 {
             return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
-        inwardCreatedPublisher.publishEvent(inventoryEntryV1.getUserId(), consignmentV1.getItemCount());
+        inwardCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(), consignmentV1.getItemCount());
         return consignmentV1;
     }
 
@@ -78,13 +84,14 @@ public class InventoryControllerV1 {
             return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
+        outwardCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), StringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
         return consignmentServiceV1.generateDC(consignmentV1.getId());
     }
 
-    @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<InventoryLogV1> getLogsByConsignment(@PathVariable String consignmentId) {
-        return inventoryServiceV1.getLogsByConsignment(consignmentId);
-    }
+//    @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public List<InventoryLogV1> getLogsByConsignment(@PathVariable String consignmentId) {
+//        return inventoryServiceV1.getLogsByConsignment(consignmentId);
+//    }
 
 //    @PutMapping("/{id}")
 //    public void updateInventory(@PathVariable String id, @RequestBody InventoryDTOV1 inventoryDTO) {

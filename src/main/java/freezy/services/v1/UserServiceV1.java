@@ -58,7 +58,7 @@ public class UserServiceV1 {
             role = UserRoleV1.SUPPLIER;
         }
         if(null != role){
-            return userRepositoryV1.findAllByRole(role);
+            return userRepositoryV1.findAllByRoleOrderByCreatedAtDesc(role);
         }
         return null;
     }
@@ -76,7 +76,7 @@ public class UserServiceV1 {
         user.setEmail(dto.getEmail());
         user.setRole(UserRoleV1.CUSTOMER);
         user.setCity(dto.getCity());
-        user.setCreated_at(UtilsService.generateDateFormat());
+        user.setCreatedAt(UtilsService.generateDateFormat());
         user.setPincode(dto.getPincode());
         user.setGstId(dto.getGstId());
         saveUser(user);

@@ -21,7 +21,7 @@ public class InventoryV1 {
     private String id;
 
     @Column(nullable = false)
-    private Integer inventory;
+    private Integer stock;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
