@@ -2,8 +2,10 @@ package freezy.controllers.v1;
 
 
 import freezy.dto.v1.ConsignmentDetailsDTOV1;
+import freezy.dto.v1.ConsignmentInfoDTO;
 import freezy.entities.InventoryLog;
 import freezy.entities.v1.InventoryLogV1;
+import freezy.repository.v1.ConsignmentRepositoryV1;
 import freezy.services.InventoryLogService;
 import freezy.services.v1.InventoryLogServiceV1;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,9 @@ public class InventoryLogControllerV1 {
     @Autowired
     private InventoryLogServiceV1 inventoryLogServiceV1;
 
+    @Autowired
+    private ConsignmentRepositoryV1 consignmentRepositoryV1;
+
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<InventoryLogV1> getAllInventoryLogs() {
 
@@ -36,6 +41,11 @@ public class InventoryLogControllerV1 {
 
     @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ConsignmentDetailsDTOV1 getLogsByConsignment(@PathVariable String consignmentId) {
-        return inventoryLogServiceV1.getInventoryLogsByConsignment(consignmentId);
+        return inventoryLogServiceV1.getInventoryLogsByConsignment(consignmentRepositoryV1.findById(consignmentId).get());
+    }
+
+    @GetMapping(value = "/consignments", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ConsignmentInfoDTO> getConsignments() {
+        return inventoryLogServiceV1.getAllConsignmentLogs();
     }
 }

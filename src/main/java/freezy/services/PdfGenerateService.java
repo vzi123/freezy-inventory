@@ -7,6 +7,8 @@ import freezy.entities.*;
 import freezy.entities.v1.*;
 import freezy.repository.v1.InventoryLogRepositoryV1;
 import freezy.utils.Constants;
+import freezy.utils.DropboxService;
+import freezy.utils.FreazyMultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.lowagie.text.DocumentException;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -37,6 +40,9 @@ public class PdfGenerateService {
 
     @Autowired
     InventoryLogRepositoryV1 inventoryLogRepositoryV1;
+
+    @Autowired
+    DropboxService dropboxService;
 
 
     public File generatePdfFile(String templateName, Map<String, Object> data, String pdfFileName) throws Exception{
@@ -170,6 +176,9 @@ public class PdfGenerateService {
         data.put("accessories", accessories);
         data.put("customer",userDTO);
         data.put("dcId", consignmentV1.getId());
+        byte[] dcFile = generatePdfFileContents("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
+        FreazyMultipartFile file = new FreazyMultipartFile(dcFile);
+        dropboxService.uploadFile(file, "/freezy/dc/");
         return generatePdfFileContents("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
     }
 }

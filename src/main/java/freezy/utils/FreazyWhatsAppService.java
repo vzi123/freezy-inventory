@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -56,42 +57,24 @@ public class FreazyWhatsAppService {
         return true;
     }
 
-    public Object sendStockMessage(String phoneNumber, List<String> headers, List<List<String>> data) {
+    public Object sendMessageWithAttachment(String phoneNumber, String message, String templateId, String fileURL) {
         try {
             if (isPhoneNumberValid(phoneNumber)) {
                 Twilio.init("AC8903c55131234b42768cc0f4c60360b2", "e1727ae514209c01e6307905a3bddae9");
                 PhoneNumber to = new PhoneNumber("whatsapp:"+phoneNumber);
-                PhoneNumber from = new PhoneNumber("MG8e1c09441f02353105e00fc419b735f4");
-                // Sample table data
-                List<List<String>> tableData = Stream.of(
-                        headers
-                ).collect(Collectors.toList());
-                tableData.addAll(data);
-
-                // Convert the table data to a formatted string
-                String header = String.join("\t", tableData.get(0));
-                String tableContent = tableData.subList(1, tableData.size()).stream()
-                        .map(row -> String.join("\t", row))
-                        .collect(Collectors.joining("\n"));
-
-                // Create the message body
-                String messageBody = String.format("Hello," +
-                        "\n\n" +
-                        "Below is the latest stock information:" +
-                        "\n\n" +
-                        "%s" +
-                        "\n" +
-                        "%s", header, tableContent);
-
-                // Send the message
+                PhoneNumber from = new PhoneNumber("whatsapp:+14052679902");//("MG8e1c09441f02353105e00fc419b735f4");
+                System.out.println("Message : " + message);
+                System.out.println("Template : " + templateId);
+                System.out.println("From : " + from.getEndpoint());
+                System.out.println("To : " + to.getEndpoint());
                 Message twilioMessage = Message.creator(
-                        to,
-                        from, messageBody)
-                        .setContentSid("HX55af1578da5f98421d2c541cc2290b39")
+                                to,
+                                from,"body")
+                        .setContentVariables(message)
+                        .setContentSid(templateId)
+                        .setMediaUrl(URI.create(fileURL))
                         .setMessagingServiceSid("MG8e1c09441f02353105e00fc419b735f4")
-                        .setBody(messageBody)
                         .create();
-
                 System.out.println("Message sent with SID: " + twilioMessage.getSid());
             } else {
                 throw new IllegalArgumentException(

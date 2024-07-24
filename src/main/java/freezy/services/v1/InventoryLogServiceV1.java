@@ -1,6 +1,7 @@
 package freezy.services.v1;
 
 import freezy.dto.v1.ConsignmentDetailsDTOV1;
+import freezy.dto.v1.ConsignmentInfoDTO;
 import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.InventoryEntryV1;
 import freezy.entities.InventoryLog;
@@ -32,8 +33,29 @@ public class InventoryLogServiceV1 {
         return inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
     }
 
-    public ConsignmentDetailsDTOV1 getInventoryLogsByConsignment(String consignmentId){
-        ConsignmentV1 consignmentV1 = consignmentRepositoryV1.findById(consignmentId).orElse(null);
+    public List<ConsignmentInfoDTO> getAllConsignmentLogs(){
+        List<ConsignmentInfoDTO> consignmentDetails = new ArrayList<>();
+        List<ConsignmentV1> consignments = consignmentRepositoryV1.findAllByOrderByCreatedAtDesc();
+        for(ConsignmentV1 consignment: consignments){
+            ConsignmentInfoDTO info = new ConsignmentInfoDTO();
+            info.setId(consignment.getId());
+            info.setInOut(consignment.getInOut());
+            info.setComments(consignment.getComments());
+            info.setCreatedFor(consignment.getCreatedFor());
+            info.setCreatedAt(consignment.getCreatedAt());
+            info.setItemCount(consignment.getItemCount());
+            info.setTotalAmount(consignment.getTotalAmount());
+            ConsignmentDetailsDTOV1 detail = getInventoryLogsByConsignment(consignment);
+            info.setServices(detail.getServices());
+            info.setProducts(detail.getProducts());
+            info.setAccessories(detail.getAccessories());
+            consignmentDetails.add(info);
+        }
+        return consignmentDetails;
+    }
+
+    public ConsignmentDetailsDTOV1 getInventoryLogsByConsignment(ConsignmentV1 consignmentV1){
+//        ConsignmentV1 consignmentV1 = consignmentRepositoryV1.findById(consignmentId).orElse(null);
         List<InventoryLogV1> logs = inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
 
         ConsignmentDetailsDTOV1 entry = new ConsignmentDetailsDTOV1();
