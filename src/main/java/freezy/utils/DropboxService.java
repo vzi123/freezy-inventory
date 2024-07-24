@@ -19,10 +19,15 @@ public class DropboxService {
     private DbxClientV2 dropboxClient;
 
     public FileMetadata uploadFile(MultipartFile file, String path) throws IOException {
-        try (InputStream in = file.getInputStream()) {
-            return dropboxClient.files().uploadBuilder(path)
+        try{
+            InputStream in = file.getInputStream();
+
+            // Upload file to Dropbox
+            FileMetadata metadata = dropboxClient.files().uploadBuilder("/freazy/dc/" + file.getOriginalFilename())
                     .withMode(WriteMode.OVERWRITE)
                     .uploadAndFinish(in);
+
+            System.out.println("File uploaded successfully: " + metadata.getPathLower());
         } catch (UploadErrorException e) {
             e.printStackTrace();
         } catch (DbxException e) {

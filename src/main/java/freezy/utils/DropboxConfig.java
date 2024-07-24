@@ -14,7 +14,7 @@ public class DropboxConfig {
 
     @Bean
     public DbxClientV2 dropboxClient() {
-        DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/spring-boot-demo")
+        DbxRequestConfig config = DbxRequestConfig.newBuilder("dropbox/freazy")
                 .withUserLocale("en_US")
                 .build();
         return new DbxClientV2(config, accessToken);
