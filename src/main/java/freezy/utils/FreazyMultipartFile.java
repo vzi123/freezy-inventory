@@ -10,14 +10,16 @@ import java.nio.file.Path;
 public class FreazyMultipartFile implements MultipartFile {
 
     private byte[] input;
+    private String name;
 
-    public FreazyMultipartFile(byte[] dcFile) {
+    public FreazyMultipartFile(byte[] dcFile, String name) {
         this.input = dcFile;
+        this.name = name;
     }
 
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 
     @Override

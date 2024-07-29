@@ -72,6 +72,35 @@ public class FreazyWhatsAppService {
                                 from,"body")
                         .setContentVariables(message)
                         .setContentSid(templateId)
+                        .setMediaUrl("https://drive.google.com/file/d/15hMcaa3WWJMw_lKzaGXifkIhDGRe2alU/view")
+                        .setMessagingServiceSid("MG8e1c09441f02353105e00fc419b735f4")
+                        .create();
+                System.out.println("Message sent with SID: " + twilioMessage.getSid());
+            } else {
+                throw new IllegalArgumentException(
+                        "Phone number [" + phoneNumber + "] is not a valid number"
+                );
+            }
+        } catch (Exception exception) {
+            logger.error(exception.getMessage());
+        }
+        return null;
+    }
+
+    public Object sendFile(String phoneNumber, String message, String templateId, String fileURL) {
+        try {
+            if (isPhoneNumberValid(phoneNumber)) {
+                Twilio.init("AC8903c55131234b42768cc0f4c60360b2", "e1727ae514209c01e6307905a3bddae9");
+                PhoneNumber to = new PhoneNumber("whatsapp:"+phoneNumber);
+                PhoneNumber from = new PhoneNumber("whatsapp:+14052679902");//("MG8e1c09441f02353105e00fc419b735f4");
+                System.out.println("Message : " + message);
+                System.out.println("Template : " + templateId);
+                System.out.println("From : " + from.getEndpoint());
+                System.out.println("To : " + to.getEndpoint());
+                Message twilioMessage = Message.creator(
+                                to,
+                                from,
+                                "Here is your PDF file!")
                         .setMediaUrl(URI.create(fileURL))
                         .setMessagingServiceSid("MG8e1c09441f02353105e00fc419b735f4")
                         .create();

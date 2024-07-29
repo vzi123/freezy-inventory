@@ -1,13 +1,14 @@
 package freezy.controllers.v1;
 
 
+import freezy.dto.v1.AccessoryDTOV1;
 import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.ProductDTOV1;
 import freezy.entities.Product;
-import freezy.entities.v1.InventoryTypeV1;
-import freezy.entities.v1.ProductV1;
-import freezy.entities.v1.UserV1;
+import freezy.entities.v1.*;
 import freezy.services.ProductService;
+import freezy.services.v1.AccessoryServiceV1;
+import freezy.services.v1.CategoryServiceV1;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.services.v1.ProductServiceV1;
 import freezy.utils.Constants;
@@ -32,6 +33,12 @@ public class ProductControllerV1 {
     @Autowired
     UtilsService utilsService;
 
+    @Autowired
+    CategoryServiceV1 categoryServiceV1;
+
+    @Autowired
+    private AccessoryServiceV1 accessoryServiceV1;
+
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ProductV1> getAllProducts() {
         return productServiceV1.getAllProducts();
@@ -48,13 +55,26 @@ public class ProductControllerV1 {
             return utilsService.sendResponse(Constants.CATEGORY_NULL, HttpStatus.OK);
         }
         else{
-            ProductV1 product = productServiceV1.saveProduct(productDTO);
-            InventoryDTOV1 dto = new InventoryDTOV1();
-            dto.setProductId(product.getId());
-            dto.setType(InventoryTypeV1.PRODUCT.name());
-            dto.setQuantity(0);
-            dto.setUnitPrice(0);
-            inventoryServiceV1.saveInventory(dto);
+            CategoryV1 category = categoryServiceV1.getCategoryById(productDTO.getCategoryId());
+            if(category.getName().equalsIgnoreCase(Constants.ACCESSORIES)){
+                AccessoryV1 accessoryV1 = accessoryServiceV1.saveAccessory(productDTO);
+                InventoryDTOV1 inventoryDTOV1 = new InventoryDTOV1();
+                inventoryDTOV1.setAccessoryId(accessoryV1.getId());
+                inventoryDTOV1.setQuantity(0);
+                inventoryDTOV1.setUnitPrice(0);
+                inventoryDTOV1.setType(InventoryTypeV1.ACCESSORY.name());
+                inventoryServiceV1.saveInventory(inventoryDTOV1);
+            }
+            if(category.getName().equalsIgnoreCase(Constants.PRODUCTS)){
+                ProductV1 product = productServiceV1.saveProduct(productDTO);
+                InventoryDTOV1 dto = new InventoryDTOV1();
+                dto.setProductId(product.getId());
+                dto.setType(InventoryTypeV1.PRODUCT.name());
+                dto.setQuantity(0);
+                dto.setUnitPrice(0);
+                inventoryServiceV1.saveInventory(dto);
+            }
+
         }
         return null;
     }

@@ -58,6 +58,25 @@ public class AccessoryServiceV1 {
         return accessory;
     }
 
+    public AccessoryV1 saveAccessory(ProductDTOV1 dto) {
+        AccessoryV1 accessory = new AccessoryV1();
+        if(null != dto){
+            accessory.setId(utilsService.generateId(Constants.ACCESSORY_ORDER_PREFIX));
+            accessory.setName(dto.getName());
+            accessory.setCategory(categoryServiceV1.getCategoryById(dto.getCategoryId()));
+            accessory.setDescription(dto.getDescription());
+            if(null != dto.getBrandId())accessory.setBrand(brandServiceV1.getBrandById(dto.getBrandId()));
+            if(null != dto.getCost()){
+                accessory.setCost(dto.getCost());
+            }
+            else{
+                accessory.setCost(0);
+            }
+            accessoryRepositoryV1.saveAndFlush(accessory);
+        }
+        return accessory;
+    }
+
     public void deleteProduct(String id) {
         accessoryRepositoryV1.deleteById(id);
     }

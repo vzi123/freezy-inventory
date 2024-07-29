@@ -5,10 +5,10 @@ import freezy.dto.UserDTO;
 import freezy.dto.v1.DCDTOV1;
 import freezy.entities.*;
 import freezy.entities.v1.*;
+import freezy.events.DCCreatedEvent;
+import freezy.events.DCCreatedPublisher;
 import freezy.repository.v1.InventoryLogRepositoryV1;
-import freezy.utils.Constants;
-import freezy.utils.DropboxService;
-import freezy.utils.FreazyMultipartFile;
+import freezy.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.lowagie.text.DocumentException;
@@ -22,10 +22,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +40,15 @@ public class PdfGenerateService {
 
     @Autowired
     DropboxService dropboxService;
+
+    @Autowired
+    DCCreatedPublisher dcCreatedPublisher;
+
+    @Autowired
+    UtilsService utilsService;
+
+    @Autowired
+    FreazyS3Service freazyS3Service;
 
 
     public File generatePdfFile(String templateName, Map<String, Object> data, String pdfFileName) throws Exception{
@@ -94,6 +100,30 @@ public class PdfGenerateService {
             renderer.finishPDF();
 
             return byteArrayOutputStream.toByteArray();
+        }  catch (FileNotFoundException e) {
+            logger.error(e.getMessage(), e);
+        } catch (DocumentException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return null;
+    }
+
+    public File generatePDFFile(String templateName, Map<String, Object> data, String pdfFileName) throws Exception{
+        Context context = new Context();
+        context.setVariables(data);
+
+        String htmlContent = templateEngine.process(templateName, context);
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            ITextRenderer renderer = new ITextRenderer();
+            renderer.setDocumentFromString(htmlContent);
+            renderer.layout();
+            renderer.createPDF(byteArrayOutputStream, false);
+            renderer.finishPDF();
+            File file = new File(pdfFileName);
+            OutputStream os = new FileOutputStream(file);
+            byteArrayOutputStream.writeTo(os);
+            os.close();
+            return file;
         }  catch (FileNotFoundException e) {
             logger.error(e.getMessage(), e);
         } catch (DocumentException e) {
@@ -177,8 +207,12 @@ public class PdfGenerateService {
         data.put("customer",userDTO);
         data.put("dcId", consignmentV1.getId());
         byte[] dcFile = generatePdfFileContents("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
-        FreazyMultipartFile file = new FreazyMultipartFile(dcFile);
-        dropboxService.uploadFile(file, "/freezy/dc/");
+        FreazyMultipartFile file = new FreazyMultipartFile(dcFile, consignmentV1.getId());
+        String link = dropboxService.uploadFile(file, consignmentV1.getId());
+        String s3Link = freazyS3Service.uploadFile(file);
+        System.out.println("Link : " + link);
+        System.out.println("S3 Link : " + s3Link);
+        dcCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(),link,userDTO.getName() );
         return generatePdfFileContents("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
     }
 }

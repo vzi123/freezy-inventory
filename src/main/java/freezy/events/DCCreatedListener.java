@@ -25,7 +25,7 @@ public class DCCreatedListener {
             UserV1 adminUser = userServiceV1.getUserById(dcCreatedEvent.getAdminUserId());
             String message = createMessageString(adminUser.getFirst_name(), dcCreatedEvent.getCustomerName());
                     //"Hi " + adminUser.getFirst_name() + ", An Outward Entry for " + outwardCreatedEvent.getCustomerName() + " for an amount Rs." + outwardCreatedEvent.getCost() + "/- has been created. Please check Freazy for more details.";
-            freazyWhatsAppService.sendMessageWithAttachment(adminUser.getPhone_number(), message, Constants.DC_SENT, dcCreatedEvent.getDcURL());
+            freazyWhatsAppService.sendFile(adminUser.getPhone_number(), message, Constants.DC_SENT, dcCreatedEvent.getDcURL());
             //Hi {{1}}, a DC for customer {{2}} is generated. Please find the PDF attached. Please check Freazy for more details.
         }
         catch (Exception e){
