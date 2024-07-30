@@ -137,7 +137,7 @@ public class Constants {
     public static final String STOCK_DETAILS = "HX6b97eb9e92da354d12a2cd8e30715aae";
     public static final String OUTWARD_CREATE = "HXad54e34a99658d55ef975745708c8088";
     public static final String WELCOME_TO_FREAZY = "HX33fb0070c3cdb64f388e1cd7ea167680";
-    public static final String DC_SENT ="HXec7c603aa70e70eaa284de6e6bc53c62";
+    public static final String DC_PDF_SENT ="HX7a61c4648463fe93f6f3a195a577ec22";
 
     public static final String PRODUCTS = "ACs";
     public static final String ACCESSORIES = "Accessories";

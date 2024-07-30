@@ -31,7 +31,7 @@ public class StockAlertSchedule {
 
 
 
-    @Scheduled(cron = "0 */30 * ? * *")
+    @Scheduled(cron = "0 0 0 * * ?", zone = "Asia/Kolkata")
     public void runEvey5Minutes() {
         System.out.println(" Here to calculate stock");
         List<InventoryListV1> stockDetails = inventoryServiceV1.getAllInventory();

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -100,11 +101,12 @@ public class FreazyWhatsAppService {
                 Message twilioMessage = Message.creator(
                                 to,
                                 from,
-                                "Here is your PDF file!")
-                        .setMediaUrl(URI.create(fileURL))
+                                "Here is the generated DC for a customer.")
                         .setMessagingServiceSid("MG8e1c09441f02353105e00fc419b735f4")
+                        .setMediaUrl(Arrays.asList(URI.create(fileURL)))
                         .create();
                 System.out.println("Message sent with SID: " + twilioMessage.getSid());
+                System.out.println("Message status: " + twilioMessage.getStatus());
             } else {
                 throw new IllegalArgumentException(
                         "Phone number [" + phoneNumber + "] is not a valid number"

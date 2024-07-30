@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -57,13 +58,13 @@ public class FreazyS3Service {
 
         // Initialize S3 presigner for generating presigned URLs
         this.presigner = S3Presigner.builder()
-                .region(Region.US_EAST_1) // Set your desired region
+                .region(Region.EU_NORTH_1) // Set your desired region
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
+        String fileName = file.getName();
 
         // Upload the file to S3
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -72,7 +73,8 @@ public class FreazyS3Service {
                 .contentType(file.getContentType())
                 .build();
 
-        s3Client.putObject(putObjectRequest, (Path) file.getInputStream());
+        s3Client.putObject(putObjectRequest,
+                RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
         // Generate a presigned URL for the uploaded file
         GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()

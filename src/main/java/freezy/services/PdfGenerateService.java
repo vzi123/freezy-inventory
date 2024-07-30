@@ -39,9 +39,6 @@ public class PdfGenerateService {
     InventoryLogRepositoryV1 inventoryLogRepositoryV1;
 
     @Autowired
-    DropboxService dropboxService;
-
-    @Autowired
     DCCreatedPublisher dcCreatedPublisher;
 
     @Autowired
@@ -208,11 +205,11 @@ public class PdfGenerateService {
         data.put("dcId", consignmentV1.getId());
         byte[] dcFile = generatePdfFileContents("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
         FreazyMultipartFile file = new FreazyMultipartFile(dcFile, consignmentV1.getId());
-        String link = dropboxService.uploadFile(file, consignmentV1.getId());
+//        String link = dropboxService.uploadFile(file, consignmentV1.getId());
         String s3Link = freazyS3Service.uploadFile(file);
-        System.out.println("Link : " + link);
+//        System.out.println("Link : " + link);
         System.out.println("S3 Link : " + s3Link);
-        dcCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(),link,userDTO.getName() );
+        dcCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(),s3Link,userDTO.getName() );
         return generatePdfFileContents("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
     }
 }
