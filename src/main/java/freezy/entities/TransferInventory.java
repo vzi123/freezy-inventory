@@ -19,7 +19,7 @@ public class TransferInventory {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Product_old productOld;
 
     @Column(nullable = false)
     private int count;

@@ -1,18 +1,21 @@
 package freezy.utils;
 
+import freezy.dto.v1.ConsignmentDetailsDTO;
+import freezy.dto.v1.GoodsDetailDTO;
 import freezy.entities.User;
-import freezy.entities.v1.UserV1;
+import freezy.entities.InventoryLogV1;
+import freezy.entities.UserV1;
 import freezy.services.UserService;
+import freezy.services.v1.InventoryLogServiceV1;
 import freezy.services.v1.UserServiceV1;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.TimeZone;
 
 
@@ -25,6 +28,9 @@ public class UtilsService {
     @Autowired
     UserServiceV1 userServiceV1;
 
+
+    @Autowired
+    InventoryLogServiceV1 inventoryLogServiceV1;
 
 
     public String generateId(String prefix){
@@ -76,4 +82,27 @@ public class UtilsService {
 //    public BigDecimal toPercentageOf(BigDecimal value, BigDecimal total) {
 //        return value.divide(total, 4, RoundingMode.HALF_UP).multiply(ONE_HUNDRED);
 //    }
+
+    public Boolean validateODU(ConsignmentDetailsDTO details) {
+        for(GoodsDetailDTO dto: details.getProducts()){
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
+            if(null == logs || logs.size() ==0) return false;
+        }
+        return true;
+    }
+
+    public Boolean validateIDU(ConsignmentDetailsDTO details) {
+        for(GoodsDetailDTO dto: details.getProducts()){
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
+            if(null != logs && logs.size() > 0) return false;
+        }
+        return true;
+    }
+
+    public Boolean validateQuantity(ConsignmentDetailsDTO details) {
+        for(GoodsDetailDTO dto: details.getProducts()){
+            if(null != dto && dto.getQuantity() > 1) return false;
+        }
+        return true;
+    }
 }

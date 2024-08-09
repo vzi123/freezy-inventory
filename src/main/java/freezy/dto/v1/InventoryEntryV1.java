@@ -5,31 +5,31 @@ import java.util.List;
 public class InventoryEntryV1 {
     String comments;
     String userId;
-    List<InventoryDTOV1> products;
-    List<InventoryDTOV1> accessories;
-    List<InventoryDTOV1> services;
+    List<GoodsDetailDTO> products;
+    List<GoodsDetailDTO> accessories;
+    List<GoodsDetailDTO> services;
 
-    public List<InventoryDTOV1> getProducts() {
+    public List<GoodsDetailDTO> getProducts() {
         return products;
     }
 
-    public void setProducts(List<InventoryDTOV1> products) {
+    public void setProducts(List<GoodsDetailDTO> products) {
         this.products = products;
     }
 
-    public List<InventoryDTOV1> getAccessories() {
+    public List<GoodsDetailDTO> getAccessories() {
         return accessories;
     }
 
-    public void setAccessories(List<InventoryDTOV1> accessories) {
+    public void setAccessories(List<GoodsDetailDTO> accessories) {
         this.accessories = accessories;
     }
 
-    public List<InventoryDTOV1> getServices() {
+    public List<GoodsDetailDTO> getServices() {
         return services;
     }
 
-    public void setServices(List<InventoryDTOV1> services) {
+    public void setServices(List<GoodsDetailDTO> services) {
         this.services = services;
     }
 

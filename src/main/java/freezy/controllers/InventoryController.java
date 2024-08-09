@@ -2,54 +2,144 @@ package freezy.controllers;
 
 
 import freezy.dto.InventoryCountDTO;
-import freezy.dto.InventoryDTO;
-import freezy.entities.Inventory;
-import freezy.services.InventoryService;
+import freezy.dto.v1.InventoryListV1;
+import freezy.entities.InventoryV1;
+import freezy.events.InwardCreatedPublisher;
+import freezy.events.OutwardCreatedPublisher;
+import freezy.services.v1.ConsignmentServiceV1;
+import freezy.services.v1.InventoryServiceV1;
+import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/v1/inventory")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class InventoryController {
     @Autowired
-    private InventoryService inventoryService;
+    private InventoryServiceV1 inventoryServiceV1;
+
+    @Autowired
+    UtilsService utilsService;
+
+    @Autowired
+    ConsignmentServiceV1 consignmentServiceV1;
+
+    @Autowired
+    InwardCreatedPublisher inwardCreatedPublisher;
+
+    @Autowired
+    OutwardCreatedPublisher outwardCreatedPublisher;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Inventory> getAllInventory() {
-        return inventoryService.getAllInventory();
+    public List<InventoryListV1> getAllInventory() {
+        return inventoryServiceV1.getAllInventory();
     }
 
     @GetMapping("/{id}")
-    public Inventory getInventoryById(@PathVariable String id) {
-        return inventoryService.getInventoryById(id);
+    public InventoryV1 getInventoryById(@PathVariable String id) {
+        return inventoryServiceV1.getInventoryById(id);
     }
 
-    @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void addInventory(@RequestBody InventoryDTO inventoryDTO) {
-        inventoryService.saveInventory(inventoryDTO);
+    /*@PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void addInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
+        inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, null, null);
     }
 
-    @PutMapping("/{id}")
-    public void updateInventory(@PathVariable String id, @RequestBody InventoryDTO inventoryDTO) {
-        if (inventoryService.getInventoryById(id) != null) {
-            inventoryService.saveInventory(inventoryDTO);
+    @PostMapping(value = "/inward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Object saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1){
+        Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
+        Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
+        if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
+            return utilsService.sendResponse(Constants.INVALID_IDU, HttpStatus.OK);
         }
+        if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
+            return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
+        }
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
+        inwardCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(), consignmentV1.getItemCount());
+        return consignmentV1;
     }
+
+    @PostMapping(value = "/outward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Object saveOuwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception {
+        Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
+        if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
+            return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
+        }
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
+        outwardCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), StringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
+        return consignmentServiceV1.generateDC(consignmentV1.getId());
+    }*/
+
+//    @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public List<InventoryLogV1> getLogsByConsignment(@PathVariable String consignmentId) {
+//        return inventoryServiceV1.getLogsByConsignment(consignmentId);
+//    }
+
+//    @PutMapping("/{id}")
+//    public void updateInventory(@PathVariable String id, @RequestBody InventoryDTOV1 inventoryDTO) {
+//        if (inventoryServiceV1.getInventoryById(id) != null) {
+//            inventoryServiceV1.saveInventory(inventoryDTO);
+//        }
+//    }
 
     @GetMapping(value = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<InventoryCountDTO> getInventoryNumbers() {
-        return inventoryService.getInventoryCount();
+        return inventoryServiceV1.getInventoryCount();
     }
 
 
     @DeleteMapping("/{id}")
     public void deleteInventory(@PathVariable String id) {
-        inventoryService.deleteInventory(id);
+        inventoryServiceV1.deleteInventory(id);
     }
+
+    /*@PostMapping(value = "/inward/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Object editInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1, @PathVariable String consignmentId){
+        if(null != consignmentId){
+            ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
+            if(null == consignmentV1){
+                return utilsService.sendResponse(Constants.INVALID_CONSIGNMENT, HttpStatus.OK);
+            }
+            else{
+                Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
+                Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
+                if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
+                    return utilsService.sendResponse(Constants.INVALID_IDU, HttpStatus.OK);
+                }
+                if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
+                    return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
+                }
+            }
+            inventoryServiceV1.undoConsignment(consignmentV1);
+            ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, consignmentV1);
+            return consignment;
+        }
+        return null;
+    }
+
+    @PostMapping(value = "/outward/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Object editOutwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1, @PathVariable String consignmentId) throws Exception{
+        if(null != consignmentId){
+            ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
+            if(null == consignmentV1){
+                return utilsService.sendResponse(Constants.INVALID_CONSIGNMENT, HttpStatus.OK);
+            }
+            else{
+                Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
+                if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
+                    return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
+                }
+            }
+            inventoryServiceV1.undoConsignment(consignmentV1);
+            ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, consignmentV1);
+            return consignmentServiceV1.generateDC(consignmentV1.getId());
+        }
+        return null;
+    }*/
 
 }

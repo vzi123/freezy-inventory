@@ -22,8 +22,14 @@ public class SalesOrderItems {
     private SalesOrder salesOrder;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
+    @ManyToOne
+    @JoinColumn(name = "accessory_id")
+    private Accessory accessory;
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private Service service;
 
     @Column(nullable = false)
     private Integer quantity;

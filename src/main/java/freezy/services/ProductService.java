@@ -2,6 +2,7 @@ package freezy.services;
 
 
 import freezy.entities.Product;
+import freezy.entities.Product_old;
 import freezy.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

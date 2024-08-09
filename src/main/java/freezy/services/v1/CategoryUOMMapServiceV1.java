@@ -3,10 +3,8 @@ package freezy.services.v1;
 
 
 import freezy.dto.v1.UOMDTOV1;
-import freezy.entities.CategoryUOMMap;
-import freezy.entities.v1.CategoryUOMMapV1;
-import freezy.entities.v1.UOMV1;
-import freezy.repository.CategoryUOMMapRepository;
+import freezy.entities.CategoryUOMMapV1;
+import freezy.entities.UOMV1;
 import freezy.repository.v1.CategoryUOMMapRepositoryV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;

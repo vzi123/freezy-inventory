@@ -1,21 +1,17 @@
 package freezy.services.v1;
 
 
-import freezy.dto.v1.AccessoryDTOV1;
 import freezy.dto.v1.ServiceDTOV1;
-import freezy.entities.v1.AccessoryV1;
-import freezy.entities.v1.ServiceV1;
-import freezy.repository.v1.AccessoryRepositoryV1;
+import freezy.entities.Service;
 import freezy.repository.v1.ServiceRepositoryV1;
 import freezy.repository.v1.ServiceTierRepositoryV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@org.springframework.stereotype.Service
 public class ServicesServiceV1 {
     @Autowired
     private ServiceRepositoryV1 serviceRepositoryV1;
@@ -31,16 +27,16 @@ public class ServicesServiceV1 {
 
 
 
-    public List<ServiceV1> getAllServices() {
+    public List<Service> getAllServices() {
         return serviceRepositoryV1.findAll();
     }
 
-    public ServiceV1 getServiceById(String id) {
+    public Service getServiceById(String id) {
         return serviceRepositoryV1.findById(id).orElse(null);
     }
 
-    public ServiceV1 saveService(ServiceDTOV1 dto) {
-        ServiceV1 service = new ServiceV1();
+    public Service saveService(ServiceDTOV1 dto) {
+        Service service = new Service();
         if(null != dto){
             service.setId(utilsService.generateId(Constants.SERVICE_ORDER_PREFIX));
             service.setName(dto.getName());

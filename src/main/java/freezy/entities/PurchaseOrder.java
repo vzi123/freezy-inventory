@@ -20,25 +20,25 @@ public class PurchaseOrder {
     @Id
     private String id;
 
-    public User getUser() {
-        return user;
-    }
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
-    private String userPersona;
+    private UserRole userRole;
 
-    @Column
+    @Column(nullable = false)
     private Integer budget;
 
     @Column(nullable = false)
-    private String status;
+    private PurchaseOrderStatus status;
+
+    @Column(nullable = true)
+    private Double discount;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(name = "project_id")
     private Project project;
 
     @ManyToOne
@@ -48,6 +48,9 @@ public class PurchaseOrder {
     @JoinColumn(name = "created_at")
     @Column(nullable = false)
     private String createdAt;
+
+    @Column
+    private String comments;
 
     @OneToMany(mappedBy = "purchaseOrder")
     private List<PurchaseOrderItems> purchaseOrderItems;
@@ -59,19 +62,4 @@ public class PurchaseOrder {
     @JsonManagedReference
     private List<SalesOrder> salesOrders;
 
-    private Integer discount;
-
-    private String comments;
-
-    public String toString(){
-        return this.id;
-    }
-
-    public List<PurchaseOrderItems> getPurchaseOrderItems() {
-        return purchaseOrderItems;
-    }
-
-    public void setPurchaseOrderItems(List<PurchaseOrderItems> purchaseOrderItems) {
-        this.purchaseOrderItems = purchaseOrderItems;
-    }
 }

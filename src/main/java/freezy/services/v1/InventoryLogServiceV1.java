@@ -1,14 +1,11 @@
 package freezy.services.v1;
 
-import freezy.dto.v1.ConsignmentDetailsDTOV1;
-import freezy.dto.v1.ConsignmentInfoDTO;
-import freezy.dto.v1.InventoryDTOV1;
-import freezy.dto.v1.InventoryEntryV1;
-import freezy.entities.InventoryLog;
-import freezy.entities.v1.*;
-import freezy.repository.InventoryLogRepository;
+import freezy.entities.Consignment;
+import freezy.entities.InventoryLogV1;
 import freezy.repository.v1.ConsignmentRepositoryV1;
 import freezy.repository.v1.InventoryLogRepositoryV1;
+import freezy.repository.v1.ProductRepositoryV1;
+import freezy.repository.v1.UserRepositoryV1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +21,21 @@ public class InventoryLogServiceV1 {
     @Autowired
     ConsignmentRepositoryV1 consignmentRepositoryV1;
 
+    @Autowired
+    UserRepositoryV1 userRepositoryV1;
+
+    @Autowired
+    ProductRepositoryV1 productRepositoryV1;
+
     public List<InventoryLogV1> getAllInventoryLogs() {
         return inventoryLogRepositoryV1.findAllByOrderByCreatedAtDesc();
     }
 
     public List<InventoryLogV1> getAllInventoryLogsByConsignment(String consignmentId) {
-        ConsignmentV1 consignmentV1 = consignmentRepositoryV1.findById(consignmentId).orElse(null);
-        return inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
+        Consignment consignment = consignmentRepositoryV1.findById(consignmentId).orElse(null);
+        return inventoryLogRepositoryV1.findAllByConsignment(consignment);
     }
-
+/*
     public List<ConsignmentInfoDTO> getAllConsignmentLogs(){
         List<ConsignmentInfoDTO> consignmentDetails = new ArrayList<>();
         List<ConsignmentV1> consignments = consignmentRepositoryV1.findAllByOrderByCreatedAtDesc();
@@ -43,7 +46,6 @@ public class InventoryLogServiceV1 {
             info.setComments(consignment.getComments());
             info.setCreatedFor(consignment.getCreatedFor());
             info.setCreatedAt(consignment.getCreatedAt());
-            info.setItemCount(consignment.getItemCount());
             info.setTotalAmount(consignment.getTotalAmount());
             ConsignmentDetailsDTOV1 detail = getInventoryLogsByConsignment(consignment);
             info.setServices(detail.getServices());
@@ -68,17 +70,17 @@ public class InventoryLogServiceV1 {
         List<InventoryLogV1> services = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.SERVICE);
         if(null != products){
             for(InventoryLogV1 log: products){
-                productV1s.add(log.getInventory().getProduct());
+                productV1s.add(log.getProduct());
             }
         }
         if(null != accessories){
             for(InventoryLogV1 log: accessories){
-                accessoryV1s.add(log.getInventory().getAccessory());
+                accessoryV1s.add(log.getAccessory());
             }
         }
         if(null != services){
             for(InventoryLogV1 log: services){
-                serviceV1s.add(log.getInventory().getService());
+                serviceV1s.add(log.getService());
             }
         }
 
@@ -87,7 +89,7 @@ public class InventoryLogServiceV1 {
         entry.setAccessories(accessoryV1s);
         return entry;
 
-    }
+    }*/
 
 
     public InventoryLogV1 getInventoryLogById(String id) {
@@ -102,8 +104,8 @@ public class InventoryLogServiceV1 {
         inventoryLogRepositoryV1.deleteById(id);
     }
 
-    public List<InventoryLogV1> getAllLogsByConsignment(ConsignmentV1 consignmentV1){
-        return inventoryLogRepositoryV1.findAllByConsignment(consignmentV1);
+    public List<InventoryLogV1> getAllLogsByConsignment(Consignment consignment){
+        return inventoryLogRepositoryV1.findAllByConsignment(consignment);
     }
 
     public List<InventoryLogV1> getAllLogsByIduSerial(String iduSerial){
@@ -111,5 +113,22 @@ public class InventoryLogServiceV1 {
     }
 
 
+    public List<InventoryLogV1> getAllLogsByUser(String userId){
+        List<Consignment> consignments = consignmentRepositoryV1.findAllByCreatedFor(userRepositoryV1.findById(userId).get());
+        return inventoryLogRepositoryV1.findAllByConsignmentIn(consignments);
+    }
+
+    public List<InventoryLogV1> getLogsByProduct(String productId){
+        return inventoryLogRepositoryV1.findAllByProduct(productRepositoryV1.findById(productId).get());
+    }
+
+    public List<String> getIDUsForAProduct(String productId) {
+        List<String> idus = new ArrayList<>();
+        List<InventoryLogV1> logs =  inventoryLogRepositoryV1.findAllByProduct(productRepositoryV1.findById(productId).get());
+        for(InventoryLogV1 log: logs){
+            idus.add(log.getIduSerial());
+        }
+        return idus;
+    }
 
 }

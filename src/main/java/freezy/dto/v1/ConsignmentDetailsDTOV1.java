@@ -1,48 +1,48 @@
 package freezy.dto.v1;
 
-import freezy.entities.v1.AccessoryV1;
-import freezy.entities.v1.ConsignmentV1;
-import freezy.entities.v1.ProductV1;
-import freezy.entities.v1.ServiceV1;
+import freezy.entities.Accessory;
+import freezy.entities.Consignment;
+import freezy.entities.Product;
+import freezy.entities.Service;
 
 import java.util.List;
 
 public class ConsignmentDetailsDTOV1 {
 
-    List<ProductV1> products;
-    List<AccessoryV1> accessories;
-    List<ServiceV1> services;
-    ConsignmentV1 consignment;
+    List<Product> products;
+    List<Accessory> accessories;
+    List<Service> services;
+    Consignment consignment;
 
-    public List<ProductV1> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<ProductV1> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 
-    public List<AccessoryV1> getAccessories() {
+    public List<Accessory> getAccessories() {
         return accessories;
     }
 
-    public void setAccessories(List<AccessoryV1> accessories) {
+    public void setAccessories(List<Accessory> accessories) {
         this.accessories = accessories;
     }
 
-    public List<ServiceV1> getServices() {
+    public List<Service> getServices() {
         return services;
     }
 
-    public void setServices(List<ServiceV1> services) {
+    public void setServices(List<Service> services) {
         this.services = services;
     }
 
-    public ConsignmentV1 getConsignment() {
+    public Consignment getConsignment() {
         return consignment;
     }
 
-    public void setConsignment(ConsignmentV1 consignment) {
+    public void setConsignment(Consignment consignment) {
         this.consignment = consignment;
     }
 }

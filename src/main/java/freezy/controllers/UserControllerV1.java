@@ -1,0 +1,91 @@
+package freezy.controllers;
+
+
+import freezy.dto.UserDTO;
+import freezy.entities.UserRoleV1;
+import freezy.entities.UserV1;
+import freezy.services.v1.UserServiceV1;
+import freezy.utils.Constants;
+import freezy.utils.UtilsService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@Slf4j
+@RequestMapping("/v1/users")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+public class UserControllerV1 {
+    @Autowired
+    private UserServiceV1 userServiceV1;
+
+    @Autowired
+    UtilsService utilsService;
+
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<UserV1> getAllUsers() {
+        return userServiceV1.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public UserV1 getUserById(@PathVariable String id) {
+        return userServiceV1.getUserById(id);
+    }
+
+    @PostMapping(value = "/customer", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserV1 saveCustomer(@RequestBody UserDTO dto) {
+        String userId = utilsService.generateId(Constants.USER_PREFIX);
+        return userServiceV1.createOrUpdateUser(userId, dto, UserRoleV1.CUSTOMER);
+    }
+
+    @PostMapping(value = "/supplier", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserV1 saveSupplier(@RequestBody UserDTO dto) {
+        String userId = utilsService.generateId(Constants.USER_PREFIX);
+        return userServiceV1.createOrUpdateUser(userId, dto, UserRoleV1.SUPPLIER);
+    }
+
+    @PutMapping("/{id}")
+    public void updateUser(@PathVariable String id, @RequestBody UserV1 user) {
+        if (userServiceV1.getUserById(id) != null) {
+            userServiceV1.saveUser(user);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable String id) {
+        userServiceV1.deleteUser(id);
+    }
+
+    @GetMapping("/search")
+    public List<UserV1> searchUsers(@RequestParam(required = false) String firstName,
+                                                  @RequestParam(required = false) String lastName,
+                                                  @RequestParam(required = false) String phoneNo,
+                                                  @RequestParam(required = false) String email) {
+
+        log.info("Search request received with params: firstName = {}, lastName = {}, state = {}, isAdmin = {}, from = {}, to = {}"+
+                firstName +
+                lastName +
+                phoneNo +
+                email);
+        return userServiceV1.searchUsers(firstName, lastName, phoneNo, email);
+    }
+
+    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<UserV1> filterUsers(@RequestParam(required = false) String type) {
+
+        return userServiceV1.getUsersByType(type);
+    }
+
+    @PostMapping(value = "/customer/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserV1 updateCustomer(@PathVariable String customerId, @RequestBody UserDTO dto) {
+        return userServiceV1.createOrUpdateUser(customerId, dto, UserRoleV1.CUSTOMER);
+    }
+
+    @PostMapping(value = "/supplier/{supplierId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserV1 updateSupplier(@PathVariable String supplierId, @RequestBody UserDTO dto) {
+        return userServiceV1.createOrUpdateUser(supplierId, dto, UserRoleV1.SUPPLIER);
+    }
+}

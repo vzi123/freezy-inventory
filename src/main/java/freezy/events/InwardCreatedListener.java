@@ -1,20 +1,13 @@
 package freezy.events;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import freezy.entities.Quotation;
-import freezy.entities.v1.UserV1;
-import freezy.services.PdfGenerateService;
-import freezy.services.QuotationService;
+import freezy.entities.UserV1;
 import freezy.services.v1.UserServiceV1;
 import freezy.utils.Constants;
-import freezy.utils.FreazyEmailService;
 import freezy.utils.FreazyWhatsAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
 
 @Component
 public class InwardCreatedListener {
@@ -30,9 +23,9 @@ public class InwardCreatedListener {
         try{
             System.out.println("No. of Items - " + inwardCreatedEvent.getCountOfItems());
             UserV1 adminUser = userServiceV1.getUserById(inwardCreatedEvent.getAdminUserId());
-            String message = createMessageString(adminUser.getFirst_name(), inwardCreatedEvent.getCountOfItems().toString(),"inward_created" );
+            String message = createMessageString(adminUser.getFirstName(), inwardCreatedEvent.getCountOfItems().toString(),"inward_created" );
                    // "Hi " + adminUser.getFirst_name() + ", An Inward Inventory for " + inwardCreatedEvent.getCountOfItems() + " items has been created. Please check Freazy for more details.";
-            freazyWhatsAppService.sendMessage(adminUser.getPhone_number(), message, Constants.INWARD_CREATED);
+            freazyWhatsAppService.sendMessage(adminUser.getPhoneNumber(), message, Constants.INWARD_CREATED);
         }
         catch (Exception e){
 

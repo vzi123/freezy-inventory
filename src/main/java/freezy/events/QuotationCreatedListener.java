@@ -1,7 +1,7 @@
 package freezy.events;
 
 import freezy.entities.Quotation;
-import freezy.services.PdfGenerateService;
+import freezy.utils.PdfGenerateService;
 import freezy.services.QuotationService;
 import freezy.utils.FreazyEmailService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
 package freezy.dto.v1;
 
-import freezy.entities.v1.*;
-import jakarta.persistence.*;
+import freezy.entities.*;
 
 import java.util.List;
 
@@ -13,9 +12,9 @@ public class ConsignmentInfoDTO {
     private String createdAt;
     private Integer totalAmount;
     private UserV1 createdFor;
-    List<ProductV1> products;
-    List<AccessoryV1> accessories;
-    List<ServiceV1> services;
+    List<Product> products;
+    List<Accessory> accessories;
+    List<Service> services;
 
     public String getId() {
         return id;
@@ -73,27 +72,27 @@ public class ConsignmentInfoDTO {
         this.createdFor = createdFor;
     }
 
-    public List<ProductV1> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<ProductV1> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 
-    public List<AccessoryV1> getAccessories() {
+    public List<Accessory> getAccessories() {
         return accessories;
     }
 
-    public void setAccessories(List<AccessoryV1> accessories) {
+    public void setAccessories(List<Accessory> accessories) {
         this.accessories = accessories;
     }
 
-    public List<ServiceV1> getServices() {
+    public List<Service> getServices() {
         return services;
     }
 
-    public void setServices(List<ServiceV1> services) {
+    public void setServices(List<Service> services) {
         this.services = services;
     }
 }

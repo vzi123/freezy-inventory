@@ -5,18 +5,14 @@ import freezy.dto.PurchaseOrderDTO;
 import freezy.dto.PurchaseOrderDetailsDTO;
 import freezy.dto.PurchaseOrderStatusDTO;
 import freezy.entities.*;
-import freezy.services.PdfGenerateService;
-import freezy.services.ProductService;
+import freezy.utils.PdfGenerateService;
 import freezy.services.PurchaseOrderService;
 import freezy.services.UserService;
 import freezy.utils.Constants;
 import freezy.utils.FreazySMSService;
 import freezy.utils.UtilsService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -129,7 +125,7 @@ public class PurchaseOrderController {
         else{
             orderStates = new ArrayList<String>((Constants.PO_STATUSES_CUSTOMER).values());
         }
-        List<PurchaseOrder> purchaseOrders = purchaseOrderService.getAllPurchaseOrdersByPersonaAndStates(persona, orderStates);
+        List<PurchaseOrder> purchaseOrders = purchaseOrderService.getAllPurchaseOrdersByRoleAndStatus(UserRole.valueOf(persona), orderStates);
         return purchaseOrders;
     }
 

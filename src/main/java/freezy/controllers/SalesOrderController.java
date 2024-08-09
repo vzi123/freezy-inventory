@@ -74,7 +74,7 @@ public class SalesOrderController {
         //validateStockAndBudgetWithPurchaseOrder
         //validateStockAndBudgetOfSalesOrderWithPO
         PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
-        if(purchaseOrder.getStatus().equalsIgnoreCase(PurchaseOrderStatus.DRAFT.toString())){
+        if(purchaseOrder.getStatus().name().equalsIgnoreCase(PurchaseOrderStatus.DRAFT.toString())){
             return utilsService.sendResponse(Constants.PO_STATE_NOT_ALLOWED, HttpStatus.OK);
         }
         String doProductsMatch = salesOrderService.validateIncomingProductsWithPO(salesOrderDetailsDTO);

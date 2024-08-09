@@ -1,8 +1,8 @@
 package freezy.schedule;
 
 import freezy.dto.v1.InventoryListV1;
-import freezy.entities.v1.InventoryTypeV1;
-import freezy.entities.v1.UserV1;
+import freezy.entities.InventoryType;
+import freezy.entities.UserV1;
 import freezy.events.StockDetailsPublisher;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.utils.StringUtils;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -40,14 +39,14 @@ public class StockAlertSchedule {
         List<List<String>> inventory = new ArrayList<>();
         for(InventoryListV1 item: stockDetails){
             if(null != item){
-                if(item.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
+                if(item.getType().equalsIgnoreCase(InventoryType.PRODUCT.name())){
                     List<String> items = new ArrayList<>();
                     items.add(StringUtils.replaceSpaces(item.getProduct().getName()));
                     items.add(item.getInventory().toString());
                     inventory.add(items);
 //                    stockDetailsPublisher.publishEvent(superUser.getId(), item.getProduct().getName(), item.getInventory());
                 }
-                if(item.getType().equalsIgnoreCase(InventoryTypeV1.ACCESSORY.name())){
+                if(item.getType().equalsIgnoreCase(InventoryType.ACCESSORY.name())){
                     List<String> items = new ArrayList<>();
                     items.add(StringUtils.replaceSpaces(item.getAccessory().getName()));
                     items.add(item.getInventory().toString());

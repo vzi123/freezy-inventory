@@ -1,18 +1,15 @@
 package freezy.dto.v1;
 
-import freezy.entities.v1.AccessoryV1;
-import freezy.entities.v1.ProductV1;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import freezy.entities.Accessory;
+import freezy.entities.Product;
 
 public class InventoryListV1 {
 
     String id;
     Integer inventory;
-    ProductV1 product;
+    Product product;
     String uom;
-    AccessoryV1 accessory;
+    Accessory accessory;
     String type;
 
     public String getType() {
@@ -23,11 +20,11 @@ public class InventoryListV1 {
         this.type = type;
     }
 
-    public AccessoryV1 getAccessory() {
+    public Accessory getAccessory() {
         return accessory;
     }
 
-    public void setAccessory(AccessoryV1 accessory) {
+    public void setAccessory(Accessory accessory) {
         this.accessory = accessory;
     }
 
@@ -47,11 +44,11 @@ public class InventoryListV1 {
         this.inventory = inventory;
     }
 
-    public ProductV1 getProduct() {
+    public Product getProduct() {
         return product;
     }
 
-    public void setProduct(ProductV1 product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 

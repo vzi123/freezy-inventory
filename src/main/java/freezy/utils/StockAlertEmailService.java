@@ -32,7 +32,7 @@ public class StockAlertEmailService {
         List<StockAlerts> stockAlerts = stockAlertsRepository.findAll();
         List<Inventory> inventories = inventoryRepository.findAll();
         Map<String, Integer> alertsMap = new HashMap<>();
-        stockAlerts.forEach(e-> alertsMap.put(e.getProduct().getId(),e.getAlertQuantity() ));
+        stockAlerts.forEach(e-> alertsMap.put(e.getProductOld().getId(),e.getAlertQuantity() ));
 
         for (Inventory inventory: inventories) {
             if(null != alertsMap.get(inventory.getProduct().getId()) && inventory.getInventory() < alertsMap.get(inventory.getProduct().getId())){

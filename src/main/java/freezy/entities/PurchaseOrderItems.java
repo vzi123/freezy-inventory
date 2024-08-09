@@ -18,8 +18,14 @@ public class PurchaseOrderItems {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
+    @ManyToOne
+    @JoinColumn(name = "accessory_id")
+    private Accessory accessory;
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private Service service;
 
     @ManyToOne
     @JoinColumn(name = "created_by")
@@ -41,17 +47,4 @@ public class PurchaseOrderItems {
     @JsonIgnore
     @JsonBackReference
     private PurchaseOrder purchaseOrder;
-
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public PurchaseOrder getPurchaseOrder() {
-        return purchaseOrder;
-    }
 }

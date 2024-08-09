@@ -162,9 +162,9 @@
     <hr></hr>
 
     <!-- Table for dynamic population -->
-    <h3 th:if="${not #lists.isEmpty(products)}">Products</h3>
+    <h3 th:if="${not #lists.isEmpty(productOlds)}">Products</h3>
     <table class="item-table">
-      <thead th:if="${not #lists.isEmpty(products)}">
+      <thead th:if="${not #lists.isEmpty(productOlds)}">
       <tr>
         <th>Item</th>
         <th>Description</th>
@@ -172,7 +172,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="item : ${products}">
+      <tr th:each="item : ${productOlds}">
         <td th:text="${item.id}"></td>
         <td th:text="${item.description}"></td>
         <td th:text="${item.stock}"></td>

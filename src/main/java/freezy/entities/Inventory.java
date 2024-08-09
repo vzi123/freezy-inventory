@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name = "inventory")
+@Table(name = "inventory_old")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

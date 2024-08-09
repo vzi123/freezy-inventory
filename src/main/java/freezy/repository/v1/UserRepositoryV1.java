@@ -1,10 +1,8 @@
 package freezy.repository.v1;
 
 
-import freezy.entities.User;
-import freezy.entities.UserRole;
-import freezy.entities.v1.UserRoleV1;
-import freezy.entities.v1.UserV1;
+import freezy.entities.UserRoleV1;
+import freezy.entities.UserV1;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +20,6 @@ public interface UserRepositoryV1 extends JpaRepository<UserV1, String>, JpaSpec
                                      @Param("phNo") String phNo, @Param("email") String email);
 
     public List<UserV1> findAllByRoleOrderByCreatedAtDesc(UserRoleV1 userRole);
+
+    public UserV1 findByPhoneNumber(String phoneNo);
 }

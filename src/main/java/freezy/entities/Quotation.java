@@ -19,28 +19,24 @@ public class Quotation {
     @Id
     private String id;
 
-    public User getUser() {
-        return user;
-    }
-
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
-    private String userPersona;
+    private UserRole userRole;
 
     @Column(nullable = false)
     private Integer budget;
 
     @Column(nullable = false)
-    private String status;
+    private QuotationStatus status;
 
     @Column(nullable = true)
     private Double discount;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(name = "project_id")
     private Project project;
 
     @ManyToOne

@@ -2,8 +2,6 @@ package freezy.controllers;
 
 import freezy.dto.*;
 import freezy.entities.*;
-import freezy.repository.DashboardWidgetsRepository;
-import freezy.repository.StockAlertsRepository;
 import freezy.services.*;
 import freezy.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +65,7 @@ public class DashboardController {
         Map<String, StockAlerts> alertsMap = new HashMap<>();
         Map<String, Inventory> inventoryMap = new HashMap<>();
         for(StockAlerts stockAlert: stockAlerts){
-            alertsMap.put(stockAlert.getProduct().getId(), stockAlert);
+            alertsMap.put(stockAlert.getProductOld().getId(), stockAlert);
         }
         for(Inventory inventory: inventories){
             inventoryMap.put(inventory.getProduct().getId(), inventory);
@@ -159,10 +156,10 @@ public class DashboardController {
         List<Quotation> quotations = quotationService.getAllQuotations();
         List<QuotationDTO> quotationDTOS = new ArrayList<>();
         for(Quotation quotation: quotations){
-            if(!(quotation.getStatus().equalsIgnoreCase(QuotationStatus.CANCELLED.name())
-            && (quotation.getStatus().equalsIgnoreCase(QuotationStatus.CONVERTED.name())))){
+            if(!(quotation.getStatus().name().equalsIgnoreCase(QuotationStatus.CANCELLED.name())
+            && (quotation.getStatus().name().equalsIgnoreCase(QuotationStatus.CONVERTED.name())))){
                 QuotationDTO dto = new QuotationDTO();
-                dto.setStatus(quotation.getStatus());
+                dto.setStatus(quotation.getStatus().name());
                 dto.setBudget(quotation.getBudget());
                 dto.setQuotationId(quotation.getId());
                 dto.setProjectId(quotation.getProject().getId());

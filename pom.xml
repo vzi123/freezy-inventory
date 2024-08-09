@@ -138,6 +138,15 @@
 			<version>2.26.25</version> <!-- Use the latest version -->
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/de.taimos/totp -->
+		<dependency>
+			<groupId>de.taimos</groupId>
+			<artifactId>totp</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+
+
 	</dependencies>
 
 	<build>

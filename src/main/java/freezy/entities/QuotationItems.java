@@ -1,6 +1,5 @@
 package freezy.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,19 +15,22 @@ public class QuotationItems {
 
     @Id
     private String id;
-
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "quotation_id", nullable = false)
+    @JsonIgnore
+    @JsonBackReference
+    private Quotation quotation;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
-
     @ManyToOne
-    @JoinColumn(name = "created_by")
-    private User createdBy;
-
-    @Column(nullable = false)
-    @JoinColumn(name = "created_at")
-    private String createdAt;
-
+    @JoinColumn(name = "accessory_id")
+    private Accessory accessory;
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private Service service;
+    @Column
+    private InventoryType type;
     @Column(nullable = false)
     private Integer quantity;
 
@@ -41,9 +43,9 @@ public class QuotationItems {
     @Column(nullable = false)
     private Integer effectivePrice;
 
-    @ManyToOne
-    @JoinColumn(name = "quo_id", nullable = false)
-    @JsonIgnore
-    @JsonBackReference
-    private Quotation quotation;
+    @Column(nullable = false)
+    @JoinColumn(name = "created_at")
+    private String createdAt;
+
+
 }

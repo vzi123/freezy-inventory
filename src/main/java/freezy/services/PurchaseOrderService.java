@@ -15,13 +15,8 @@ import freezy.utils.UtilsService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.LinkOption;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -59,12 +54,12 @@ public class PurchaseOrderService {
         return purchaseOrderRepository.findAll();
     }
 
-    public List<PurchaseOrder> getAllPurchaseOrdersByPersona(String persona) {
-        return purchaseOrderRepository.findAllByUserPersona(persona);
-    }
+//    public List<PurchaseOrder> getAllPurchaseOrdersByPersona(String persona) {
+//        return purchaseOrderRepository.findAllByUserRole(persona);
+//    }
 
-    public List<PurchaseOrder> getAllPurchaseOrdersByPersonaAndStates(String persona, List<String> states) {
-        return purchaseOrderRepository.findAllByUserPersonaAndStatusIn(persona, states);
+    public List<PurchaseOrder> getAllPurchaseOrdersByRoleAndStatus(UserRole persona, List<String> states) {
+        return purchaseOrderRepository.findAllByUserRoleAndStatusIn(persona, states);
     }
 
     public PurchaseOrder getPurchaseOrderById(String id) {
@@ -77,7 +72,7 @@ public class PurchaseOrderService {
             purchaseOrder.setId(utilsService.generateId(Constants.PURCHASE_ORDER_PREFIX));
             purchaseOrder.setCreatedAt(utilsService.generateDateFormat());
             purchaseOrder.setCreatedBy(utilsService.getSuperUser());
-            purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
+            purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT);
         }
         purchaseOrderRepository.save(purchaseOrder);
     }
@@ -85,7 +80,7 @@ public class PurchaseOrderService {
     public PurchaseOrder savePurchaseOrderDetails(PurchaseOrderDetailsDTO purchaseOrderDetails) {
         log.info(" in service");
         PurchaseOrder purchaseOrder = getPurchaseOrder();
-        purchaseOrder.setUserPersona(purchaseOrderDetails.getUserPersona());
+        purchaseOrder.setUserRole(UserRole.valueOf(purchaseOrderDetails.getUserPersona()));
         purchaseOrder.setUser(userService.getUserById(purchaseOrderDetails.getUserId()));
         purchaseOrder.setDiscount(purchaseOrderDetails.getDiscount());
         purchaseOrder.setComments(purchaseOrderDetails.getComments());
@@ -104,7 +99,7 @@ public class PurchaseOrderService {
             budget = budget + (poDTO.getQuantity() * poDTO.getPrice());
             purchaseOrderItems.add(purchaseOrderItem);
         }
-        budget = (int)(budget * (1 - (float)(purchaseOrderDetails.getDiscount())/100));
+        budget = (int)(budget * (1 - (Double)(purchaseOrderDetails.getDiscount())/100));
         purchaseOrderItemsRepository.saveAll(purchaseOrderItems);
         purchaseOrder.setBudget(budget);
         purchaseOrderRepository.saveAndFlush(purchaseOrder);
@@ -128,18 +123,18 @@ public class PurchaseOrderService {
     }
 
     public void changeStatus(PurchaseOrder purchaseOrder, String oldStatus, String newStatus){
-        purchaseOrder.setStatus(newStatus);
+        purchaseOrder.setStatus(PurchaseOrderStatus.valueOf(newStatus));
         purchaseOrderRepository.saveAndFlush(purchaseOrder);
     }
 
     public PurchaseOrder createPOFromQuotation(Quotation quotation){
         try{
             PurchaseOrder purchaseOrder = getPurchaseOrder();
-            purchaseOrder.setUserPersona(quotation.getUserPersona());
+            purchaseOrder.setUserRole(UserRole.valueOf(quotation.getUserRole().name()));
             purchaseOrder.setUser(quotation.getUser());
             purchaseOrder.setBudget(quotation.getBudget());
             purchaseOrder.setProject(quotation.getProject());
-            purchaseOrder.setDiscount(quotation.getDiscount().intValue());
+            purchaseOrder.setDiscount(quotation.getDiscount().doubleValue());
             purchaseOrderRepository.saveAndFlush(purchaseOrder);
 
             List<PurchaseOrderItems> purchaseOrderItems = new ArrayList<PurchaseOrderItems>();
@@ -168,7 +163,7 @@ public class PurchaseOrderService {
         purchaseOrder.setId(utilsService.generateId(Constants.PURCHASE_ORDER_PREFIX));
         purchaseOrder.setCreatedAt(utilsService.generateDateFormat());
         purchaseOrder.setCreatedBy(utilsService.getSuperUser());
-        purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
+        purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT);
         return purchaseOrder;
     }
 

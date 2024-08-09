@@ -1,10 +1,10 @@
 package freezy.services;
 
-import freezy.entities.PurchaseOrder;
 import freezy.entities.Product;
+import freezy.entities.PurchaseOrder;
+import freezy.entities.Product_old;
 import freezy.entities.PurchaseOrderItems;
 import freezy.repository.PurchaseOrderItemsRepository;
-import freezy.repository.PurchaseOrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

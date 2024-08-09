@@ -1,7 +1,7 @@
 package freezy.events;
 
 import com.google.gson.JsonObject;
-import freezy.entities.v1.UserV1;
+import freezy.entities.UserV1;
 import freezy.services.v1.UserServiceV1;
 import freezy.utils.Constants;
 import freezy.utils.FreazyWhatsAppService;
@@ -28,7 +28,7 @@ public class StockDetailsListener {
             System.out.println("Stovl - " + stockDetailsEvent);
             UserV1 adminUser = userServiceV1.getUserById(stockDetailsEvent.getAdminUserId());
             String message = createMessage(stockDetailsEvent.getHeader(), stockDetailsEvent.getInventory());
-            freazyWhatsAppService.sendMessage(adminUser.getPhone_number(), message, Constants.STOCK_ALERT);
+            freazyWhatsAppService.sendMessage(adminUser.getPhoneNumber(), message, Constants.STOCK_ALERT);
             //freazyWhatsAppService.sendStockMessage(adminUser.getPhone_number(),stockDetailsEvent.getHeader(), stockDetailsEvent.getInventory());
         }
         catch (Exception e){

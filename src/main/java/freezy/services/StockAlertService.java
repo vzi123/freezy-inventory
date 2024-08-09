@@ -2,9 +2,7 @@ package freezy.services;
 
 
 
-import freezy.entities.Category;
 import freezy.entities.StockAlerts;
-import freezy.repository.CategoryRepository;
 import freezy.repository.StockAlertsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

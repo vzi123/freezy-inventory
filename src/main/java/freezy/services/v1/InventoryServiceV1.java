@@ -2,31 +2,19 @@ package freezy.services.v1;
 
 
 import freezy.dto.InventoryCountDTO;
-import freezy.dto.InventoryDTO;
-import freezy.dto.v1.InventoryDTOV1;
-import freezy.dto.v1.InventoryEntryV1;
+import freezy.dto.v1.GoodsDetailDTO;
 import freezy.dto.v1.InventoryListV1;
-import freezy.entities.Inventory;
-import freezy.entities.Product;
-import freezy.entities.v1.*;
-import freezy.events.InwardDetailEvent;
-import freezy.events.InwardDetailListener;
+import freezy.entities.*;
 import freezy.events.InwardDetailPublisher;
 import freezy.repository.v1.InventoryRepositoryV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@Service
+@org.springframework.stereotype.Service
 public class InventoryServiceV1 {
     @Autowired
     private InventoryRepositoryV1 inventoryRepositoryV1;
@@ -45,9 +33,6 @@ public class InventoryServiceV1 {
 
     @Autowired
     CategoryUOMMapServiceV1 categoryUOMMapServiceV1;
-
-    @Autowired
-    ConsignmentServiceV1 consignmentServiceV1;
 
     @Autowired
     AccessoryServiceV1 accessoryServiceV1;
@@ -71,12 +56,12 @@ public class InventoryServiceV1 {
                 listV1.setId(v1.getId());
                 if(null != v1.getProduct()){
                     listV1.setProduct(v1.getProduct());
-                    listV1.setType(InventoryTypeV1.PRODUCT.name());
+                    listV1.setType(InventoryType.PRODUCT.name());
                     categoryUOMMapV1 = categoryUOMMapServiceV1.getUOMByCategory(v1.getProduct().getCategory().getId());
                 }
                 if(null != v1.getAccessory()){
                     listV1.setAccessory(v1.getAccessory());
-                    listV1.setType(InventoryTypeV1.ACCESSORY.name());
+                    listV1.setType(InventoryType.ACCESSORY.name());
                     categoryUOMMapV1 = categoryUOMMapServiceV1.getUOMByCategory(v1.getAccessory().getCategory().getId());
                 }
                 if(null != categoryUOMMapV1 && !categoryUOMMapV1.getMultiple().equalsIgnoreCase("1")){
@@ -95,11 +80,11 @@ public class InventoryServiceV1 {
         return inventoryRepositoryV1.findById(id).orElse(null);
     }
 
-    public void saveInventory(InventoryDTOV1 inventoryDTO) {
+    public void saveInventory(GoodsDetailDTO inventoryDTO) {
 
         InventoryV1 inventory = null;
-        if(inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.PRODUCT.name())){
-            ProductV1 product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
+        if(inventoryDTO.getType().equalsIgnoreCase(InventoryType.PRODUCT.name())){
+            Product product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
             inventory = inventoryRepositoryV1.findByProduct(product);
             if(null == inventory){
                 inventory = new InventoryV1();
@@ -115,9 +100,9 @@ public class InventoryServiceV1 {
             inventory.setUpdatedAt(utilsService.generateDateFormat());
             inventory.setUpdatedBy(utilsService.getSuperUserV1());
         }
-        if(inventoryDTO.getType().equalsIgnoreCase(InventoryTypeV1.ACCESSORY.name())){
-            AccessoryV1 accessoryV1 = accessoryServiceV1.getAccessoryById(inventoryDTO.getAccessoryId());
-            inventory = inventoryRepositoryV1.findByAccessory(accessoryV1);
+        if(inventoryDTO.getType().equalsIgnoreCase(InventoryType.ACCESSORY.name())){
+            Accessory accessory = accessoryServiceV1.getAccessoryById(inventoryDTO.getAccessoryId());
+            inventory = inventoryRepositoryV1.findByAccessory(accessory);
             if(null == inventory){
                 inventory = new InventoryV1();
                 inventory.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
@@ -128,7 +113,7 @@ public class InventoryServiceV1 {
             }
             inventory.setCreatedAt(utilsService.generateDateFormat());
             inventory.setCreatedBy(utilsService.getSuperUserV1());
-            inventory.setAccessory(accessoryV1);
+            inventory.setAccessory(accessory);
             inventory.setUpdatedAt(utilsService.generateDateFormat());
             inventory.setUpdatedBy(utilsService.getSuperUserV1());
         }
@@ -161,7 +146,7 @@ public class InventoryServiceV1 {
         }
         return countList;
     }
-
+/*
     public ConsignmentV1 incrementOrDecrementInventory(InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 existingConsignment){
 //        try{
         ConsignmentV1 consignmentV1 = existingConsignment;
@@ -232,8 +217,8 @@ public class InventoryServiceV1 {
     public List<InventoryLogV1> getLogsByConsignment(String consignmentId) {
         ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
         return inventoryLogServiceV1.getAllLogsByConsignment(consignmentV1);
-    }
-
+    }*/
+/*
     public Boolean validateODU(InventoryEntryV1 inventoryEntryV1) {
         for(InventoryDTOV1 dto: inventoryEntryV1.getProducts()){
             List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
@@ -255,9 +240,9 @@ public class InventoryServiceV1 {
             if(null != dto && dto.getQuantity() > 1) return false;
         }
         return true;
-    }
+    }*/
 
-    public Integer createProductEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
+    /*public Integer createProductEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
 
         Integer totalAmount = 0;
         ProductV1 product = productServiceV1.getProductV1ById(inventoryDTO.getProductId());
@@ -441,10 +426,36 @@ public class InventoryServiceV1 {
         }
 
     }
-
+*/
     public void publishInwardDetailEvent(Integer quantity, String productName){
         String userName = utilsService.getSuperUserV1().getId();
         inwardDetailPublisher.publishEvent(userName, quantity, productName);
     }
+
+
+    public InventoryV1 getInventoryByProduct(String productId){
+        Product product = productServiceV1.getProductV1ById(productId);
+        return inventoryRepositoryV1.findByProduct(product);
+    }
+
+    public InventoryV1 getInventoryByAccessory(String accessoryId){
+        Accessory accessory = accessoryServiceV1.getAccessoryById(accessoryId);
+        return inventoryRepositoryV1.findByAccessory(accessory);
+    }
+
+    public InventoryV1 getInventoryByService(String serviceId){
+        Service service = servicesServiceV1.getServiceById(serviceId);
+        return inventoryRepositoryV1.findByService(service);
+    }
+
+    public InventoryV1 saveInventory(InventoryV1 inventoryV1){
+        inventoryRepositoryV1.saveAndFlush(inventoryV1);
+        return inventoryV1;
+    }
+
+    public void saveAll(List<InventoryV1> inventoryV1s){
+        inventoryRepositoryV1.saveAllAndFlush(inventoryV1s);
+    }
+
 
 }

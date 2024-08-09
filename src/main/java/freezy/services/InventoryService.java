@@ -3,10 +3,7 @@ package freezy.services;
 
 import freezy.dto.InventoryCountDTO;
 import freezy.dto.InventoryDTO;
-import freezy.entities.Inventory;
-import freezy.entities.InventoryLog;
-import freezy.entities.InventoryLogEntry;
-import freezy.entities.Product;
+import freezy.entities.*;
 import freezy.repository.InventoryRepository;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
@@ -14,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class InventoryService {

@@ -3,22 +3,18 @@ package freezy.controllers;
 
 import freezy.dto.QuotationDTO;
 import freezy.dto.QuotationStatusDTO;
-import freezy.entities.Category;
 import freezy.entities.PurchaseOrder;
 import freezy.entities.Quotation;
 import freezy.entities.QuotationStatus;
 import freezy.services.*;
 import freezy.utils.Constants;
 import freezy.utils.FreazyEmailService;
+import freezy.utils.PdfGenerateService;
 import freezy.utils.UtilsService;
-import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -91,15 +87,15 @@ public class QuotationController {
 
         Quotation quotationObj = quotationService.getQuotationById(statusDTO.getId());
         if (statusDTO.getNewStatus().equalsIgnoreCase(QuotationStatus.APPROVED.name()) &&
-                !quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.CONVERTED.name())) {
+                !quotationObj.getStatus().name().equalsIgnoreCase(QuotationStatus.CONVERTED.name())) {
             if (quotationObj.getQuotationItems().size() > 0) {
-                quotationObj.setStatus(statusDTO.getNewStatus());
+                quotationObj.setStatus(QuotationStatus.valueOf(statusDTO.getNewStatus()));
                 quotationService.saveQuotation(quotationObj);
                 PurchaseOrder purchaseOrder = purchaseOrderService.createPOFromQuotation(quotationObj);
                 if(null != statusDTO.getCreateSO() && statusDTO.getCreateSO().booleanValue() == Boolean.TRUE){
                     salesOrderService.clonePOtoSO(purchaseOrder);
                 }
-                quotationObj.setStatus(QuotationStatus.CONVERTED.name());
+                quotationObj.setStatus(QuotationStatus.CONVERTED);
                 return purchaseOrder;
             }
             return utilsService.sendResponse("Cannot Approve Quotation without items", HttpStatus.OK);
@@ -119,7 +115,8 @@ public class QuotationController {
     @GetMapping(value = "{quotationId}/mail", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object mailQuotation(@PathVariable String quotationId) throws Exception{
         Quotation quotationObj = quotationService.getQuotationById(quotationId);
-        if(quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.DRAFT.name()) || quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.SENT.name())){
+        if(quotationObj.getStatus().name().equalsIgnoreCase(QuotationStatus.DRAFT.name())
+                || quotationObj.getStatus().name().equalsIgnoreCase(QuotationStatus.SENT.name())){
             File quotation = pdfGenerateService.generateQuotation(quotationObj);
             freazyEmailService.sendEmail(quotation);
             return utilsService.sendResponse("Quotation Mailed", HttpStatus.OK);

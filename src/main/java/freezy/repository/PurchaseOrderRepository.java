@@ -1,9 +1,8 @@
 package freezy.repository;
 
-import freezy.entities.Product;
 import freezy.entities.PurchaseOrder;
-import freezy.entities.PurchaseOrderStatus;
 import freezy.entities.User;
+import freezy.entities.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +19,7 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, St
             "    where poi.po_id = po.id and  po.id = :poId", nativeQuery = true)
     public List getGivenStockByPurchaseOrder(@Param("poId") String poId);
 
-    public List<PurchaseOrder> findAllByUserPersona(String persona);
-    public List<PurchaseOrder> findAllByUserPersonaAndStatusIn(String persona, List<String> states);
+    public List<PurchaseOrder> findAllByUserRole(UserRole persona);
+    public List<PurchaseOrder> findAllByUserRoleAndStatusIn(UserRole persona, List<String> states);
 }
 

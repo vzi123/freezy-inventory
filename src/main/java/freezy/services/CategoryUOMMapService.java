@@ -2,7 +2,7 @@ package freezy.services;
 
 
 
-import freezy.entities.CategoryUOMMap;
+import freezy.entities.CategoryUOMMap_old;
 import freezy.repository.CategoryUOMMapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,15 +14,15 @@ public class CategoryUOMMapService {
     @Autowired
     private CategoryUOMMapRepository categoryUOMMapRepository;
 
-    public List<CategoryUOMMap> getAllCategoryUOMMaps() {
+    public List<CategoryUOMMap_old> getAllCategoryUOMMaps() {
         return categoryUOMMapRepository.findAll();
     }
 
-    public CategoryUOMMap getCategoryUOMMapById(String id) {
+    public CategoryUOMMap_old getCategoryUOMMapById(String id) {
         return categoryUOMMapRepository.findById(id).orElse(null);
     }
 
-    public void saveCategoryUOMMap(CategoryUOMMap categoryUOMMap) {
+    public void saveCategoryUOMMap(CategoryUOMMap_old categoryUOMMap) {
         categoryUOMMapRepository.save(categoryUOMMap);
     }
 

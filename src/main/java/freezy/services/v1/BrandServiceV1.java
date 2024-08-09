@@ -1,8 +1,7 @@
 package freezy.services.v1;
 
 
-import freezy.entities.v1.BrandV1;
-import freezy.entities.v1.CategoryV1;
+import freezy.entities.Brand;
 import freezy.repository.v1.BrandRepositoryV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
@@ -21,16 +20,16 @@ public class BrandServiceV1 {
     UtilsService utilsService;
 
 
-    public List<BrandV1> getAllBrands() {
+    public List<Brand> getAllBrands() {
         return brandRepositoryV1.findAll();
     }
 
-    public BrandV1 getBrandById(String id) {
+    public Brand getBrandById(String id) {
         return brandRepositoryV1.findById(id).orElse(null);
     }
 
-    public void saveBrand(BrandV1 brandV1) {
-        brandV1.setId(utilsService.generateId(Constants.BRAND_ORDER_PREFIX));
-        brandRepositoryV1.saveAndFlush(brandV1);
+    public void saveBrand(Brand brand) {
+        brand.setId(utilsService.generateId(Constants.BRAND_ORDER_PREFIX));
+        brandRepositoryV1.saveAndFlush(brand);
     }
 }

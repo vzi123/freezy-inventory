@@ -1,7 +1,7 @@
 package freezy.events;
 
 import com.google.gson.JsonObject;
-import freezy.entities.v1.UserV1;
+import freezy.entities.UserV1;
 import freezy.services.v1.UserServiceV1;
 import freezy.utils.Constants;
 import freezy.utils.FreazyWhatsAppService;
@@ -23,9 +23,9 @@ public class InwardDetailListener {
         try{
             System.out.println("No. of Items - " + inwardDetailEvent.getProductName());
             UserV1 adminUser = userServiceV1.getUserById(inwardDetailEvent.getAdminUserId());
-            String message = createMessageString(adminUser.getFirst_name(), inwardDetailEvent.getQuantity().toString(), inwardDetailEvent.getProductName(), "inward_details" );
+            String message = createMessageString(adminUser.getFirstName(), inwardDetailEvent.getQuantity().toString(), inwardDetailEvent.getProductName(), "inward_details" );
                     //"Hi " + adminUser.getFirst_name() + ", A procurement for " + inwardDetailEvent.getQuantity() + " #s for " + inwardDetailEvent.getProductName() + " is complete. Please check Freazy for more details.";
-            freazyWhatsAppService.sendMessage(adminUser.getPhone_number(), message, Constants.INWARD_DETAILS);
+            freazyWhatsAppService.sendMessage(adminUser.getPhoneNumber(), message, Constants.INWARD_DETAILS);
         }
         catch (Exception e){
 

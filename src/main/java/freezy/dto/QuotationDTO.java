@@ -1,5 +1,7 @@
 package freezy.dto;
 
+import freezy.dto.v1.GoodsDetailDTO;
+
 import java.util.List;
 
 public class QuotationDTO {
@@ -9,7 +11,9 @@ public class QuotationDTO {
     Integer budget;
     String projectId;
     String projectName;
-    List<QuotationItemsDTO> quotationItems;
+    List<GoodsDetailDTO> products;
+    List<GoodsDetailDTO> accessories;
+    List<GoodsDetailDTO> services;
     String quotationId;
     String status;
     Float discount;
@@ -70,19 +74,35 @@ public class QuotationDTO {
         this.projectId = projectId;
     }
 
-    public List<QuotationItemsDTO> getQuotationItems() {
-        return quotationItems;
-    }
-
-    public void setQuotationItems(List<QuotationItemsDTO> quotationItems) {
-        this.quotationItems = quotationItems;
-    }
-
     public String getQuotationId() {
         return quotationId;
     }
 
     public void setQuotationId(String quotationId) {
         this.quotationId = quotationId;
+    }
+
+    public List<GoodsDetailDTO> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<GoodsDetailDTO> products) {
+        this.products = products;
+    }
+
+    public List<GoodsDetailDTO> getAccessories() {
+        return accessories;
+    }
+
+    public void setAccessories(List<GoodsDetailDTO> accessories) {
+        this.accessories = accessories;
+    }
+
+    public List<GoodsDetailDTO> getServices() {
+        return services;
+    }
+
+    public void setServices(List<GoodsDetailDTO> services) {
+        this.services = services;
     }
 }

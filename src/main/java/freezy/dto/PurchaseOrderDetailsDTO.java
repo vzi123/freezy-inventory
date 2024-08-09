@@ -21,8 +21,8 @@ public class PurchaseOrderDetailsDTO {
         this.comments = comments;
     }
 
-    public Integer getDiscount() {
-        return discount;
+    public Double getDiscount() {
+        return discount.doubleValue();
     }
 
     public void setDiscount(Integer discount) {

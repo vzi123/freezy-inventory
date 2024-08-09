@@ -8,7 +8,8 @@ public class Constants {
     public static final String PURCHASE_ORDER_PREFIX = "PO";
     public static final String CATEGORY_ORDER_PREFIX = "CAT";
     public static final String BRAND_ORDER_PREFIX = "BR";
-    public static final String CONSIGNMENT_PREFIX = "DC";
+    public static final String CONSIGNMENT_PREFIX = "CONS";
+    public static final String CONSIGNMENT_DETAIL_PREFIX = "COND";
     public static final String UOM_ORDER_PREFIX = "UOM";
     public static final String USER_PREFIX = "US";
     public static final String PURCHASE_ORDER_ITEM_PREFIX = "POI";
@@ -28,6 +29,7 @@ public class Constants {
     public static final String INVENTORY_OUT = "OUT";
     public static final String INVENTORY_INC = "INC";
     public static final String INVENTORY_DEDUCT = "DEC";
+    public static final String INVENTORY_RETURN = "RET";
     public static final String PROC_PREFIX = "PROC";
     public static final Integer STOCK_ALERT_QUANTITY = 50;
     public static final String CUSTOMER = "customer";

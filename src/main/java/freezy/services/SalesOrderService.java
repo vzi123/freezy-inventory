@@ -15,7 +15,6 @@ import freezy.utils.UtilsService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -88,7 +87,7 @@ public class SalesOrderService {
         PurchaseOrder purchaseOrder =  purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
         getDefaultSO(salesOrder);
         salesOrder.setPurchaseOrder(purchaseOrder);
-        salesOrder.setUserPersona(purchaseOrder.getUserPersona());
+        salesOrder.setUserPersona(purchaseOrder.getUserRole().name());
         salesOrder.setUser(purchaseOrder.getUser());
         salesOrder.setStatus(SalesOrderStatus.DEFAULT.toString());
         salesOrderRepository.saveAndFlush(salesOrder);
@@ -128,10 +127,10 @@ public class SalesOrderService {
         InventoryDTO inventoryDTO = new InventoryDTO();
         inventoryDTO.setStock(salesOrderItem.getQuantity());
         inventoryDTO.setProductId(salesOrderItem.getProduct().getId());
-        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)){
+        if(purchaseOrder.getUserRole().name().equalsIgnoreCase(Constants.CUSTOMER)){
             inventoryService.incrementOrDecrementInventory(inventoryDTO, Constants.INVENTORY_DEDUCT, salesOrderItem.getId());
         }
-        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
+        if(purchaseOrder.getUserRole().name().equalsIgnoreCase(Constants.VENDOR)){
             inventoryService.incrementOrDecrementInventory(inventoryDTO, Constants.INVENTORY_INC, salesOrderItem.getId());
         }
     }
@@ -166,21 +165,21 @@ public class SalesOrderService {
         salesOrder.setStatus(newStatus);
         PurchaseOrder purchaseOrder = salesOrder.getPurchaseOrder();
         if(newStatus.equalsIgnoreCase(SalesOrderStatus.STOCK_DELIVERED.toString())){
-            purchaseOrder.setStatus(PurchaseOrderStatus.PARTIALLY_DELIVERED.toString());
+            purchaseOrder.setStatus(PurchaseOrderStatus.PARTIALLY_DELIVERED);
             purchaseOrderService.savePurchaseOrder(purchaseOrder);
             saveReceivable(salesOrder, ReceivableStatus.FULL_PAYMENT_RECEIVED, "Payment Received");
         }
         if(newStatus.equalsIgnoreCase(SalesOrderStatus.STOCK_RECEIVED.toString())){
-            purchaseOrder.setStatus(PurchaseOrderStatus.PARTIALLY_RECEIVED.toString());
+            purchaseOrder.setStatus(PurchaseOrderStatus.PARTIALLY_RECEIVED);
             purchaseOrderService.savePurchaseOrder(purchaseOrder);
             savePayable(salesOrder, PayableStatus.FULL_PAYMENT_DONE, "Payment Done");
         }
         if(newStatus.equalsIgnoreCase(SalesOrderStatus.CLOSED.toString())){
-            if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)) {
-                purchaseOrder.setStatus(PurchaseOrderStatus.PARTIAL_PAYMENT_RECEIVED.toString());
+            if(purchaseOrder.getUserRole().name().equalsIgnoreCase(Constants.CUSTOMER)) {
+                purchaseOrder.setStatus(PurchaseOrderStatus.PARTIAL_PAYMENT_RECEIVED);
             }
-            if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)) {
-                purchaseOrder.setStatus(PurchaseOrderStatus.PARTIAL_PAYMENT_DONE.toString());
+            if(purchaseOrder.getUserRole().name().equalsIgnoreCase(Constants.VENDOR)) {
+                purchaseOrder.setStatus(PurchaseOrderStatus.PARTIAL_PAYMENT_DONE);
             }
             purchaseOrderService.savePurchaseOrder(purchaseOrder);
         }
@@ -329,7 +328,7 @@ public class SalesOrderService {
             salesOrder.setPurchaseOrder(purchaseOrder);
             salesOrder.setStatus(SalesOrderStatus.STOCK_TO_BE_DELIVERED.name());
             salesOrder.setUser(purchaseOrder.getUser());
-            salesOrder.setUserPersona(purchaseOrder.getUserPersona());
+            salesOrder.setUserPersona(purchaseOrder.getUserRole().name());
             salesOrderRepository.saveAndFlush(salesOrder);
             List<SalesOrderItems> salesOrderItems = new ArrayList<>();
             for(PurchaseOrderItems purchaseItem: purchaseOrder.getPurchaseOrderItems()){

@@ -1,8 +1,6 @@
 package freezy.services;
 
-import freezy.entities.Category;
 import freezy.entities.Endorsement;
-import freezy.repository.CategoryRepository;
 import freezy.repository.EndorsementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

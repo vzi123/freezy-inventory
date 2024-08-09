@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 
 
 @Entity
-@Table(name = "inventory_log")
+@Table(name = "inventory_log_old")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

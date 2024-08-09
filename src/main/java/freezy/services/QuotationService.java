@@ -5,17 +5,13 @@ package freezy.services;
 import freezy.dto.QuotationDTO;
 import freezy.dto.QuotationItemsDTO;
 import freezy.entities.*;
-import freezy.entities.Product;
 import freezy.events.QuotationCreatedPublisher;
-import freezy.repository.CategoryRepository;
-import freezy.repository.ProductRepository;
 import freezy.repository.QuotationRepository;
 import freezy.utils.Constants;
 import freezy.utils.FreazyWhatsAppService;
 import freezy.utils.StringUtils;
 import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,7 +55,7 @@ public class QuotationService {
         return quotationRepository.findById(id).orElse(null);
     }
 
-    public Quotation saveQuotation(QuotationDTO dto) {
+    /*public Quotation saveQuotation(QuotationDTO dto) {
         Quotation quotation = null;
         if(null != dto.getQuotationId()){
             quotation = getQuotationById(dto.getQuotationId());
@@ -67,7 +63,7 @@ public class QuotationService {
         if(null == quotation){
             quotation = new Quotation();
             quotation.setId(utilsService.generateId(Constants.QUOTATION_PREFIX));
-            quotation.setStatus(QuotationStatus.DRAFT.toString());
+            quotation.setStatus(QuotationStatus.DRAFT);
         }
 
         Project project = null;
@@ -77,12 +73,12 @@ public class QuotationService {
         if(null != project){
             quotation.setProject(project);
             quotation.setUser(project.getCustomer());
-            quotation.setUserPersona(project.getCustomer().getRole().name());
+            quotation.setUserRole(UserRole.valueOf(project.getCustomer().getRole().name()));
         }
         else {
             quotation.setProject(null);
             quotation.setUser(userService.getUserById(dto.getUserId()));
-            quotation.setUserPersona(dto.getUserPersona());
+            quotation.setUserRole(UserRole.valueOf(project.getCustomer().getRole().name()));
         }
 
         quotation.setCreatedAt(utilsService.generateDateFormat());
@@ -121,7 +117,7 @@ public class QuotationService {
             item.setId(utilsService.generateId(Constants.QUOTATION_ITEM_PREFIX));
             item.setCreatedAt(utilsService.generateDateFormat());
             item.setCreatedBy(utilsService.getSuperUser());
-            item.setProduct(productService.getProductById(items.getProductId()));
+            item.setProductOld(productService.getProductById(items.getProductId()));
             quotationItemsService.saveQuotationItems(item);
 
             itemsEntity.add(item);
@@ -133,6 +129,11 @@ public class QuotationService {
         //String message = String.format(Constants.QUOTATION_CREATED_STRING, utilsService.getSuperUser().getFirst_name(),userService.getUserById(dto.getUserId()).getFirst_name());
         //freazyWhatsAppService.sendMessage(Constants.SEND_SMS, message);
         quotationCreatedPublisher.publishEvent(quotation.getId());
+        return quotation;
+    }*/
+
+    public Quotation saveQuotation(QuotationDTO dto){
+        Quotation quotation = new Quotation();
         return quotation;
     }
 

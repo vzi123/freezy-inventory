@@ -24,7 +24,7 @@ public class Delivery {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Product_old productOld;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

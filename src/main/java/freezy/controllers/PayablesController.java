@@ -1,11 +1,8 @@
 package freezy.controllers;
 
 
-import freezy.entities.Category;
 import freezy.entities.Payable;
 import freezy.entities.PurchaseOrder;
-import freezy.entities.Receivable;
-import freezy.services.CategoryService;
 import freezy.services.PayableService;
 import freezy.services.PurchaseOrderService;
 import lombok.extern.slf4j.Slf4j;
