@@ -85,7 +85,7 @@ public class UtilsService {
 
     public Boolean validateODU(ConsignmentDetailsDTO details) {
         for(GoodsDetailDTO dto: details.getProducts()){
-            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getIduSerialNo());
             if(null == logs || logs.size() ==0) return false;
         }
         return true;
@@ -93,7 +93,7 @@ public class UtilsService {
 
     public Boolean validateIDU(ConsignmentDetailsDTO details) {
         for(GoodsDetailDTO dto: details.getProducts()){
-            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getIduSerialNo());
             if(null != logs && logs.size() > 0) return false;
         }
         return true;

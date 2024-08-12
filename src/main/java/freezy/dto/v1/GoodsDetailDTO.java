@@ -5,7 +5,8 @@ public class GoodsDetailDTO {
     String productId;
     Integer quantity;
     Integer unitPrice;
-    String serialNo;
+    String iduSerialNo;
+    String oduSerialNo;
     String type;
     String accessoryId;
     String serviceId;
@@ -43,12 +44,20 @@ public class GoodsDetailDTO {
         this.accessoryId = accessoryId;
     }
 
-    public String getSerialNo() {
-        return serialNo;
+    public String getIduSerialNo() {
+        return iduSerialNo;
     }
 
-    public void setSerialNo(String serialNo) {
-        this.serialNo = serialNo;
+    public void setIduSerialNo(String iduSerialNo) {
+        this.iduSerialNo = iduSerialNo;
+    }
+
+    public String getOduSerialNo() {
+        return oduSerialNo;
+    }
+
+    public void setOduSerialNo(String oduSerialNo) {
+        this.oduSerialNo = oduSerialNo;
     }
 
     public String getProductId() {

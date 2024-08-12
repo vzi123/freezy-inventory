@@ -143,6 +143,8 @@ public class ConsignmentServiceV1 {
                 detail.setCount(dto.getQuantity());
                 detail.setAmount(new Double(dto.getUnitPrice().toString()));
                 detail.setCreatedAt(utilsService.generateDateFormat());
+                detail.setIduSerialNo(dto.getIduSerialNo());
+                detail.setOduSerialNo(dto.getOduSerialNo());
                 if(consignment.getInOut().name().equalsIgnoreCase(InventoryLogEntryV1.IN.name())){
                     direction = ConsignmentDirection.IN;
                 }
@@ -307,18 +309,18 @@ public class ConsignmentServiceV1 {
             inventoryLog.setQuantity(dto.getQuantity());
             Product productV1 = productServiceV1.getProductV1ById(dto.getProductId());
             inventoryLog.setProduct(productV1);
+            inventoryLog.setIduSerial(dto.getIduSerialNo());
+            inventoryLog.setOduSerial(dto.getOduSerialNo());
             if(consignment.getInOut().name().equalsIgnoreCase(InventoryLogEntryV1.IN.name())){
                 inventoryLog.setInOut(InventoryLogEntryV1.IN);
-                inventoryLog.setIduSerial(dto.getSerialNo());
-                inventoryLog.setComments("Procured " + dto.getQuantity() + " " + productV1.getName() + " (IDU: " + dto.getSerialNo() + ") on " + utilsService.generateDateFormat() + " from " +
+                inventoryLog.setComments("Procured " + dto.getQuantity() + " " + productV1.getName() + " (IDU: " + dto.getIduSerialNo() + ", ODU: " + dto.getOduSerialNo() +" ) on " + utilsService.generateDateFormat() + " from " +
                         userFirstName + ", Notes: " + consignment.getComments());
 //                publishInwardDetailEvent(inventoryDTO.getQuantity(), product.getName());
             }
             else{
                 inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-                inventoryLog.setOduSerial(dto.getSerialNo());
                 Product product = productServiceV1.getProductV1ById(dto.getProductId());
-                inventoryLog.setComments("Delivered " + dto.getQuantity() + " " + product.getName() + "(ODU: " + dto.getSerialNo() + ") on " + utilsService.generateDateFormat() + " for " +
+                inventoryLog.setComments("Delivered " + dto.getQuantity() + " " + product.getName() + " (IDU: " + dto.getIduSerialNo() + ", ODU: " + dto.getOduSerialNo() +" ) on " + utilsService.generateDateFormat() + " for " +
                         userFirstName + ", Notes: " + consignment.getComments());
             }
 
