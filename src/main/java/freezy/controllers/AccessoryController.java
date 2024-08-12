@@ -49,7 +49,7 @@ public class AccessoryController {
             GoodsDetailDTO goodsDetailDTO = new GoodsDetailDTO();
             goodsDetailDTO.setAccessoryId(accessory.getId());
             goodsDetailDTO.setQuantity(0);
-            goodsDetailDTO.setUnitPrice(0);
+            goodsDetailDTO.setTotalAmount(new Double(0));
             goodsDetailDTO.setType(InventoryType.ACCESSORY.name());
             inventoryServiceV1.saveInventory(goodsDetailDTO);
         }

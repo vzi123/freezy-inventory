@@ -4,13 +4,39 @@ public class GoodsDetailDTO {
 
     String productId;
     Integer quantity;
-    Integer unitPrice;
+    Integer subTotal;
     String iduSerialNo;
     String oduSerialNo;
     String type;
     String accessoryId;
     String serviceId;
     Double tax;
+    String taxPercentage;
+    Double totalAmount;
+
+    public Integer getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Integer subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public String getTaxPercentage() {
+        return taxPercentage;
+    }
+
+    public void setTaxPercentage(String taxPercentage) {
+        this.taxPercentage = taxPercentage;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 
     public Double getTax() {
         return tax;
@@ -74,13 +100,5 @@ public class GoodsDetailDTO {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public Integer getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(Integer unitPrice) {
-        this.unitPrice = unitPrice;
     }
 }

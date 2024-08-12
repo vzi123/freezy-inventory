@@ -33,9 +33,13 @@ public class ConsignmentDetails {
     @Column
     private Integer count;
     @Column
-    private Double amount;
+    private Double subTotal;
     @Column
-    private Double tax;
+    private Double taxAmount;
+    @Column
+    private String taxPercentage;
+    @Column
+    private Double totalAmount;
     @Column
     private ConsignmentDirection direction;
     @Column

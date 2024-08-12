@@ -67,7 +67,7 @@ public class ProductController {
                 GoodsDetailDTO goodsDetailDTO = new GoodsDetailDTO();
                 goodsDetailDTO.setAccessoryId(accessory.getId());
                 goodsDetailDTO.setQuantity(0);
-                goodsDetailDTO.setUnitPrice(0);
+                goodsDetailDTO.setSubTotal(0);
                 goodsDetailDTO.setType(InventoryType.ACCESSORY.name());
                 inventoryServiceV1.saveInventory(goodsDetailDTO);
             }
@@ -77,7 +77,7 @@ public class ProductController {
                 dto.setProductId(product.getId());
                 dto.setType(InventoryType.PRODUCT.name());
                 dto.setQuantity(0);
-                dto.setUnitPrice(0);
+                dto.setSubTotal(0);
                 inventoryServiceV1.saveInventory(dto);
             }
 

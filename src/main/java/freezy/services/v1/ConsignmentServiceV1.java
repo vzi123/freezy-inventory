@@ -141,7 +141,10 @@ public class ConsignmentServiceV1 {
                 detail.setId(utilsService.generateId(Constants.CONSIGNMENT_DETAIL_PREFIX));
                 detail.setComments(details.getComments());
                 detail.setCount(dto.getQuantity());
-                detail.setAmount(new Double(dto.getUnitPrice().toString()));
+                detail.setSubTotal(new Double(dto.getSubTotal().toString()));
+                detail.setTotalAmount(new Double(dto.getTotalAmount().toString()));
+                detail.setTaxPercentage(dto.getTaxPercentage());
+                detail.setTaxAmount(detail.getTaxAmount());
                 detail.setCreatedAt(utilsService.generateDateFormat());
                 detail.setIduSerialNo(dto.getIduSerialNo());
                 detail.setOduSerialNo(dto.getOduSerialNo());
@@ -155,7 +158,6 @@ public class ConsignmentServiceV1 {
                     direction = ConsignmentDirection.OUT;
                 }
                 detail.setDirection(direction);
-                detail.setTax(dto.getTax());
                 consignmentDetailServiceV1.save(detail);
             }
         }
@@ -179,7 +181,10 @@ public class ConsignmentServiceV1 {
                 detail.setId(utilsService.generateId(Constants.CONSIGNMENT_DETAIL_PREFIX));
                 detail.setComments(details.getComments());
                 detail.setCount(dto.getQuantity());
-                detail.setAmount(new Double(dto.getUnitPrice().toString()));
+                detail.setSubTotal(new Double(dto.getSubTotal().toString()));
+                detail.setTotalAmount(new Double(dto.getTotalAmount().toString()));
+                detail.setTaxPercentage(dto.getTaxPercentage());
+                detail.setTaxAmount(detail.getTaxAmount());
                 detail.setCreatedAt(utilsService.generateDateFormat());
                 if(consignment.getInOut().name().equalsIgnoreCase(InventoryLogEntryV1.IN.name())){
                     direction = ConsignmentDirection.IN;
@@ -191,7 +196,6 @@ public class ConsignmentServiceV1 {
                     direction = ConsignmentDirection.OUT;
                 }
                 detail.setDirection(direction);
-                detail.setTax(dto.getTax());
                 consignmentDetailServiceV1.save(detail);
             }
         }
@@ -215,7 +219,10 @@ public class ConsignmentServiceV1 {
                 detail.setId(utilsService.generateId(Constants.CONSIGNMENT_DETAIL_PREFIX));
                 detail.setComments(details.getComments());
                 detail.setCount(dto.getQuantity());
-                detail.setAmount(new Double(dto.getUnitPrice().toString()));
+                detail.setSubTotal(new Double(dto.getSubTotal().toString()));
+                detail.setTotalAmount(new Double(dto.getTotalAmount().toString()));
+                detail.setTaxPercentage(dto.getTaxPercentage());
+                detail.setTaxAmount(detail.getTaxAmount());
                 detail.setCreatedAt(utilsService.generateDateFormat());
                 if(consignment.getInOut().name().equalsIgnoreCase(InventoryLogEntryV1.IN.name())){
                     direction = ConsignmentDirection.IN;
@@ -227,7 +234,6 @@ public class ConsignmentServiceV1 {
                     direction = ConsignmentDirection.OUT;
                 }
                 detail.setDirection(direction);
-                detail.setTax(dto.getTax());
                 consignmentDetailServiceV1.save(detail);
             }
         }
@@ -305,7 +311,7 @@ public class ConsignmentServiceV1 {
             UserV1 user = consignment.getCreatedFor();
             String userFirstName = (null != user.getFirstName())?user.getFirstName():" ";
             inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-            inventoryLog.setAmount(dto.getUnitPrice());
+            inventoryLog.setAmount(dto.getTotalAmount().intValue());
             inventoryLog.setQuantity(dto.getQuantity());
             Product productV1 = productServiceV1.getProductV1ById(dto.getProductId());
             inventoryLog.setProduct(productV1);
@@ -337,7 +343,7 @@ public class ConsignmentServiceV1 {
             UserV1 user = consignment.getCreatedFor();
             String userFirstName = (null != user.getFirstName())?user.getFirstName():" ";
             inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-            inventoryLog.setAmount(dto.getUnitPrice());
+            inventoryLog.setAmount(dto.getTotalAmount().intValue());
             inventoryLog.setQuantity(dto.getQuantity());
             Accessory accessoryV1 = accessoryServiceV1.getAccessoryById(dto.getAccessoryId());
             inventoryLog.setAccessory(accessoryV1);
@@ -368,7 +374,7 @@ public class ConsignmentServiceV1 {
                 UserV1 user = consignment.getCreatedFor();
                 String userFirstName = (null != user.getFirstName())?user.getFirstName():" ";
                 inventoryLog.setId(utilsService.generateId(Constants.INVENTORY_ORDER_PREFIX));
-                inventoryLog.setAmount(dto.getUnitPrice());
+                inventoryLog.setAmount(dto.getTotalAmount().intValue());
                 inventoryLog.setQuantity(dto.getQuantity());
                 Service service = servicesServiceV1.getServiceById(dto.getServiceId());
                 inventoryLog.setService(service);
