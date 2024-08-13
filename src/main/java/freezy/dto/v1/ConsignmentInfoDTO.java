@@ -13,8 +13,8 @@ public class ConsignmentInfoDTO {
     private String createdAt;
     private Integer totalAmount;
     private UserV1 createdFor;
-    List<ProductV1> products;
-    List<AccessoryV1> accessories;
+    List<ProductDetailsDTO> products;
+    List<AccessoryDetailsDTO> accessories;
     List<ServiceV1> services;
 
     public String getId() {
@@ -73,27 +73,27 @@ public class ConsignmentInfoDTO {
         this.createdFor = createdFor;
     }
 
-    public List<ProductV1> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductV1> products) {
-        this.products = products;
-    }
-
-    public List<AccessoryV1> getAccessories() {
-        return accessories;
-    }
-
-    public void setAccessories(List<AccessoryV1> accessories) {
-        this.accessories = accessories;
-    }
-
     public List<ServiceV1> getServices() {
         return services;
     }
 
     public void setServices(List<ServiceV1> services) {
         this.services = services;
+    }
+
+    public List<ProductDetailsDTO> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductDetailsDTO> products) {
+        this.products = products;
+    }
+
+    public List<AccessoryDetailsDTO> getAccessories() {
+        return accessories;
+    }
+
+    public void setAccessories(List<AccessoryDetailsDTO> accessories) {
+        this.accessories = accessories;
     }
 }

@@ -1,9 +1,6 @@
 package freezy.services.v1;
 
-import freezy.dto.v1.ConsignmentDetailsDTOV1;
-import freezy.dto.v1.ConsignmentInfoDTO;
-import freezy.dto.v1.InventoryDTOV1;
-import freezy.dto.v1.InventoryEntryV1;
+import freezy.dto.v1.*;
 import freezy.entities.InventoryLog;
 import freezy.entities.v1.*;
 import freezy.repository.InventoryLogRepository;
@@ -60,20 +57,22 @@ public class InventoryLogServiceV1 {
 
         ConsignmentDetailsDTOV1 entry = new ConsignmentDetailsDTOV1();
         entry.setConsignment(consignmentV1);
-        List<ProductV1> productV1s = new ArrayList<>();
-        List<AccessoryV1> accessoryV1s = new ArrayList<>();
+        List<ProductDetailsDTO> productV1s = new ArrayList<>();
+        List<AccessoryDetailsDTO> accessoryV1s = new ArrayList<>();
         List<ServiceV1> serviceV1s = new ArrayList<>();
         List<InventoryLogV1> products = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.PRODUCT);
         List<InventoryLogV1> accessories = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.ACCESSORY);
         List<InventoryLogV1> services = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.SERVICE);
         if(null != products){
             for(InventoryLogV1 log: products){
-                productV1s.add(log.getInventory().getProduct());
+                ProductDetailsDTO dto = getProductDetailsDTOfromEntity(log);
+                productV1s.add(dto);
             }
         }
         if(null != accessories){
             for(InventoryLogV1 log: accessories){
-                accessoryV1s.add(log.getInventory().getAccessory());
+                AccessoryDetailsDTO dto = getAccessoryDetailsDTOfromEntity(log);
+                accessoryV1s.add(dto);
             }
         }
         if(null != services){
@@ -108,6 +107,33 @@ public class InventoryLogServiceV1 {
 
     public List<InventoryLogV1> getAllLogsByIduSerial(String iduSerial){
         return inventoryLogRepositoryV1.findAllByIduSerial(iduSerial);
+    }
+
+    public AccessoryDetailsDTO getAccessoryDetailsDTOfromEntity(InventoryLogV1 inventoryLogV1){
+        AccessoryDetailsDTO detailsDTO = new AccessoryDetailsDTO();
+        AccessoryV1 accessoryV1 = inventoryLogV1.getInventory().getAccessory();
+        detailsDTO.setId(accessoryV1.getId());
+        detailsDTO.setAmount(inventoryLogV1.getAmount().doubleValue());
+        detailsDTO.setCategory(accessoryV1.getCategory());
+        detailsDTO.setCount(inventoryLogV1.getQuantity());
+        detailsDTO.setDescription(accessoryV1.getDescription());
+        detailsDTO.setName(accessoryV1.getName());
+        detailsDTO.setCost(accessoryV1.getCost());
+        detailsDTO.setBrand(accessoryV1.getBrand());
+        return detailsDTO;
+    }
+
+    public ProductDetailsDTO getProductDetailsDTOfromEntity(InventoryLogV1 inventoryLogV1){
+        ProductDetailsDTO detailsDTO = new ProductDetailsDTO();
+        ProductV1 productV1 = inventoryLogV1.getInventory().getProduct();
+        detailsDTO.setId(productV1.getId());
+        detailsDTO.setAmount(inventoryLogV1.getAmount().doubleValue());
+        detailsDTO.setCategory(productV1.getCategory());
+        detailsDTO.setDescription(productV1.getDescription());
+        detailsDTO.setName(productV1.getName());
+        detailsDTO.setCost(productV1.getCost());
+        detailsDTO.setBrand(productV1.getBrand());
+        return detailsDTO;
     }
 
 

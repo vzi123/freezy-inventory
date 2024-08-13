@@ -74,7 +74,7 @@ public class UserServiceV1 {
         user.setPhone_number(dto.getPhoneNumber());
         user.setAddress(dto.getAddress());
         user.setEmail(dto.getEmail());
-        user.setRole(UserRoleV1.CUSTOMER);
+        user.setRole(role);
         user.setCity(dto.getCity());
         user.setCreatedAt(UtilsService.generateDateFormat());
         user.setPincode(dto.getPincode());

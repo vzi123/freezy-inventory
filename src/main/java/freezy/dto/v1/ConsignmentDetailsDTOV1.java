@@ -9,24 +9,24 @@ import java.util.List;
 
 public class ConsignmentDetailsDTOV1 {
 
-    List<ProductV1> products;
-    List<AccessoryV1> accessories;
+    List<ProductDetailsDTO> products;
+    List<AccessoryDetailsDTO> accessories;
     List<ServiceV1> services;
     ConsignmentV1 consignment;
 
-    public List<ProductV1> getProducts() {
+    public List<ProductDetailsDTO> getProducts() {
         return products;
     }
 
-    public void setProducts(List<ProductV1> products) {
+    public void setProducts(List<ProductDetailsDTO> products) {
         this.products = products;
     }
 
-    public List<AccessoryV1> getAccessories() {
+    public List<AccessoryDetailsDTO> getAccessories() {
         return accessories;
     }
 
-    public void setAccessories(List<AccessoryV1> accessories) {
+    public void setAccessories(List<AccessoryDetailsDTO> accessories) {
         this.accessories = accessories;
     }
 
