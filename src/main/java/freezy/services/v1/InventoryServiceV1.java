@@ -236,7 +236,7 @@ public class InventoryServiceV1 {
 
     public Boolean validateODU(InventoryEntryV1 inventoryEntryV1) {
         for(InventoryDTOV1 dto: inventoryEntryV1.getProducts()){
-            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getIduSerialNo());
             if(null == logs || logs.size() ==0) return false;
         }
         return true;
@@ -244,7 +244,7 @@ public class InventoryServiceV1 {
 
     public Boolean validateIDU(InventoryEntryV1 inventoryEntryV1) {
         for(InventoryDTOV1 dto: inventoryEntryV1.getProducts()){
-            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getSerialNo());
+            List<InventoryLogV1> logs = inventoryLogServiceV1.getAllLogsByIduSerial(dto.getIduSerialNo());
             if(null != logs && logs.size() > 0) return false;
         }
         return true;
@@ -292,17 +292,17 @@ public class InventoryServiceV1 {
         inventoryLog.setQuantity(inventoryDTO.getQuantity());
         inventoryLog.setUpdatedStock(inventory.getStock());
         inventoryLog.setType(InventoryTypeV1.PRODUCT);
+        inventoryLog.setIduSerial(inventoryDTO.getIduSerialNo());
+        inventoryLog.setOduSerial(inventoryDTO.getOduSerialNo());
         if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
             inventoryLog.setInOut(InventoryLogEntryV1.IN);
-            inventoryLog.setIduSerial(inventoryDTO.getSerialNo());
-            inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " " + product.getName() + " (IDU: " + inventoryDTO.getSerialNo() + ") on " + utilsService.generateDateFormat() + " from " +
+            inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " " + product.getName() + " (IDU: " + inventoryDTO.getIduSerialNo() + ", ODU: " + inventoryDTO.getOduSerialNo() + ") on " + utilsService.generateDateFormat() + " from " +
                     userFirstName + ", Notes: " + inventoryEntryV1.getComments());
             publishInwardDetailEvent(inventoryDTO.getQuantity(), product.getName());
         }
         else{
             inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-            inventoryLog.setOduSerial(inventoryDTO.getSerialNo());
-            inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + " " + product.getName() + "(ODU: " + inventoryDTO.getSerialNo() + ") on " + utilsService.generateDateFormat() + " for " +
+            inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + " " + product.getName() + " (IDU: " + inventoryDTO.getIduSerialNo() + ", ODU: " + inventoryDTO.getOduSerialNo() + ") on " + utilsService.generateDateFormat() + " for " +
                     userFirstName + ", Notes: " + inventoryEntryV1.getComments());
         }
 
@@ -346,15 +346,15 @@ public class InventoryServiceV1 {
         inventoryLog.setQuantity(inventoryDTO.getQuantity());
         inventoryLog.setUpdatedStock(inventory.getStock());
         inventoryLog.setType(InventoryTypeV1.ACCESSORY);
+        inventoryLog.setIduSerial(inventoryDTO.getIduSerialNo());
+        inventoryLog.setOduSerial(inventoryDTO.getOduSerialNo());
         if(inOrOut.equalsIgnoreCase(Constants.INVENTORY_INC)){
             inventoryLog.setInOut(InventoryLogEntryV1.IN);
-            inventoryLog.setIduSerial(inventoryDTO.getSerialNo());
             inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " " +  accessoryV1.getName() + " on " + utilsService.generateDateFormat() + " from " +
                     userFirstName + ", Notes: " + inventoryEntryV1.getComments());
         }
         else{
             inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-            inventoryLog.setOduSerial(inventoryDTO.getSerialNo());
             inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + " " +  accessoryV1.getName() + " on " + utilsService.generateDateFormat() + " for " +
                     userFirstName + ", Notes: " + inventoryEntryV1.getComments());
         }
