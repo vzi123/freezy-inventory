@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for freezy-small-dew-912 on 2024-05-25T18:19:00+05:30
+# fly.toml app configuration file generated for freezy-prod-dew-912 on 2024-08-13T20:33:16+05:30
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'freezy-small-dew-912'
-primary_region = 'ams'
+app = 'freezy-prod-dew-912'
+primary_region = 'bom'
 kill_signal = 'SIGINT'
 kill_timeout = '5s'
 
@@ -16,7 +16,7 @@ kill_timeout = '5s'
 
 [http_service]
   internal_port = 8080
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
