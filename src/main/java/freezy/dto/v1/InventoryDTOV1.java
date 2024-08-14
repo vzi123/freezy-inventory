@@ -5,7 +5,8 @@ public class InventoryDTOV1 {
     String productId;
     Integer quantity;
     Integer unitPrice;
-    String serialNo;
+    String iduSerialNo;
+    String oduSerialNo;
     String type;
     String accessoryId;
     String serviceId;
@@ -34,14 +35,6 @@ public class InventoryDTOV1 {
         this.accessoryId = accessoryId;
     }
 
-    public String getSerialNo() {
-        return serialNo;
-    }
-
-    public void setSerialNo(String serialNo) {
-        this.serialNo = serialNo;
-    }
-
     public String getProductId() {
         return productId;
     }
@@ -64,5 +57,21 @@ public class InventoryDTOV1 {
 
     public void setUnitPrice(Integer unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public String getIduSerialNo() {
+        return iduSerialNo;
+    }
+
+    public void setIduSerialNo(String iduSerialNo) {
+        this.iduSerialNo = iduSerialNo;
+    }
+
+    public String getOduSerialNo() {
+        return oduSerialNo;
+    }
+
+    public void setOduSerialNo(String oduSerialNo) {
+        this.oduSerialNo = oduSerialNo;
     }
 }
