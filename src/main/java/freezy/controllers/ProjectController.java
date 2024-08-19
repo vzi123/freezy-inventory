@@ -1,10 +1,9 @@
 package freezy.controllers;
 
 import freezy.entities.Project;
-import freezy.schedule.StockAlertSchedule;
 import freezy.services.ProjectService;
 import freezy.utils.FreazySMSService;
-import freezy.utils.StockAlertEmailService;
+import freezy.utils.FreazyStockAlertEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ public class ProjectController {
     private ProjectService projectService;
 
     @Autowired
-    private StockAlertEmailService stockAlertEmailService;
+    private FreazyStockAlertEmailService freazyStockAlertEmailService;
 
     @Autowired
     FreazySMSService freazySMSService;
