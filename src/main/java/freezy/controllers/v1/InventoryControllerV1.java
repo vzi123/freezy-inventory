@@ -60,10 +60,10 @@ public class InventoryControllerV1 {
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
         Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
         if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
-            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_IDU, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_IDU, HttpStatus.BAD_REQUEST);
         }
         if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
-            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_QUANTITY_IDU, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_QUANTITY_IDU, HttpStatus.BAD_REQUEST);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, null);
         inwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(), consignmentV1.getItemCount());
@@ -74,7 +74,7 @@ public class InventoryControllerV1 {
     public Object saveOuwardInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception {
         Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
-            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.BAD_REQUEST);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, null);
         outwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), FreazyStringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
@@ -109,16 +109,16 @@ public class InventoryControllerV1 {
         if(null != consignmentId){
             ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
             if(null == consignmentV1){
-                return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.OK);
+                return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.BAD_REQUEST);
             }
             else{
                 Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
                 Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
                 if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
-                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_IDU, HttpStatus.OK);
+                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_IDU, HttpStatus.BAD_REQUEST);
                 }
                 if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
-                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_QUANTITY_IDU, HttpStatus.OK);
+                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_QUANTITY_IDU, HttpStatus.BAD_REQUEST);
                 }
             }
             inventoryServiceV1.undoConsignment(consignmentV1);
@@ -133,12 +133,12 @@ public class InventoryControllerV1 {
         if(null != consignmentId){
             ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
             if(null == consignmentV1){
-                return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.OK);
+                return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.BAD_REQUEST);
             }
             else{
                 Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
                 if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
-                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.OK);
+                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.BAD_REQUEST);
                 }
             }
             inventoryServiceV1.undoConsignment(consignmentV1);
