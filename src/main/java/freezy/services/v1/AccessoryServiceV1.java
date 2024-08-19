@@ -4,16 +4,12 @@ package freezy.services.v1;
 import freezy.dto.v1.AccessoryDTOV1;
 import freezy.dto.v1.ProductDTOV1;
 import freezy.entities.v1.AccessoryV1;
-import freezy.entities.v1.CategoryV1;
-import freezy.entities.v1.ProductV1;
 import freezy.repository.v1.AccessoryRepositoryV1;
-import freezy.repository.v1.ProductRepositoryV1;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyConstants;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +18,7 @@ public class AccessoryServiceV1 {
     private AccessoryRepositoryV1 accessoryRepositoryV1;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     CategoryServiceV1 categoryServiceV1;
@@ -42,7 +38,7 @@ public class AccessoryServiceV1 {
     public AccessoryV1 saveAccessory(AccessoryDTOV1 dto) {
         AccessoryV1 accessory = new AccessoryV1();
         if(null != dto){
-            accessory.setId(utilsService.generateId(Constants.ACCESSORY_ORDER_PREFIX));
+            accessory.setId(freazyUtilsService.generateId(FreazyConstants.ACCESSORY_ORDER_PREFIX));
             accessory.setName(dto.getName());
             accessory.setCategory(categoryServiceV1.getCategoryById(dto.getCategoryId()));
             accessory.setDescription(dto.getDescription());
@@ -61,7 +57,7 @@ public class AccessoryServiceV1 {
     public AccessoryV1 saveAccessory(ProductDTOV1 dto) {
         AccessoryV1 accessory = new AccessoryV1();
         if(null != dto){
-            accessory.setId(utilsService.generateId(Constants.ACCESSORY_ORDER_PREFIX));
+            accessory.setId(freazyUtilsService.generateId(FreazyConstants.ACCESSORY_ORDER_PREFIX));
             accessory.setName(dto.getName());
             accessory.setCategory(categoryServiceV1.getCategoryById(dto.getCategoryId()));
             accessory.setDescription(dto.getDescription());

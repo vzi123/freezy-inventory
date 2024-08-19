@@ -1,24 +1,15 @@
 package freezy.controllers.v1;
 
 
-import freezy.entities.v1.CategoryV1;
 import freezy.entities.v1.ConsignmentV1;
 import freezy.services.PdfGenerateService;
-import freezy.services.v1.CategoryServiceV1;
 import freezy.services.v1.ConsignmentServiceV1;
-import freezy.utils.Constants;
-import freezy.utils.FreazyWhatsAppService;
-import freezy.utils.StockAlertEmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.List;
 
 @RestController

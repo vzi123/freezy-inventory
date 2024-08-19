@@ -6,7 +6,7 @@ import freezy.entities.v1.UserV1;
 import freezy.events.StockDetailsPublisher;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.utils.FreazyStringUtils;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class StockAlertSchedule {
     StockDetailsPublisher stockDetailsPublisher;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
 
 
@@ -34,7 +34,7 @@ public class StockAlertSchedule {
     public void runEvey5Minutes() {
         System.out.println(" Here to calculate stock");
         List<InventoryListV1> stockDetails = inventoryServiceV1.getAllInventory();
-        UserV1 superUser = utilsService.getSuperUserV1();
+        UserV1 superUser = freazyUtilsService.getSuperUserV1();
         List<String> headers = Arrays.asList(new String[] { "Product_Name", "Stock" });
         List<List<String>> inventory = new ArrayList<>();
         for(InventoryListV1 item: stockDetails){

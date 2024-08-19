@@ -2,12 +2,7 @@ package freezy.controllers.v1;
 
 
 import freezy.entities.v1.BrandV1;
-import freezy.entities.v1.CategoryV1;
 import freezy.services.v1.BrandServiceV1;
-import freezy.services.v1.CategoryServiceV1;
-import freezy.utils.Constants;
-import freezy.utils.FreazyWhatsAppService;
-import freezy.utils.StockAlertEmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

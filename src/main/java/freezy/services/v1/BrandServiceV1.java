@@ -2,10 +2,9 @@ package freezy.services.v1;
 
 
 import freezy.entities.v1.BrandV1;
-import freezy.entities.v1.CategoryV1;
 import freezy.repository.v1.BrandRepositoryV1;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyConstants;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,7 @@ public class BrandServiceV1 {
     BrandRepositoryV1 brandRepositoryV1;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
 
     public List<BrandV1> getAllBrands() {
@@ -30,7 +29,7 @@ public class BrandServiceV1 {
     }
 
     public void saveBrand(BrandV1 brandV1) {
-        brandV1.setId(utilsService.generateId(Constants.BRAND_ORDER_PREFIX));
+        brandV1.setId(freazyUtilsService.generateId(FreazyConstants.BRAND_ORDER_PREFIX));
         brandRepositoryV1.saveAndFlush(brandV1);
     }
 }

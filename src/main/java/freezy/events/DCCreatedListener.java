@@ -3,7 +3,7 @@ package freezy.events;
 import com.google.gson.JsonObject;
 import freezy.entities.v1.UserV1;
 import freezy.services.v1.UserServiceV1;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazyWhatsAppService;
 import freezy.utils.FreazyStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class DCCreatedListener {
             UserV1 adminUser = userServiceV1.getUserById(dcCreatedEvent.getAdminUserId());
             String message = createMessageString(adminUser.getFirst_name(), dcCreatedEvent.getCustomerName());
                     //"Hi " + adminUser.getFirst_name() + ", An Outward Entry for " + outwardCreatedEvent.getCustomerName() + " for an amount Rs." + outwardCreatedEvent.getCost() + "/- has been created. Please check Freazy for more details.";
-            freazyWhatsAppService.sendFile(adminUser.getPhone_number(), message, Constants.DC_PDF_SENT, dcCreatedEvent.getDcURL());
+            freazyWhatsAppService.sendFile(adminUser.getPhone_number(), message, FreazyConstants.DC_PDF_SENT, dcCreatedEvent.getDcURL());
             //Hi {{1}}, a DC for customer {{2}} is generated. Please find the PDF attached. Please check Freazy for more details.
         }
         catch (Exception e){

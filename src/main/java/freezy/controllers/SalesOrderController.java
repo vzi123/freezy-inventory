@@ -10,13 +10,12 @@ import freezy.repository.SalesOrderItemsRepository;
 import freezy.services.PurchaseOrderService;
 import freezy.services.SalesOrderService;
 import freezy.services.UserService;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazySMSService;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +39,7 @@ public class SalesOrderController {
     private SalesOrderItemsRepository salesOrderItemsRepository;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     FreazySMSService freazySMSService;
@@ -75,22 +74,22 @@ public class SalesOrderController {
         //validateStockAndBudgetOfSalesOrderWithPO
         PurchaseOrder purchaseOrder = purchaseOrderService.getPurchaseOrderById(salesOrderDetailsDTO.getPoId());
         if(purchaseOrder.getStatus().equalsIgnoreCase(PurchaseOrderStatus.DRAFT.toString())){
-            return utilsService.sendResponse(Constants.PO_STATE_NOT_ALLOWED, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.PO_STATE_NOT_ALLOWED, HttpStatus.OK);
         }
         String doProductsMatch = salesOrderService.validateIncomingProductsWithPO(salesOrderDetailsDTO);
         if(doProductsMatch != null){
-            return utilsService.sendResponse(Constants.PO_SO_PRODUCT_ERROR, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.PO_SO_PRODUCT_ERROR, HttpStatus.OK);
         }
         String isBudgetAndQuantityOnPOValid = salesOrderService.validateIncomingStockWithPurchaseOrder(salesOrderDetailsDTO);
         if(isBudgetAndQuantityOnPOValid != null){
-            return utilsService.sendResponse(Constants.PO_BUDGET_STOCK_ERROR, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.PO_BUDGET_STOCK_ERROR, HttpStatus.OK);
         }
         String isValidBudgetAndStockWithPOAndSO = salesOrderService.validateIncomingWithPOAndSO(salesOrderDetailsDTO);
         if(isValidBudgetAndStockWithPOAndSO != null){
-            return utilsService.sendResponse(Constants.PO_SO_BUDGET_STOCK_ERROR, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.PO_SO_BUDGET_STOCK_ERROR, HttpStatus.OK);
         }
         SalesOrder salesOrder = salesOrderService.saveSalesOrderDetails(salesOrderDetailsDTO);
-        freazySMSService.sendSms(Constants.SEND_SMS2, utilsService.generateSOMessage(salesOrder.getId()));
+        freazySMSService.sendSms(FreazyConstants.SEND_SMS2, freazyUtilsService.generateSOMessage(salesOrder.getId()));
         return salesOrderService.getSalesOrderById(salesOrder.getId());
 
     }
@@ -104,11 +103,11 @@ public class SalesOrderController {
 
     @GetMapping(value= "/statuses/{persona}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map getSalesOrderStatuses(@PathVariable String persona) {
-        if(null != persona && persona.equalsIgnoreCase(Constants.CUSTOMER)){
-            return Constants.SO_STATUSES_CUSTOMER;
+        if(null != persona && persona.equalsIgnoreCase(FreazyConstants.CUSTOMER)){
+            return FreazyConstants.SO_STATUSES_CUSTOMER;
         }
-        if(null != persona && persona.equalsIgnoreCase(Constants.VENDOR)){
-            return Constants.SO_STATUSES_SUPPLIER;
+        if(null != persona && persona.equalsIgnoreCase(FreazyConstants.VENDOR)){
+            return FreazyConstants.SO_STATUSES_SUPPLIER;
         }
         return null;
     }

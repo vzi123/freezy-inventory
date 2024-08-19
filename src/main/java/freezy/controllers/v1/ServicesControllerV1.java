@@ -1,18 +1,11 @@
 package freezy.controllers.v1;
 
 
-import freezy.dto.v1.AccessoryDTOV1;
-import freezy.dto.v1.InventoryDTOV1;
-import freezy.entities.v1.AccessoryV1;
-import freezy.entities.v1.InventoryTypeV1;
 import freezy.entities.v1.ServiceV1;
-import freezy.services.v1.AccessoryServiceV1;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.services.v1.ServicesServiceV1;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +22,7 @@ public class ServicesControllerV1 {
     InventoryServiceV1 inventoryServiceV1;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ServiceV1> getAll() {

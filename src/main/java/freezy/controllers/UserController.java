@@ -5,8 +5,8 @@ import freezy.dto.UserDTO;
 import freezy.entities.User;
 import freezy.entities.UserRole;
 import freezy.services.UserService;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyConstants;
+import freezy.utils.FreazyUtilsService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers() {
@@ -45,8 +45,8 @@ public class UserController {
         user.setAddress(dto.getAddress());
         user.setRole(UserRole.CUSTOMER);
         user.setCity(dto.getCity());
-        user.setId(utilsService.generateId(Constants.USER_PREFIX));
-        user.setCreated_at(utilsService.generateDateFormat());
+        user.setId(freazyUtilsService.generateId(FreazyConstants.USER_PREFIX));
+        user.setCreated_at(freazyUtilsService.generateDateFormat());
         userService.saveUser(user);
     }
 
@@ -59,8 +59,8 @@ public class UserController {
         user.setAddress(dto.getAddress());
         user.setCity(dto.getCity());
         user.setRole(UserRole.SUPPLIER);
-        user.setId(utilsService.generateId(Constants.USER_PREFIX));
-        user.setCreated_at(utilsService.generateDateFormat());
+        user.setId(freazyUtilsService.generateId(FreazyConstants.USER_PREFIX));
+        user.setCreated_at(freazyUtilsService.generateDateFormat());
         userService.saveUser(user);
     }
 

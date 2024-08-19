@@ -4,8 +4,6 @@ package freezy.services;
 import freezy.entities.User;
 import freezy.entities.UserRole;
 import freezy.repository.UserRepository;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;

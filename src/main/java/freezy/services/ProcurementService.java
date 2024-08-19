@@ -4,8 +4,8 @@ import freezy.dto.InventoryDTO;
 import freezy.dto.ProcurementDTO;
 import freezy.entities.Procurement;
 import freezy.repository.ProcurementRepository;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyConstants;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class ProcurementService {
     InventoryService inventoryService;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     ProductService productService;
@@ -57,13 +57,13 @@ public class ProcurementService {
             procurement = new Procurement();
         }
 
-        procurement.setId(utilsService.generateId(Constants.PROC_PREFIX));
-        procurement.setDate(utilsService.generateDateFormat());
+        procurement.setId(freazyUtilsService.generateId(FreazyConstants.PROC_PREFIX));
+        procurement.setDate(freazyUtilsService.generateDateFormat());
         procurement.setProduct(productService.getProductById(procurementDTO.getProductId()));
         procurement.setQuantity(procurementDTO.getQuantity());
         procurement.setCost(procurementDTO.getCost());
         procurement.setVendor(procurementDTO.getVendorId());
-        procurement.setDescription("Procured on " + utilsService.generateDateFormat() + " from " + procurementDTO.getVendorId());
+        procurement.setDescription("Procured on " + freazyUtilsService.generateDateFormat() + " from " + procurementDTO.getVendorId());
         procurementRepository.save(procurement);
         InventoryDTO dto = new InventoryDTO();
         dto.setProductId(procurement.getProduct().getId());

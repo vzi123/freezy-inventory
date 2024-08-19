@@ -7,10 +7,10 @@ import freezy.dto.QuotationItemsDTO;
 import freezy.entities.*;
 import freezy.events.QuotationCreatedPublisher;
 import freezy.repository.QuotationRepository;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazyWhatsAppService;
 import freezy.utils.FreazyStringUtils;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class QuotationService {
     QuotationItemsService quotationItemsService;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     ProductService productService;
@@ -62,7 +62,7 @@ public class QuotationService {
         }
         if(null == quotation){
             quotation = new Quotation();
-            quotation.setId(utilsService.generateId(Constants.QUOTATION_PREFIX));
+            quotation.setId(freazyUtilsService.generateId(FreazyConstants.QUOTATION_PREFIX));
             quotation.setStatus(QuotationStatus.DRAFT.toString());
         }
 
@@ -81,8 +81,8 @@ public class QuotationService {
             quotation.setUserPersona(dto.getUserPersona());
         }
 
-        quotation.setCreatedAt(utilsService.generateDateFormat());
-        quotation.setCreatedBy(utilsService.getSuperUser());
+        quotation.setCreatedAt(freazyUtilsService.generateDateFormat());
+        quotation.setCreatedBy(freazyUtilsService.getSuperUser());
         quotation.setBudget(0);
         if(null != dto.getDiscount()){
             quotation.setDiscount(dto.getDiscount().doubleValue());
@@ -114,9 +114,9 @@ public class QuotationService {
             }
             //item.setPrice((int)((productService.getProductById(items.getProductId())).getPrice() * (1 - (float)(dto.getDiscount())/100)));
             item.setQuantity(items.getQuantity());
-            item.setId(utilsService.generateId(Constants.QUOTATION_ITEM_PREFIX));
-            item.setCreatedAt(utilsService.generateDateFormat());
-            item.setCreatedBy(utilsService.getSuperUser());
+            item.setId(freazyUtilsService.generateId(FreazyConstants.QUOTATION_ITEM_PREFIX));
+            item.setCreatedAt(freazyUtilsService.generateDateFormat());
+            item.setCreatedBy(freazyUtilsService.getSuperUser());
             item.setProduct(productService.getProductById(items.getProductId()));
             quotationItemsService.saveQuotationItems(item);
 

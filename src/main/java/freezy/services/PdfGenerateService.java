@@ -5,7 +5,6 @@ import freezy.dto.UserDTO;
 import freezy.dto.v1.DCDTOV1;
 import freezy.entities.*;
 import freezy.entities.v1.*;
-import freezy.events.DCCreatedEvent;
 import freezy.events.DCCreatedPublisher;
 import freezy.repository.v1.InventoryLogRepositoryV1;
 import freezy.utils.*;
@@ -13,11 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -42,7 +39,7 @@ public class PdfGenerateService {
     DCCreatedPublisher dcCreatedPublisher;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     FreazyS3Service freazyS3Service;
@@ -209,7 +206,7 @@ public class PdfGenerateService {
         String s3Link = freazyS3Service.uploadFile(file);
 //        System.out.println("Link : " + link);
         System.out.println("S3 Link : " + s3Link);
-        dcCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(),s3Link,userDTO.getName() );
+        dcCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(),s3Link,userDTO.getName() );
         return generatePdfFileContents("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
     }
 }

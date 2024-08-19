@@ -4,7 +4,7 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
-public class Constants {
+public class FreazyConstants {
     public static final String PURCHASE_ORDER_PREFIX = "PO";
     public static final String CATEGORY_ORDER_PREFIX = "CAT";
     public static final String BRAND_ORDER_PREFIX = "BR";

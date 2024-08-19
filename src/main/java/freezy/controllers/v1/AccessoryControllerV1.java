@@ -3,15 +3,12 @@ package freezy.controllers.v1;
 
 import freezy.dto.v1.AccessoryDTOV1;
 import freezy.dto.v1.InventoryDTOV1;
-import freezy.dto.v1.ProductDTOV1;
 import freezy.entities.v1.AccessoryV1;
 import freezy.entities.v1.InventoryTypeV1;
-import freezy.entities.v1.ProductV1;
 import freezy.services.v1.AccessoryServiceV1;
 import freezy.services.v1.InventoryServiceV1;
-import freezy.services.v1.ProductServiceV1;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyConstants;
+import freezy.utils.FreazyUtilsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +28,7 @@ public class AccessoryControllerV1 {
     InventoryServiceV1 inventoryServiceV1;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<AccessoryV1> getAll() {
@@ -46,7 +43,7 @@ public class AccessoryControllerV1 {
     @PostMapping(value = "/save",produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public Object save(@Valid @RequestBody AccessoryDTOV1 dto) {
         if(null == dto.getCategoryId()){
-            return utilsService.sendResponse(Constants.CATEGORY_NULL, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.CATEGORY_NULL, HttpStatus.OK);
         }
         else{
             AccessoryV1 accessoryV1 = accessoryServiceV1.saveAccessory(dto);

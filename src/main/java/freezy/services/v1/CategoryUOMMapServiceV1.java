@@ -3,13 +3,11 @@ package freezy.services.v1;
 
 
 import freezy.dto.v1.UOMDTOV1;
-import freezy.entities.CategoryUOMMap;
 import freezy.entities.v1.CategoryUOMMapV1;
 import freezy.entities.v1.UOMV1;
-import freezy.repository.CategoryUOMMapRepository;
 import freezy.repository.v1.CategoryUOMMapRepositoryV1;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyConstants;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +19,7 @@ public class CategoryUOMMapServiceV1 {
     private CategoryUOMMapRepositoryV1 categoryUOMMapRepositoryV1;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     CategoryServiceV1 categoryServiceV1;
@@ -50,19 +48,19 @@ public class CategoryUOMMapServiceV1 {
         }
         else{
             categoryUOMMap = new CategoryUOMMapV1();
-            categoryUOMMap.setId(utilsService.generateId(Constants.UOM_ORDER_PREFIX));
+            categoryUOMMap.setId(freazyUtilsService.generateId(FreazyConstants.UOM_ORDER_PREFIX));
         }
         String type = null;
         if(null != uomdtov1.getProductId()) {
-            type = Constants.PRODUCTS;
+            type = FreazyConstants.PRODUCTS;
             categoryUOMMap.setProduct(productServiceV1.getProductV1ById(uomdtov1.getProductId()));
         }
         if(null != uomdtov1.getAccessoryId()) {
-            type = Constants.ACCESSORIES;
+            type = FreazyConstants.ACCESSORIES;
             categoryUOMMap.setAccessory(accessoryServiceV1.getAccessoryById(uomdtov1.getAccessoryId()));
         }
         if(null != uomdtov1.getServiceId()) {
-            type = Constants.SERVICES;
+            type = FreazyConstants.SERVICES;
             categoryUOMMap.setService(servicesServiceV1.getServiceById(uomdtov1.getServiceId()));
         }
         categoryUOMMap.setCategory(categoryServiceV1.getCategoryByType(type));

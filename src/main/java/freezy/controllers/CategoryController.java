@@ -3,7 +3,7 @@ package freezy.controllers;
 
 import freezy.entities.Category;
 import freezy.services.CategoryService;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazyWhatsAppService;
 import freezy.utils.StockAlertEmailService;
 import lombok.extern.slf4j.Slf4j;
@@ -59,8 +59,8 @@ public class CategoryController {
 
     @GetMapping(value = "/send/{message}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void sendWhatsaApp(@PathVariable String message) {
-        freazyWhatsAppService.sendMessage(Constants.SEND_SMS, message, Constants.WELCOME_TO_FREAZY);
-        freazyWhatsAppService.sendMessage(Constants.SEND_SMS2, message, Constants.WELCOME_TO_FREAZY);
+        freazyWhatsAppService.sendMessage(FreazyConstants.SEND_SMS, message, FreazyConstants.WELCOME_TO_FREAZY);
+        freazyWhatsAppService.sendMessage(FreazyConstants.SEND_SMS2, message, FreazyConstants.WELCOME_TO_FREAZY);
     }
 
     @GetMapping(value = "/mail", produces = MediaType.APPLICATION_JSON_VALUE)

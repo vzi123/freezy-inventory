@@ -3,7 +3,7 @@ package freezy.events;
 import com.google.gson.JsonObject;
 import freezy.entities.v1.UserV1;
 import freezy.services.v1.UserServiceV1;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazyWhatsAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -23,9 +23,9 @@ public class OutwardCreatedListener {
         try{
             System.out.println("No. of Items - " + outwardCreatedEvent.getCustomerName());
             UserV1 adminUser = userServiceV1.getUserById(outwardCreatedEvent.getAdminUserId());
-            String message = createMessageString(adminUser.getFirst_name(), outwardCreatedEvent.getCustomerName(), outwardCreatedEvent.getCost().toString(), Constants.OUTWARD_CREATE);
+            String message = createMessageString(adminUser.getFirst_name(), outwardCreatedEvent.getCustomerName(), outwardCreatedEvent.getCost().toString(), FreazyConstants.OUTWARD_CREATE);
                     //"Hi " + adminUser.getFirst_name() + ", An Outward Entry for " + outwardCreatedEvent.getCustomerName() + " for an amount Rs." + outwardCreatedEvent.getCost() + "/- has been created. Please check Freazy for more details.";
-            freazyWhatsAppService.sendMessage(adminUser.getPhone_number(), message, Constants.OUTWARD_CREATE);
+            freazyWhatsAppService.sendMessage(adminUser.getPhone_number(), message, FreazyConstants.OUTWARD_CREATE);
         }
         catch (Exception e){
 

@@ -9,13 +9,12 @@ import freezy.repository.PayableRepository;
 import freezy.repository.ReceivableRepository;
 import freezy.repository.SalesOrderItemsRepository;
 import freezy.repository.SalesOrderRepository;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazySMSService;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -31,7 +30,7 @@ public class SalesOrderService {
     private SalesOrderItemsRepository salesOrderItemsRepository;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     UserService userService;
@@ -114,11 +113,11 @@ public class SalesOrderService {
     }
 
     private void createCashEntries(SalesOrder salesOrder) {
-        if(salesOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)){
+        if(salesOrder.getUserPersona().equalsIgnoreCase(FreazyConstants.CUSTOMER)){
             salesOrder.setStatus(SalesOrderStatus.RAISED.toString());
             saveReceivable(salesOrder, ReceivableStatus.TO_BE_RECEIVED, "Raised a Receivable");
         }
-        if(salesOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
+        if(salesOrder.getUserPersona().equalsIgnoreCase(FreazyConstants.VENDOR)){
             salesOrder.setStatus(SalesOrderStatus.STOCK_TO_BE_RECEIVED.name());
             savePayable(salesOrder, PayableStatus.TO_BE_PAID, "Raised a Payable");
         }
@@ -128,24 +127,24 @@ public class SalesOrderService {
         InventoryDTO inventoryDTO = new InventoryDTO();
         inventoryDTO.setStock(salesOrderItem.getQuantity());
         inventoryDTO.setProductId(salesOrderItem.getProduct().getId());
-        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)){
-            inventoryService.incrementOrDecrementInventory(inventoryDTO, Constants.INVENTORY_DEDUCT, salesOrderItem.getId());
+        if(purchaseOrder.getUserPersona().equalsIgnoreCase(FreazyConstants.CUSTOMER)){
+            inventoryService.incrementOrDecrementInventory(inventoryDTO, FreazyConstants.INVENTORY_DEDUCT, salesOrderItem.getId());
         }
-        if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)){
-            inventoryService.incrementOrDecrementInventory(inventoryDTO, Constants.INVENTORY_INC, salesOrderItem.getId());
+        if(purchaseOrder.getUserPersona().equalsIgnoreCase(FreazyConstants.VENDOR)){
+            inventoryService.incrementOrDecrementInventory(inventoryDTO, FreazyConstants.INVENTORY_INC, salesOrderItem.getId());
         }
     }
 
     private void getDefaultSO(SalesOrder salesOrder) {
-        salesOrder.setId(utilsService.generateId(Constants.SALES_ORDER_PREFIX));
-        salesOrder.setCreatedAt(utilsService.generateDateFormat());
-        salesOrder.setCreatedBy(utilsService.getSuperUser());
+        salesOrder.setId(freazyUtilsService.generateId(FreazyConstants.SALES_ORDER_PREFIX));
+        salesOrder.setCreatedAt(freazyUtilsService.generateDateFormat());
+        salesOrder.setCreatedBy(freazyUtilsService.getSuperUser());
     }
 
     private void getDefaultSOI(SalesOrderItems salesOrderItem) {
-        salesOrderItem.setId(utilsService.generateId(Constants.SALES_ORDER_ITEM_PREFIX));
-        salesOrderItem.setCreatedAt(utilsService.generateDateFormat());
-        salesOrderItem.setCreatedBy(utilsService.getSuperUser());
+        salesOrderItem.setId(freazyUtilsService.generateId(FreazyConstants.SALES_ORDER_ITEM_PREFIX));
+        salesOrderItem.setCreatedAt(freazyUtilsService.generateDateFormat());
+        salesOrderItem.setCreatedBy(freazyUtilsService.getSuperUser());
     }
 
     public Map<String, CompareDTO> getBudgetAndStock(SalesOrder salesOrder){
@@ -176,10 +175,10 @@ public class SalesOrderService {
             savePayable(salesOrder, PayableStatus.FULL_PAYMENT_DONE, "Payment Done");
         }
         if(newStatus.equalsIgnoreCase(SalesOrderStatus.CLOSED.toString())){
-            if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.CUSTOMER)) {
+            if(purchaseOrder.getUserPersona().equalsIgnoreCase(FreazyConstants.CUSTOMER)) {
                 purchaseOrder.setStatus(PurchaseOrderStatus.PARTIAL_PAYMENT_RECEIVED.toString());
             }
-            if(purchaseOrder.getUserPersona().equalsIgnoreCase(Constants.VENDOR)) {
+            if(purchaseOrder.getUserPersona().equalsIgnoreCase(FreazyConstants.VENDOR)) {
                 purchaseOrder.setStatus(PurchaseOrderStatus.PARTIAL_PAYMENT_DONE.toString());
             }
             purchaseOrderService.savePurchaseOrder(purchaseOrder);
@@ -199,7 +198,7 @@ public class SalesOrderService {
         Payable payable = payableRepository.findBySalesOrder(salesOrder);
         if(null == payable) {
             payable = new Payable();
-            payable.setId(utilsService.generateId(Constants.PAYABLE_PREFIX));
+            payable.setId(freazyUtilsService.generateId(FreazyConstants.PAYABLE_PREFIX));
             payable.setSalesOrder(salesOrder);
             payable.setProject(purchaseOrder.getProject());
             payable.setVendor(purchaseOrder.getUser());
@@ -207,10 +206,10 @@ public class SalesOrderService {
         payable.setAmount(payableAmount);
         payable.setStatus(status);
         payable.setComments(comments);
-        payable.setCreatedAt(utilsService.generateDateFormat());
-        payable.setCreatedBy(utilsService.getSuperUser());
+        payable.setCreatedAt(freazyUtilsService.generateDateFormat());
+        payable.setCreatedBy(freazyUtilsService.getSuperUser());
         payableRepository.saveAndFlush(payable);
-        freazySMSService.sendSms(Constants.SEND_SMS2, utilsService.generatePayableMessage(payableAmount.toString()));
+        freazySMSService.sendSms(FreazyConstants.SEND_SMS2, freazyUtilsService.generatePayableMessage(payableAmount.toString()));
         return payable;
     }
 
@@ -226,18 +225,18 @@ public class SalesOrderService {
         Receivable receivable = receivableRepository.findBySalesOrder(salesOrder);
         if(null == receivable) {
             receivable = new Receivable();
-            receivable.setId(utilsService.generateId(Constants.RECEIVABLE_PREFIX));
+            receivable.setId(freazyUtilsService.generateId(FreazyConstants.RECEIVABLE_PREFIX));
             receivable.setSalesOrder(salesOrder);
             receivable.setProject(purchaseOrder.getProject());
             receivable.setCustomer(purchaseOrder.getUser());
         }
         receivable.setAmount(receivableAmount);
-        receivable.setCreatedAt(utilsService.generateDateFormat());
-        receivable.setCreatedBy(utilsService.getSuperUser());
+        receivable.setCreatedAt(freazyUtilsService.generateDateFormat());
+        receivable.setCreatedBy(freazyUtilsService.getSuperUser());
         receivable.setStatus(status);
         receivable.setComments(comments);
         receivableRepository.saveAndFlush(receivable);
-        freazySMSService.sendSms(Constants.SEND_SMS2, utilsService.generateReceivableMessage(receivableAmount.toString()));
+        freazySMSService.sendSms(FreazyConstants.SEND_SMS2, freazyUtilsService.generateReceivableMessage(receivableAmount.toString()));
         return receivable;
     }
 
@@ -266,7 +265,7 @@ public class SalesOrderService {
         List<SOItemsDTO> soItemsDTOS = salesOrderDetailsDTO.getSoItems();
         for (SOItemsDTO dto: soItemsDTOS){
             inputQuantity = dto.getQuantity();
-            if(inputQuantity > poQuantityMap.get(dto.getProductId())) return Constants.PO_BUDGET_STOCK_ERROR;
+            if(inputQuantity > poQuantityMap.get(dto.getProductId())) return FreazyConstants.PO_BUDGET_STOCK_ERROR;
         }
         return null;
     }
@@ -302,7 +301,7 @@ public class SalesOrderService {
             else{
                 soQuantityMap.put(dto.getProductId(), dto.getQuantity());
             }
-            if(inputQuantity > poQuantityMap.get(dto.getProductId())) return Constants.PO_SO_BUDGET_STOCK_ERROR;
+            if(inputQuantity > poQuantityMap.get(dto.getProductId())) return FreazyConstants.PO_SO_BUDGET_STOCK_ERROR;
         }
         return null;
     }
@@ -317,7 +316,7 @@ public class SalesOrderService {
         for(SOItemsDTO dto : salesOrderDetailsDTO.getSoItems()){
             incomingProducts.add(dto.getProductId());
         }
-        if(!products.containsAll(incomingProducts)) return Constants.PO_SO_PRODUCT_ERROR;
+        if(!products.containsAll(incomingProducts)) return FreazyConstants.PO_SO_PRODUCT_ERROR;
         return null;
     }
 

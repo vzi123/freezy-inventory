@@ -2,14 +2,11 @@ package freezy.controllers.v1;
 
 
 import freezy.dto.UserDTO;
-import freezy.entities.User;
-import freezy.entities.UserRole;
 import freezy.entities.v1.UserRoleV1;
 import freezy.entities.v1.UserV1;
-import freezy.services.UserService;
 import freezy.services.v1.UserServiceV1;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyConstants;
+import freezy.utils.FreazyUtilsService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +24,7 @@ public class UserControllerV1 {
     private UserServiceV1 userServiceV1;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserV1> getAllUsers() {
@@ -41,13 +38,13 @@ public class UserControllerV1 {
 
     @PostMapping(value = "/customer", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserV1 saveCustomer(@Valid @RequestBody UserDTO dto) {
-        String userId = utilsService.generateId(Constants.USER_PREFIX);
+        String userId = freazyUtilsService.generateId(FreazyConstants.USER_PREFIX);
         return userServiceV1.createOrUpdateUser(userId, dto, UserRoleV1.CUSTOMER);
     }
 
     @PostMapping(value = "/supplier", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserV1 saveSupplier(@Valid @RequestBody UserDTO dto) {
-        String userId = utilsService.generateId(Constants.USER_PREFIX);
+        String userId = freazyUtilsService.generateId(FreazyConstants.USER_PREFIX);
         return userServiceV1.createOrUpdateUser(userId, dto, UserRoleV1.SUPPLIER);
     }
 

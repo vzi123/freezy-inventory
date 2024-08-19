@@ -2,13 +2,10 @@ package freezy.services.v1;
 
 
 
-import freezy.entities.v1.CategoryV1;
 import freezy.entities.v1.ConsignmentV1;
-import freezy.repository.v1.CategoryRepositoryV1;
 import freezy.repository.v1.ConsignmentRepositoryV1;
 import freezy.services.PdfGenerateService;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,7 +22,7 @@ public class ConsignmentServiceV1 {
     ConsignmentRepositoryV1 consignmentRepositoryV1;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     PdfGenerateService pdfGenerateService;

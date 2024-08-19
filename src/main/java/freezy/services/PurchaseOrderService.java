@@ -9,19 +9,14 @@ import freezy.entities.*;
 import freezy.repository.PurchaseOrderItemsRepository;
 import freezy.repository.PurchaseOrderRepository;
 import freezy.repository.SalesOrderItemsRepository;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazySMSService;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.LinkOption;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -44,7 +39,7 @@ public class PurchaseOrderService {
     private ProductService productService;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     PurchaseOrderItemsService purchaseOrderItemsService;
@@ -74,9 +69,9 @@ public class PurchaseOrderService {
     public void savePurchaseOrder(PurchaseOrder purchaseOrder) {
         log.info(" in service");
         if(null == purchaseOrder.getId()){
-            purchaseOrder.setId(utilsService.generateId(Constants.PURCHASE_ORDER_PREFIX));
-            purchaseOrder.setCreatedAt(utilsService.generateDateFormat());
-            purchaseOrder.setCreatedBy(utilsService.getSuperUser());
+            purchaseOrder.setId(freazyUtilsService.generateId(FreazyConstants.PURCHASE_ORDER_PREFIX));
+            purchaseOrder.setCreatedAt(freazyUtilsService.generateDateFormat());
+            purchaseOrder.setCreatedBy(freazyUtilsService.getSuperUser());
             purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
         }
         purchaseOrderRepository.save(purchaseOrder);
@@ -113,9 +108,9 @@ public class PurchaseOrderService {
 
     private PurchaseOrderItems getPurchaseOrderItems() {
         PurchaseOrderItems purchaseOrderItem = new PurchaseOrderItems();
-        purchaseOrderItem.setId(utilsService.generateId(Constants.PURCHASE_ORDER_ITEM_PREFIX));
-        purchaseOrderItem.setCreatedAt(utilsService.generateDateFormat());
-        purchaseOrderItem.setCreatedBy(utilsService.getSuperUser());
+        purchaseOrderItem.setId(freazyUtilsService.generateId(FreazyConstants.PURCHASE_ORDER_ITEM_PREFIX));
+        purchaseOrderItem.setCreatedAt(freazyUtilsService.generateDateFormat());
+        purchaseOrderItem.setCreatedBy(freazyUtilsService.getSuperUser());
         return purchaseOrderItem;
     }
 
@@ -165,9 +160,9 @@ public class PurchaseOrderService {
 
     private PurchaseOrder getPurchaseOrder() {
         PurchaseOrder purchaseOrder = new PurchaseOrder();
-        purchaseOrder.setId(utilsService.generateId(Constants.PURCHASE_ORDER_PREFIX));
-        purchaseOrder.setCreatedAt(utilsService.generateDateFormat());
-        purchaseOrder.setCreatedBy(utilsService.getSuperUser());
+        purchaseOrder.setId(freazyUtilsService.generateId(FreazyConstants.PURCHASE_ORDER_PREFIX));
+        purchaseOrder.setCreatedAt(freazyUtilsService.generateDateFormat());
+        purchaseOrder.setCreatedBy(freazyUtilsService.getSuperUser());
         purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
         return purchaseOrder;
     }

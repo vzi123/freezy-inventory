@@ -10,9 +10,9 @@ import freezy.events.InwardCreatedPublisher;
 import freezy.events.OutwardCreatedPublisher;
 import freezy.services.v1.ConsignmentServiceV1;
 import freezy.services.v1.InventoryServiceV1;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazyStringUtils;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class InventoryControllerV1 {
     private InventoryServiceV1 inventoryServiceV1;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     ConsignmentServiceV1 consignmentServiceV1;
@@ -60,13 +60,13 @@ public class InventoryControllerV1 {
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
         Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
         if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
-            return utilsService.sendResponse(Constants.INVALID_IDU, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_IDU, HttpStatus.OK);
         }
         if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
-            return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_QUANTITY_IDU, HttpStatus.OK);
         }
-        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
-        inwardCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(), consignmentV1.getItemCount());
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, null);
+        inwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(), consignmentV1.getItemCount());
         return consignmentV1;
     }
 
@@ -74,10 +74,10 @@ public class InventoryControllerV1 {
     public Object saveOuwardInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception {
         Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
-            return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.OK);
         }
-        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
-        outwardCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), FreazyStringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, null);
+        outwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), FreazyStringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
         return consignmentServiceV1.generateDC(consignmentV1.getId());
     }
 
@@ -109,20 +109,20 @@ public class InventoryControllerV1 {
         if(null != consignmentId){
             ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
             if(null == consignmentV1){
-                return utilsService.sendResponse(Constants.INVALID_CONSIGNMENT, HttpStatus.OK);
+                return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.OK);
             }
             else{
                 Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
                 Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
                 if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
-                    return utilsService.sendResponse(Constants.INVALID_IDU, HttpStatus.OK);
+                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_IDU, HttpStatus.OK);
                 }
                 if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
-                    return utilsService.sendResponse(Constants.INVALID_QUANTITY_IDU, HttpStatus.OK);
+                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_QUANTITY_IDU, HttpStatus.OK);
                 }
             }
             inventoryServiceV1.undoConsignment(consignmentV1);
-            ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, consignmentV1);
+            ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, consignmentV1);
             return consignment;
         }
         return null;
@@ -133,16 +133,16 @@ public class InventoryControllerV1 {
         if(null != consignmentId){
             ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
             if(null == consignmentV1){
-                return utilsService.sendResponse(Constants.INVALID_CONSIGNMENT, HttpStatus.OK);
+                return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.OK);
             }
             else{
                 Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
                 if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
-                    return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
+                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.OK);
                 }
             }
             inventoryServiceV1.undoConsignment(consignmentV1);
-            ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, consignmentV1);
+            ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, consignmentV1);
             return consignmentServiceV1.generateDC(consignmentV1.getId());
         }
         return null;

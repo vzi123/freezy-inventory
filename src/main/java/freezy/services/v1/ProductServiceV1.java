@@ -2,12 +2,11 @@ package freezy.services.v1;
 
 
 import freezy.dto.v1.ProductDTOV1;
-import freezy.entities.Product;
 import freezy.entities.v1.CategoryV1;
 import freezy.entities.v1.ProductV1;
 import freezy.repository.v1.ProductRepositoryV1;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyConstants;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class ProductServiceV1 {
     private ProductRepositoryV1 productRepositoryV1;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     CategoryServiceV1 categoryServiceV1;
@@ -39,7 +38,7 @@ public class ProductServiceV1 {
     public ProductV1 saveProduct(ProductDTOV1 dto) {
         ProductV1 productV1 = new ProductV1();
         if(null != dto){
-            productV1.setId(utilsService.generateId(Constants.PRODUCT_ORDER_PREFIX));
+            productV1.setId(freazyUtilsService.generateId(FreazyConstants.PRODUCT_ORDER_PREFIX));
             productV1.setName(dto.getName());
             productV1.setCategory(categoryServiceV1.getCategoryById(dto.getCategoryId()));
             productV1.setDescription(dto.getDescription());

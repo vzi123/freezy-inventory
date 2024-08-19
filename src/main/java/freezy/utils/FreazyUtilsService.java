@@ -5,19 +5,17 @@ import freezy.entities.v1.UserV1;
 import freezy.services.UserService;
 import freezy.services.v1.UserServiceV1;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 
 @Service
-public class UtilsService {
+public class FreazyUtilsService {
 
     @Autowired
     UserService userService;
@@ -32,7 +30,7 @@ public class UtilsService {
     }
 
     public static String generateDateFormat(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(FreazyConstants.DATE_FORMAT);
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata")); // Set timezone to IST
         String formattedDate = dateFormat.format(new Timestamp(System.currentTimeMillis()));
         return formattedDate;

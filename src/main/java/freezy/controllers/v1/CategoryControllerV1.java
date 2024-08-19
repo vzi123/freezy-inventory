@@ -1,14 +1,12 @@
 package freezy.controllers.v1;
 
 
-import freezy.entities.Category;
 import freezy.entities.v1.CategoryV1;
-import freezy.services.CategoryService;
 import freezy.services.v1.CategoryServiceV1;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazyWhatsAppService;
 import freezy.utils.StockAlertEmailService;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +31,7 @@ public class CategoryControllerV1 {
     StockAlertEmailService stockAlertEmailService;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CategoryV1> getAllCategories() {
@@ -52,9 +50,9 @@ public class CategoryControllerV1 {
     public ResponseEntity addCategory(@RequestBody CategoryV1 category) {
         Boolean isValidCategory  = categoryServiceV1.saveCategory(category);
         if(isValidCategory != null && isValidCategory.equals(Boolean.FALSE)){
-            return utilsService.sendResponse(Constants.INVALID_CATEGORY, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CATEGORY, HttpStatus.OK);
         }
-        return utilsService.sendResponse(Constants.SUCCESS, HttpStatus.OK);
+        return freazyUtilsService.sendResponse(FreazyConstants.SUCCESS, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -71,8 +69,8 @@ public class CategoryControllerV1 {
 
     @GetMapping(value = "/send/{message}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void sendWhatsaApp(@PathVariable String message) {
-        freazyWhatsAppService.sendMessage(Constants.SEND_SMS, message, Constants.WELCOME_TO_FREAZY);
-        freazyWhatsAppService.sendMessage(Constants.SEND_SMS2, message, Constants.WELCOME_TO_FREAZY);
+        freazyWhatsAppService.sendMessage(FreazyConstants.SEND_SMS, message, FreazyConstants.WELCOME_TO_FREAZY);
+        freazyWhatsAppService.sendMessage(FreazyConstants.SEND_SMS2, message, FreazyConstants.WELCOME_TO_FREAZY);
     }
 
     @GetMapping(value = "/mail", produces = MediaType.APPLICATION_JSON_VALUE)

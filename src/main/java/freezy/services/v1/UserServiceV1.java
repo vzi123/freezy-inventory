@@ -4,17 +4,12 @@ import freezy.entities.UserRole;
 import freezy.entities.v1.UserRoleV1;
 import freezy.entities.v1.UserV1;
 import freezy.repository.v1.UserRepositoryV1;
-import freezy.utils.Constants;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.TimeZone;
 
 @Service
 public class UserServiceV1 {
@@ -76,7 +71,7 @@ public class UserServiceV1 {
         user.setEmail(dto.getEmail());
         user.setRole(role);
         user.setCity(dto.getCity());
-        user.setCreatedAt(UtilsService.generateDateFormat());
+        user.setCreatedAt(FreazyUtilsService.generateDateFormat());
         user.setPincode(dto.getPincode());
         user.setGstId(dto.getGstId());
         saveUser(user);

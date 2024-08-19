@@ -6,17 +6,13 @@ import freezy.dto.PurchaseOrderDetailsDTO;
 import freezy.dto.PurchaseOrderStatusDTO;
 import freezy.entities.*;
 import freezy.services.PdfGenerateService;
-import freezy.services.ProductService;
 import freezy.services.PurchaseOrderService;
 import freezy.services.UserService;
-import freezy.utils.Constants;
+import freezy.utils.FreazyConstants;
 import freezy.utils.FreazySMSService;
-import freezy.utils.UtilsService;
-import jakarta.servlet.http.HttpServletRequest;
+import freezy.utils.FreazyUtilsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +33,7 @@ public class PurchaseOrderController {
     private UserService userService;
 
     @Autowired
-    UtilsService utilsService;
+    FreazyUtilsService freazyUtilsService;
 
     @Autowired
     FreazySMSService freazySMSService;
@@ -91,7 +87,7 @@ public class PurchaseOrderController {
     public Object savePurchaseOrderDetails(@RequestBody PurchaseOrderDetailsDTO purchaseOrderDetails) {
         log.info(" in post controller");
         PurchaseOrder purchaseOrder = purchaseOrderService.savePurchaseOrderDetails(purchaseOrderDetails);
-        freazySMSService.sendSms(Constants.SEND_SMS, utilsService.generatePOMessage(purchaseOrder.getId()));
+        freazySMSService.sendSms(FreazyConstants.SEND_SMS, freazyUtilsService.generatePOMessage(purchaseOrder.getId()));
         return purchaseOrder;
     }
 
@@ -107,11 +103,11 @@ public class PurchaseOrderController {
 
     @GetMapping(value= "/statuses/{persona}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map getPurchaseOrderStatuses(@PathVariable String persona) {
-        if(null != persona && persona.equalsIgnoreCase(Constants.CUSTOMER)){
-            return Constants.PO_STATUSES_CUSTOMER;
+        if(null != persona && persona.equalsIgnoreCase(FreazyConstants.CUSTOMER)){
+            return FreazyConstants.PO_STATUSES_CUSTOMER;
         }
-        if(null != persona && persona.equalsIgnoreCase(Constants.VENDOR)){
-            return Constants.PO_STATUSES_SUPPLIER;
+        if(null != persona && persona.equalsIgnoreCase(FreazyConstants.VENDOR)){
+            return FreazyConstants.PO_STATUSES_SUPPLIER;
         }
         return null;
     }
@@ -127,7 +123,7 @@ public class PurchaseOrderController {
             orderStates = Arrays.asList(states);
         }
         else{
-            orderStates = new ArrayList<String>((Constants.PO_STATUSES_CUSTOMER).values());
+            orderStates = new ArrayList<String>((FreazyConstants.PO_STATUSES_CUSTOMER).values());
         }
         List<PurchaseOrder> purchaseOrders = purchaseOrderService.getAllPurchaseOrdersByPersonaAndStates(persona, orderStates);
         return purchaseOrders;
