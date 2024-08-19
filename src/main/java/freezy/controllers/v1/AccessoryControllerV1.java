@@ -12,6 +12,7 @@ import freezy.services.v1.InventoryServiceV1;
 import freezy.services.v1.ProductServiceV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,7 +44,7 @@ public class AccessoryControllerV1 {
     }
 
     @PostMapping(value = "/save",produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object save(@RequestBody AccessoryDTOV1 dto) {
+    public Object save(@Valid @RequestBody AccessoryDTOV1 dto) {
         if(null == dto.getCategoryId()){
             return utilsService.sendResponse(Constants.CATEGORY_NULL, HttpStatus.OK);
         }

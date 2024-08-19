@@ -1,9 +1,12 @@
 package freezy.dto.v1;
 
+import freezy.utils.FreazyValidField;
+
 import java.util.List;
 
 public class InventoryEntryV1 {
     String comments;
+    @FreazyValidField(notBlank = true, message = "User Details cannot be blank")
     String userId;
     List<InventoryDTOV1> products;
     List<InventoryDTOV1> accessories;

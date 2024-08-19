@@ -5,17 +5,13 @@ package freezy.services;
 import freezy.dto.QuotationDTO;
 import freezy.dto.QuotationItemsDTO;
 import freezy.entities.*;
-import freezy.entities.Product;
 import freezy.events.QuotationCreatedPublisher;
-import freezy.repository.CategoryRepository;
-import freezy.repository.ProductRepository;
 import freezy.repository.QuotationRepository;
 import freezy.utils.Constants;
 import freezy.utils.FreazyWhatsAppService;
-import freezy.utils.StringUtils;
+import freezy.utils.FreazyStringUtils;
 import freezy.utils.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,7 +42,7 @@ public class QuotationService {
     FreazyWhatsAppService freazyWhatsAppService;
 
     @Autowired
-    StringUtils stringUtils;
+    FreazyStringUtils freazyStringUtils;
 
     @Autowired
     QuotationCreatedPublisher quotationCreatedPublisher;

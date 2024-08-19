@@ -5,19 +5,12 @@ import freezy.entities.v1.CategoryV1;
 
 public class ProductDetailsDTO {
     private String id;
-
     private String name;
-
     private String description;
-
     private Integer cost;
-
     private String hsnNo;
-
     private CategoryV1 category;
-
     private BrandV1 brand;
-
     private Double amount;
 
     public Double getAmount() {

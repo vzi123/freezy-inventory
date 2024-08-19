@@ -13,6 +13,7 @@ import freezy.services.v1.InventoryServiceV1;
 import freezy.services.v1.ProductServiceV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,7 +51,7 @@ public class ProductControllerV1 {
     }
 
     @PostMapping(value = "/save",produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object addProduct(@RequestBody ProductDTOV1 productDTO) {
+    public Object addProduct(@Valid @RequestBody ProductDTOV1 productDTO) {
         if(null == productDTO.getCategoryId()){
             return utilsService.sendResponse(Constants.CATEGORY_NULL, HttpStatus.OK);
         }

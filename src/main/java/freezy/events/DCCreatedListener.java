@@ -5,8 +5,7 @@ import freezy.entities.v1.UserV1;
 import freezy.services.v1.UserServiceV1;
 import freezy.utils.Constants;
 import freezy.utils.FreazyWhatsAppService;
-import freezy.utils.StringUtils;
-import freezy.utils.UtilsService;
+import freezy.utils.FreazyStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,7 @@ public class DCCreatedListener {
 
         JsonObject template = new JsonObject();
         template.addProperty("1", userName);
-        template.addProperty("2", StringUtils.replaceSpaces(customerName));
+        template.addProperty("2", FreazyStringUtils.replaceSpaces(customerName));
         String templateString = template.toString();
 
         return templateString;

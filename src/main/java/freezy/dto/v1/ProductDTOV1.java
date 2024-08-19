@@ -1,11 +1,18 @@
 package freezy.dto.v1;
 
+import freezy.utils.FreazyValidField;
+
 public class ProductDTOV1 {
 
+    @FreazyValidField(notBlank = true, message = "Product Name cannot be blank.")
     String name;
+    @FreazyValidField(notBlank = true, message = "Product Description cannot be blank.")
     String description;
+    @FreazyValidField(notBlank = true, message = "Category Details cannot be blank.")
     String categoryId;
+    @FreazyValidField(numbersOnly = true, message = "Cost should be in numbers.")
     Integer cost;
+    @FreazyValidField(alphanumeric = true, message = "HSN No should be alphanumeric.")
     String hsnNo;
     String brandId;
 

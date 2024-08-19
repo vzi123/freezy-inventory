@@ -7,12 +7,10 @@ import freezy.entities.UserRole;
 import freezy.services.UserService;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/saveSupplier", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void saveSupplier(@RequestBody UserDTO dto) {
+    public void saveSupplier(@Valid @RequestBody UserDTO dto) {
         User user = new User();
         user.setFirst_name(dto.getName());
         user.setLast_name(dto.getName());

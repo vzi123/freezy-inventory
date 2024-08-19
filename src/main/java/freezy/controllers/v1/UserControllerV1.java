@@ -10,6 +10,7 @@ import freezy.services.UserService;
 import freezy.services.v1.UserServiceV1;
 import freezy.utils.Constants;
 import freezy.utils.UtilsService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -39,13 +40,13 @@ public class UserControllerV1 {
     }
 
     @PostMapping(value = "/customer", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserV1 saveCustomer(@RequestBody UserDTO dto) {
+    public UserV1 saveCustomer(@Valid @RequestBody UserDTO dto) {
         String userId = utilsService.generateId(Constants.USER_PREFIX);
         return userServiceV1.createOrUpdateUser(userId, dto, UserRoleV1.CUSTOMER);
     }
 
     @PostMapping(value = "/supplier", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserV1 saveSupplier(@RequestBody UserDTO dto) {
+    public UserV1 saveSupplier(@Valid @RequestBody UserDTO dto) {
         String userId = utilsService.generateId(Constants.USER_PREFIX);
         return userServiceV1.createOrUpdateUser(userId, dto, UserRoleV1.SUPPLIER);
     }

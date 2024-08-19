@@ -1,11 +1,17 @@
 package freezy.dto.v1;
 
+import freezy.utils.FreazyValidField;
+
 public class ServiceDTOV1 {
 
+    @FreazyValidField(notBlank = true, message = "Service Name cannot be blank.")
     String name;
+    @FreazyValidField(notBlank = true, message = "Service Description cannot be blank.")
     String description;
     Integer cost;
+    @FreazyValidField(notBlank = true, message = "Categroy Details cannot be blank.")
     String categoryId;
+    @FreazyValidField(notBlank = true, message = "Service Tier Details cannot be blank.")
     String serviceTierId;
 
     public String getServiceTierId() {

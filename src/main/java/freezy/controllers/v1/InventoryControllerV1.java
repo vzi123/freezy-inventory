@@ -2,28 +2,21 @@ package freezy.controllers.v1;
 
 
 import freezy.dto.InventoryCountDTO;
-import freezy.dto.InventoryDTO;
-import freezy.dto.v1.InventoryDTOV1;
 import freezy.dto.v1.InventoryEntryV1;
 import freezy.dto.v1.InventoryListV1;
-import freezy.entities.Inventory;
 import freezy.entities.v1.ConsignmentV1;
-import freezy.entities.v1.InventoryLogV1;
 import freezy.entities.v1.InventoryV1;
 import freezy.events.InwardCreatedPublisher;
-import freezy.events.OutwardCreatedEvent;
 import freezy.events.OutwardCreatedPublisher;
-import freezy.services.InventoryService;
 import freezy.services.v1.ConsignmentServiceV1;
 import freezy.services.v1.InventoryServiceV1;
 import freezy.utils.Constants;
-import freezy.utils.StringUtils;
+import freezy.utils.FreazyStringUtils;
 import freezy.utils.UtilsService;
-import org.hibernate.annotations.Array;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,12 +51,12 @@ public class InventoryControllerV1 {
     }
 
     @PostMapping(value = "/save", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void addInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) {
+    public void addInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1) {
         inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, null, null);
     }
 
     @PostMapping(value = "/inward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1){
+    public Object saveInwardInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1){
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
         Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
         if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
@@ -78,13 +71,13 @@ public class InventoryControllerV1 {
     }
 
     @PostMapping(value = "/outward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object saveOuwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception {
+    public Object saveOuwardInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception {
         Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
             return utilsService.sendResponse(Constants.INVALID_ODU, HttpStatus.OK);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, Constants.INVENTORY_INC, null);
-        outwardCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), StringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
+        outwardCreatedPublisher.publishEvent(utilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), FreazyStringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
         return consignmentServiceV1.generateDC(consignmentV1.getId());
     }
 
@@ -112,7 +105,7 @@ public class InventoryControllerV1 {
     }
 
     @PostMapping(value = "/inward/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object editInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1, @PathVariable String consignmentId){
+    public Object editInwardInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1, @PathVariable String consignmentId){
         if(null != consignmentId){
             ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
             if(null == consignmentV1){
@@ -136,7 +129,7 @@ public class InventoryControllerV1 {
     }
 
     @PostMapping(value = "/outward/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object editOutwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1, @PathVariable String consignmentId) throws Exception{
+    public Object editOutwardInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1, @PathVariable String consignmentId) throws Exception{
         if(null != consignmentId){
             ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
             if(null == consignmentV1){
