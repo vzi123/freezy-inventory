@@ -276,11 +276,11 @@ public class InventoryServiceV1 {
 
         InventoryLogV1 inventoryLog = new InventoryLogV1();
         UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
-        String userFirstName = (null != user.getFirst_name())?user.getFirst_name():" ";
-        String userLastName = " ";
         inventoryLog.setInventory(inventory);
         inventoryLog.setId(freazyUtilsService.generateId(FreazyConstants.INVENTORY_ORDER_PREFIX));
         inventoryLog.setAmount(inventoryDTO.getUnitPrice());
+        inventoryLog.setTaxPercent(inventoryDTO.getGstPercent());
+        inventoryLog.setSubTotal(inventoryDTO.getSubTotal());
         inventoryLog.setQuantity(inventoryDTO.getQuantity());
         inventoryLog.setUpdatedStock(inventory.getStock());
         inventoryLog.setType(InventoryTypeV1.PRODUCT);
@@ -288,14 +288,12 @@ public class InventoryServiceV1 {
         inventoryLog.setOduSerial(inventoryDTO.getOduSerialNo());
         if(inOrOut.equalsIgnoreCase(FreazyConstants.INVENTORY_INC)){
             inventoryLog.setInOut(InventoryLogEntryV1.IN);
-            inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " " + product.getName() + " (IDU: " + inventoryDTO.getIduSerialNo() + ", ODU: " + inventoryDTO.getOduSerialNo() + ") on " + freazyUtilsService.generateDateFormat() + " from " +
-                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+            inventoryLog.setComments("Notes: " + inventoryEntryV1.getComments());
             publishInwardDetailEvent(inventoryDTO.getQuantity(), product.getName());
         }
         else{
             inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-            inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + " " + product.getName() + " (IDU: " + inventoryDTO.getIduSerialNo() + ", ODU: " + inventoryDTO.getOduSerialNo() + ") on " + freazyUtilsService.generateDateFormat() + " for " +
-                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+            inventoryLog.setComments("Notes: " + inventoryEntryV1.getComments());
         }
 
         inventoryLog.setCreatedAt(freazyUtilsService.generateDateFormat());
@@ -330,25 +328,23 @@ public class InventoryServiceV1 {
 
         InventoryLogV1 inventoryLog = new InventoryLogV1();
         UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
-        String userFirstName = (null != user.getFirst_name())?user.getFirst_name():" ";
-        String userLastName = " ";
         inventoryLog.setInventory(inventory);
         inventoryLog.setId(freazyUtilsService.generateId(FreazyConstants.INVENTORY_ORDER_PREFIX));
         inventoryLog.setAmount(inventoryDTO.getUnitPrice());
         inventoryLog.setQuantity(inventoryDTO.getQuantity());
+        inventoryLog.setTaxPercent(inventoryDTO.getGstPercent());
+        inventoryLog.setSubTotal(inventoryDTO.getSubTotal());
         inventoryLog.setUpdatedStock(inventory.getStock());
         inventoryLog.setType(InventoryTypeV1.ACCESSORY);
         inventoryLog.setIduSerial(inventoryDTO.getIduSerialNo());
         inventoryLog.setOduSerial(inventoryDTO.getOduSerialNo());
         if(inOrOut.equalsIgnoreCase(FreazyConstants.INVENTORY_INC)){
             inventoryLog.setInOut(InventoryLogEntryV1.IN);
-            inventoryLog.setComments("Procured " + inventoryDTO.getQuantity() + " " +  accessoryV1.getName() + " on " + freazyUtilsService.generateDateFormat() + " from " +
-                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+            inventoryLog.setComments("Notes: " + inventoryEntryV1.getComments());
         }
         else{
             inventoryLog.setInOut(InventoryLogEntryV1.OUT);
-            inventoryLog.setComments("Delivered " + inventoryDTO.getQuantity() + " " +  accessoryV1.getName() + " on " + freazyUtilsService.generateDateFormat() + " for " +
-                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+            inventoryLog.setComments("Notes: " + inventoryEntryV1.getComments());
         }
 
         inventoryLog.setCreatedAt(freazyUtilsService.generateDateFormat());
@@ -378,25 +374,23 @@ public class InventoryServiceV1 {
 
         InventoryLogV1 inventoryLog = new InventoryLogV1();
         UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
-        String userFirstName = (null != user.getFirst_name())?user.getFirst_name():" ";
-        String userLastName = " ";
         inventoryLog.setInventory(inventory);
         inventoryLog.setId(freazyUtilsService.generateId(FreazyConstants.INVENTORY_ORDER_PREFIX));
         inventoryLog.setAmount(inventoryDTO.getUnitPrice());
         inventoryLog.setQuantity(inventoryDTO.getQuantity());
+        inventoryLog.setTaxPercent(inventoryDTO.getGstPercent());
+        inventoryLog.setSubTotal(inventoryDTO.getSubTotal());
         inventoryLog.setUpdatedStock(0);
         inventoryLog.setType(InventoryTypeV1.SERVICE);
         if(inOrOut.equalsIgnoreCase(FreazyConstants.INVENTORY_DEDUCT)){
             inventoryLog.setInOut(InventoryLogEntryV1.OUT);
             inventoryLog.setOduSerial("NA");
-            inventoryLog.setComments("Service of " + serviceV1.getName() + " offered on " + freazyUtilsService.generateDateFormat() + " for " +
-                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+            inventoryLog.setComments("Notes: " + inventoryEntryV1.getComments());
         }
         if(inOrOut.equalsIgnoreCase(FreazyConstants.INVENTORY_INC)){
             inventoryLog.setInOut(InventoryLogEntryV1.IN);
             inventoryLog.setOduSerial("NA");
-            inventoryLog.setComments("Service of " + serviceV1.getName() + " added on " + freazyUtilsService.generateDateFormat() + " for " +
-                    userFirstName + ", Notes: " + inventoryEntryV1.getComments());
+            inventoryLog.setComments("Notes: " + inventoryEntryV1.getComments());
         }
 
         inventoryLog.setCreatedAt(freazyUtilsService.generateDateFormat());
@@ -431,7 +425,6 @@ public class InventoryServiceV1 {
         catch (Exception e){
 
         }
-
     }
 
     public void publishInwardDetailEvent(Integer quantity, String productName){

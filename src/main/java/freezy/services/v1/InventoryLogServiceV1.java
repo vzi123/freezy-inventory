@@ -120,6 +120,11 @@ public class InventoryLogServiceV1 {
         detailsDTO.setName(accessoryV1.getName());
         detailsDTO.setCost(accessoryV1.getCost());
         detailsDTO.setBrand(accessoryV1.getBrand());
+        detailsDTO.setGstPercent(inventoryLogV1.getTaxPercent());
+        detailsDTO.setIduSerialNo(inventoryLogV1.getIduSerial());
+        detailsDTO.setOduSerialNo(inventoryLogV1.getOduSerial());
+        detailsDTO.setSubTotal(inventoryLogV1.getSubTotal());
+        detailsDTO.setUnitPrice(inventoryLogV1.getAmount());
         return detailsDTO;
     }
 
@@ -133,6 +138,11 @@ public class InventoryLogServiceV1 {
         detailsDTO.setName(productV1.getName());
         detailsDTO.setCost(productV1.getCost());
         detailsDTO.setBrand(productV1.getBrand());
+        detailsDTO.setGstPercent(inventoryLogV1.getTaxPercent());
+        detailsDTO.setIduSerialNo(inventoryLogV1.getIduSerial());
+        detailsDTO.setOduSerialNo(inventoryLogV1.getOduSerial());
+        detailsDTO.setSubTotal(inventoryLogV1.getSubTotal());
+        detailsDTO.setUnitPrice(inventoryLogV1.getAmount());
         return detailsDTO;
     }
 

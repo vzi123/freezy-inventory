@@ -54,5 +54,11 @@ public class InventoryLogV1 {
     @Column
     private String oduSerial;
 
+    @Column
+    private Double taxPercent;
+
+    @Column
+    private Double subTotal;
+
 
 }

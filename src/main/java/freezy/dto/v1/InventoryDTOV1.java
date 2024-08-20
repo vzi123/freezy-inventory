@@ -5,6 +5,8 @@ public class InventoryDTOV1 {
     String productId;
     Integer quantity;
     Integer unitPrice;
+    Double gstPercent;
+    Double subTotal;
     String iduSerialNo;
     String oduSerialNo;
     String type;
@@ -73,5 +75,21 @@ public class InventoryDTOV1 {
 
     public void setOduSerialNo(String oduSerialNo) {
         this.oduSerialNo = oduSerialNo;
+    }
+
+    public Double getGstPercent() {
+        return gstPercent;
+    }
+
+    public void setGstPercent(Double gstPercent) {
+        this.gstPercent = gstPercent;
+    }
+
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
     }
 }

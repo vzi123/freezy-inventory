@@ -12,6 +12,11 @@ public class ProductDetailsDTO {
     private CategoryV1 category;
     private BrandV1 brand;
     private Double amount;
+    String iduSerialNo;
+    String oduSerialNo;
+    Double gstPercent;
+    Double subTotal;
+    Integer unitPrice;
 
     public Double getAmount() {
         return amount;
@@ -75,5 +80,45 @@ public class ProductDetailsDTO {
 
     public void setBrand(BrandV1 brand) {
         this.brand = brand;
+    }
+
+    public String getIduSerialNo() {
+        return iduSerialNo;
+    }
+
+    public void setIduSerialNo(String iduSerialNo) {
+        this.iduSerialNo = iduSerialNo;
+    }
+
+    public String getOduSerialNo() {
+        return oduSerialNo;
+    }
+
+    public void setOduSerialNo(String oduSerialNo) {
+        this.oduSerialNo = oduSerialNo;
+    }
+
+    public Double getGstPercent() {
+        return gstPercent;
+    }
+
+    public void setGstPercent(Double gstPercent) {
+        this.gstPercent = gstPercent;
+    }
+
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public Integer getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Integer unitPrice) {
+        this.unitPrice = unitPrice;
     }
 }
