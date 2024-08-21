@@ -4,7 +4,7 @@ package freezy.services.v1;
 
 import freezy.entities.v1.ConsignmentV1;
 import freezy.repository.v1.ConsignmentRepositoryV1;
-import freezy.services.PdfGenerateService;
+import freezy.utils.FreazyPdfGenerateService;
 import freezy.utils.FreazyUtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +25,7 @@ public class ConsignmentServiceV1 {
     FreazyUtilsService freazyUtilsService;
 
     @Autowired
-    PdfGenerateService pdfGenerateService;
+    FreazyPdfGenerateService freazyPdfGenerateService;
 
     public List<ConsignmentV1> getAllConsignments() {
         return consignmentRepositoryV1.findAllByOrderByCreatedAtDesc();
@@ -44,7 +44,7 @@ public class ConsignmentServiceV1 {
     }
 
     public ResponseEntity<byte[]> generateDC(String consignmentId) throws Exception{
-        byte[] dcFile = pdfGenerateService.generateDeliveryChallan(getConsignmentById(consignmentId));
+        byte[] dcFile = freazyPdfGenerateService.generateDeliveryChallan(getConsignmentById(consignmentId));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("inline", "document.pdf");

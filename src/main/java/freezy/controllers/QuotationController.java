@@ -10,6 +10,7 @@ import freezy.services.*;
 import freezy.utils.FreazyConstants;
 import freezy.utils.FreazyEmailService;
 import freezy.utils.FreazyUtilsService;
+import freezy.utils.FreazyPdfGenerateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,7 +36,7 @@ public class QuotationController {
     FreazyUtilsService freazyUtilsService;
 
     @Autowired
-    PdfGenerateService pdfGenerateService;
+    FreazyPdfGenerateService freazyPdfGenerateService;
 
     @Autowired
     FreazyEmailService freazyEmailService;
@@ -115,7 +116,7 @@ public class QuotationController {
     public Object mailQuotation(@PathVariable String quotationId) throws Exception{
         Quotation quotationObj = quotationService.getQuotationById(quotationId);
         if(quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.DRAFT.name()) || quotationObj.getStatus().equalsIgnoreCase(QuotationStatus.SENT.name())){
-            File quotation = pdfGenerateService.generateQuotation(quotationObj);
+            File quotation = freazyPdfGenerateService.generateQuotation(quotationObj);
             freazyEmailService.sendEmail(quotation);
             return freazyUtilsService.sendResponse("Quotation Mailed", HttpStatus.OK);
         }

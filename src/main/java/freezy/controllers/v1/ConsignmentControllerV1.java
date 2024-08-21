@@ -2,7 +2,7 @@ package freezy.controllers.v1;
 
 
 import freezy.entities.v1.ConsignmentV1;
-import freezy.services.PdfGenerateService;
+import freezy.utils.FreazyPdfGenerateService;
 import freezy.services.v1.ConsignmentServiceV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class ConsignmentControllerV1 {
     private ConsignmentServiceV1 consignmentServiceV1;
 
     @Autowired
-    PdfGenerateService pdfGenerateService;
+    FreazyPdfGenerateService freazyPdfGenerateService;
 
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)

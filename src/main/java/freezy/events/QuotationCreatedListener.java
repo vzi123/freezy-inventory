@@ -1,7 +1,7 @@
 package freezy.events;
 
 import freezy.entities.Quotation;
-import freezy.services.PdfGenerateService;
+import freezy.utils.FreazyPdfGenerateService;
 import freezy.services.QuotationService;
 import freezy.utils.FreazyEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,14 @@ public class QuotationCreatedListener {
     FreazyEmailService freazyEmailService;
 
     @Autowired
-    PdfGenerateService pdfGenerateService;
+    FreazyPdfGenerateService freazyPdfGenerateService;
 
     @EventListener
     public void handleEvent(QuotationCreatedEvent quotationCreatedEvent) {
         try{
             System.out.println("Quotation Id - " + quotationCreatedEvent.getQuotationId());
             Quotation quotation = quotationService.getQuotationById(quotationCreatedEvent.getQuotationId());
-            File attachment = pdfGenerateService.generateQuotation(quotation);
+            File attachment = freazyPdfGenerateService.generateQuotation(quotation);
             freazyEmailService.sendEmail(attachment);
         }
         catch (Exception e){

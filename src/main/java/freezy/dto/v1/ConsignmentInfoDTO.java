@@ -15,7 +15,7 @@ public class ConsignmentInfoDTO {
     private UserV1 createdFor;
     List<ProductDetailsDTO> products;
     List<AccessoryDetailsDTO> accessories;
-    List<ServiceV1> services;
+    List<ServiceDetailsDTO> services;
 
     public String getId() {
         return id;
@@ -73,11 +73,11 @@ public class ConsignmentInfoDTO {
         this.createdFor = createdFor;
     }
 
-    public List<ServiceV1> getServices() {
+    public List<ServiceDetailsDTO> getServices() {
         return services;
     }
 
-    public void setServices(List<ServiceV1> services) {
+    public void setServices(List<ServiceDetailsDTO> services) {
         this.services = services;
     }
 

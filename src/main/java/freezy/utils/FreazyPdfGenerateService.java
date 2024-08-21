@@ -1,4 +1,4 @@
-package freezy.services;
+package freezy.utils;
 
 import freezy.dto.QuotationMailDTO;
 import freezy.dto.UserDTO;
@@ -7,7 +7,6 @@ import freezy.entities.*;
 import freezy.entities.v1.*;
 import freezy.events.DCCreatedPublisher;
 import freezy.repository.v1.InventoryLogRepositoryV1;
-import freezy.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.lowagie.text.DocumentException;
@@ -26,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PdfGenerateService {
-    private Logger logger = LoggerFactory.getLogger(PdfGenerateService.class);
+public class FreazyPdfGenerateService {
+    private Logger logger = LoggerFactory.getLogger(FreazyPdfGenerateService.class);
 
     @Autowired
     private TemplateEngine templateEngine;

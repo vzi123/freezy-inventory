@@ -11,7 +11,7 @@ public class ConsignmentDetailsDTOV1 {
 
     List<ProductDetailsDTO> products;
     List<AccessoryDetailsDTO> accessories;
-    List<ServiceV1> services;
+    List<ServiceDetailsDTO> services;
     ConsignmentV1 consignment;
 
     public List<ProductDetailsDTO> getProducts() {
@@ -30,19 +30,19 @@ public class ConsignmentDetailsDTOV1 {
         this.accessories = accessories;
     }
 
-    public List<ServiceV1> getServices() {
-        return services;
-    }
-
-    public void setServices(List<ServiceV1> services) {
-        this.services = services;
-    }
-
     public ConsignmentV1 getConsignment() {
         return consignment;
     }
 
     public void setConsignment(ConsignmentV1 consignment) {
         this.consignment = consignment;
+    }
+
+    public List<ServiceDetailsDTO> getServices() {
+        return services;
+    }
+
+    public void setServices(List<ServiceDetailsDTO> services) {
+        this.services = services;
     }
 }

@@ -59,7 +59,7 @@ public class InventoryLogServiceV1 {
         entry.setConsignment(consignmentV1);
         List<ProductDetailsDTO> productV1s = new ArrayList<>();
         List<AccessoryDetailsDTO> accessoryV1s = new ArrayList<>();
-        List<ServiceV1> serviceV1s = new ArrayList<>();
+        List<ServiceDetailsDTO> serviceV1s = new ArrayList<>();
         List<InventoryLogV1> products = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.PRODUCT);
         List<InventoryLogV1> accessories = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.ACCESSORY);
         List<InventoryLogV1> services = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.SERVICE);
@@ -77,7 +77,8 @@ public class InventoryLogServiceV1 {
         }
         if(null != services){
             for(InventoryLogV1 log: services){
-                serviceV1s.add(log.getInventory().getService());
+                ServiceDetailsDTO dto = getServiceDetailsDTOfromEntity(log);
+                serviceV1s.add(dto);
             }
         }
 
@@ -146,6 +147,24 @@ public class InventoryLogServiceV1 {
         return detailsDTO;
     }
 
+    public ServiceDetailsDTO getServiceDetailsDTOfromEntity(InventoryLogV1 inventoryLogV1){
+        ServiceDetailsDTO detailsDTO = new ServiceDetailsDTO();
+        ServiceV1 service = inventoryLogV1.getInventory().getService();
+        detailsDTO.setId(service.getId());
+        detailsDTO.setAmount(inventoryLogV1.getAmount().doubleValue());
+        detailsDTO.setCategory(service.getCategory());
+        detailsDTO.setCount(inventoryLogV1.getQuantity());
+        detailsDTO.setDescription(service.getDescription());
+        detailsDTO.setName(service.getName());
+        detailsDTO.setCost(service.getCost());
+        detailsDTO.setBrand(null);
+        detailsDTO.setGstPercent(inventoryLogV1.getTaxPercent());
+        detailsDTO.setIduSerialNo(inventoryLogV1.getIduSerial());
+        detailsDTO.setOduSerialNo(inventoryLogV1.getOduSerial());
+        detailsDTO.setSubTotal(inventoryLogV1.getSubTotal());
+        detailsDTO.setUnitPrice(inventoryLogV1.getAmount());
+        return detailsDTO;
+    }
 
 
 }

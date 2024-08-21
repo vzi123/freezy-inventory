@@ -5,7 +5,7 @@ import freezy.dto.PurchaseOrderDTO;
 import freezy.dto.PurchaseOrderDetailsDTO;
 import freezy.dto.PurchaseOrderStatusDTO;
 import freezy.entities.*;
-import freezy.services.PdfGenerateService;
+import freezy.utils.FreazyPdfGenerateService;
 import freezy.services.PurchaseOrderService;
 import freezy.services.UserService;
 import freezy.utils.FreazyConstants;
@@ -39,7 +39,7 @@ public class PurchaseOrderController {
     FreazySMSService freazySMSService;
 
     @Autowired
-    PdfGenerateService pdfGenerateService;
+    FreazyPdfGenerateService freazyPdfGenerateService;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<PurchaseOrder> getAllPurchaseOrders() {
