@@ -278,9 +278,12 @@ public class InventoryServiceV1 {
         UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
         inventoryLog.setInventory(inventory);
         inventoryLog.setId(freazyUtilsService.generateId(FreazyConstants.INVENTORY_ORDER_PREFIX));
-        inventoryLog.setAmount(inventoryDTO.getUnitPrice());
-        inventoryLog.setTaxPercent(inventoryDTO.getGstPercent());
+        inventoryLog.setUnitPrice(inventoryDTO.getUnitPrice());
+        inventoryLog.setDiscountAmount(inventoryDTO.getDiscountAmount());
+        inventoryLog.setEffectivePrice(inventoryDTO.getEffectivePrice());
         inventoryLog.setSubTotal(inventoryDTO.getSubTotal());
+        inventoryLog.setTaxPercent(inventoryDTO.getGstValue().getGstValue());
+        inventoryLog.setTaxLabel(inventoryDTO.getGstValue().getGstRate());
         inventoryLog.setQuantity(inventoryDTO.getQuantity());
         inventoryLog.setUpdatedStock(inventory.getStock());
         inventoryLog.setType(InventoryTypeV1.PRODUCT);
@@ -330,10 +333,13 @@ public class InventoryServiceV1 {
         UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
         inventoryLog.setInventory(inventory);
         inventoryLog.setId(freazyUtilsService.generateId(FreazyConstants.INVENTORY_ORDER_PREFIX));
-        inventoryLog.setAmount(inventoryDTO.getUnitPrice());
-        inventoryLog.setQuantity(inventoryDTO.getQuantity());
-        inventoryLog.setTaxPercent(inventoryDTO.getGstPercent());
+        inventoryLog.setUnitPrice(inventoryDTO.getUnitPrice());
+        inventoryLog.setDiscountAmount(inventoryDTO.getDiscountAmount());
+        inventoryLog.setEffectivePrice(inventoryDTO.getEffectivePrice());
         inventoryLog.setSubTotal(inventoryDTO.getSubTotal());
+        inventoryLog.setTaxPercent(inventoryDTO.getGstValue().getGstValue());
+        inventoryLog.setTaxLabel(inventoryDTO.getGstValue().getGstRate());
+        inventoryLog.setQuantity(inventoryDTO.getQuantity());
         inventoryLog.setUpdatedStock(inventory.getStock());
         inventoryLog.setType(InventoryTypeV1.ACCESSORY);
         inventoryLog.setIduSerial(inventoryDTO.getIduSerialNo());
@@ -376,10 +382,13 @@ public class InventoryServiceV1 {
         UserV1 user = userServiceV1.getUserById(inventoryEntryV1.getUserId());
         inventoryLog.setInventory(inventory);
         inventoryLog.setId(freazyUtilsService.generateId(FreazyConstants.INVENTORY_ORDER_PREFIX));
-        inventoryLog.setAmount(inventoryDTO.getUnitPrice());
-        inventoryLog.setQuantity(inventoryDTO.getQuantity());
-        inventoryLog.setTaxPercent(inventoryDTO.getGstPercent());
+        inventoryLog.setUnitPrice(inventoryDTO.getUnitPrice());
+        inventoryLog.setDiscountAmount(inventoryDTO.getDiscountAmount());
+        inventoryLog.setEffectivePrice(inventoryDTO.getEffectivePrice());
         inventoryLog.setSubTotal(inventoryDTO.getSubTotal());
+        inventoryLog.setTaxPercent(inventoryDTO.getGstValue().getGstValue());
+        inventoryLog.setTaxLabel(inventoryDTO.getGstValue().getGstRate());
+        inventoryLog.setQuantity(inventoryDTO.getQuantity());
         inventoryLog.setUpdatedStock(0);
         inventoryLog.setType(InventoryTypeV1.SERVICE);
         if(inOrOut.equalsIgnoreCase(FreazyConstants.INVENTORY_DEDUCT)){

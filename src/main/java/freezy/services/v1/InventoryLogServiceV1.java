@@ -57,27 +57,27 @@ public class InventoryLogServiceV1 {
 
         ConsignmentDetailsDTOV1 entry = new ConsignmentDetailsDTOV1();
         entry.setConsignment(consignmentV1);
-        List<ProductDetailsDTO> productV1s = new ArrayList<>();
-        List<AccessoryDetailsDTO> accessoryV1s = new ArrayList<>();
-        List<ServiceDetailsDTO> serviceV1s = new ArrayList<>();
+        List<InventoryDTOV1> productV1s = new ArrayList<>();
+        List<InventoryDTOV1> accessoryV1s = new ArrayList<>();
+        List<InventoryDTOV1> serviceV1s = new ArrayList<>();
         List<InventoryLogV1> products = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.PRODUCT);
         List<InventoryLogV1> accessories = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.ACCESSORY);
         List<InventoryLogV1> services = inventoryLogRepositoryV1.findAllByConsignmentAndType(consignmentV1, InventoryTypeV1.SERVICE);
         if(null != products){
             for(InventoryLogV1 log: products){
-                ProductDetailsDTO dto = getProductDetailsDTOfromEntity(log);
+                InventoryDTOV1 dto = getProductDetailsDTOfromEntity(log);
                 productV1s.add(dto);
             }
         }
         if(null != accessories){
             for(InventoryLogV1 log: accessories){
-                AccessoryDetailsDTO dto = getAccessoryDetailsDTOfromEntity(log);
+                InventoryDTOV1 dto = getAccessoryDetailsDTOfromEntity(log);
                 accessoryV1s.add(dto);
             }
         }
         if(null != services){
             for(InventoryLogV1 log: services){
-                ServiceDetailsDTO dto = getServiceDetailsDTOfromEntity(log);
+                InventoryDTOV1 dto = getServiceDetailsDTOfromEntity(log);
                 serviceV1s.add(dto);
             }
         }
@@ -110,60 +110,124 @@ public class InventoryLogServiceV1 {
         return inventoryLogRepositoryV1.findAllByIduSerial(iduSerial);
     }
 
-    public AccessoryDetailsDTO getAccessoryDetailsDTOfromEntity(InventoryLogV1 inventoryLogV1){
-        AccessoryDetailsDTO detailsDTO = new AccessoryDetailsDTO();
+    public InventoryDTOV1 getAccessoryDetailsDTOfromEntity(InventoryLogV1 inventoryLogV1){
         AccessoryV1 accessoryV1 = inventoryLogV1.getInventory().getAccessory();
-        detailsDTO.setId(accessoryV1.getId());
-        detailsDTO.setAmount(inventoryLogV1.getAmount().doubleValue());
-        detailsDTO.setCategory(accessoryV1.getCategory());
-        detailsDTO.setCount(inventoryLogV1.getQuantity());
-        detailsDTO.setDescription(accessoryV1.getDescription());
-        detailsDTO.setName(accessoryV1.getName());
-        detailsDTO.setCost(accessoryV1.getCost());
-        detailsDTO.setBrand(accessoryV1.getBrand());
-        detailsDTO.setGstPercent(inventoryLogV1.getTaxPercent());
-        detailsDTO.setIduSerialNo(inventoryLogV1.getIduSerial());
-        detailsDTO.setOduSerialNo(inventoryLogV1.getOduSerial());
-        detailsDTO.setSubTotal(inventoryLogV1.getSubTotal());
-        detailsDTO.setUnitPrice(inventoryLogV1.getAmount());
-        return detailsDTO;
+        InventoryDTOV1 dto = new InventoryDTOV1();
+
+//        String productId;
+//        String product;
+//        String description;
+        dto.setDescription(accessoryV1.getDescription());
+//        Integer quantity;
+        dto.setQuantity(inventoryLogV1.getQuantity());
+//        Integer unitPrice;
+        dto.setUnitPrice(inventoryLogV1.getUnitPrice());
+//        Integer discountAmount;
+        dto.setDiscountAmount(inventoryLogV1.getDiscountAmount());
+//        Double subTotal;
+        dto.setSubTotal(inventoryLogV1.getSubTotal());
+//        Integer effectivePrice;
+        dto.setEffectivePrice(inventoryLogV1.getEffectivePrice());
+//        GSTDTO gstValue;
+        GSTDTO gstDTO = new GSTDTO();
+        gstDTO.setGstRate(inventoryLogV1.getTaxLabel());
+        gstDTO.setGstValue(inventoryLogV1.getTaxPercent());
+        dto.setGstValue(gstDTO);
+//        String iduSerialNo;
+        dto.setIduSerialNo(inventoryLogV1.getIduSerial());
+//        String oduSerialNo;
+        dto.setOduSerialNo(inventoryLogV1.getOduSerial());
+//        String type;
+        dto.setType(inventoryLogV1.getType().name());
+//        String accessoryId;
+        dto.setAccessoryId(accessoryV1.getId());
+//        String accessory;
+        dto.setAccessory(accessoryV1.getName());
+//        String serviceId;
+//        String service;
+//        Double gstPercent;
+        return dto;
     }
 
-    public ProductDetailsDTO getProductDetailsDTOfromEntity(InventoryLogV1 inventoryLogV1){
-        ProductDetailsDTO detailsDTO = new ProductDetailsDTO();
+    public InventoryDTOV1 getProductDetailsDTOfromEntity(InventoryLogV1 inventoryLogV1){
+        InventoryDTOV1 dto = new InventoryDTOV1();
         ProductV1 productV1 = inventoryLogV1.getInventory().getProduct();
-        detailsDTO.setId(productV1.getId());
-        detailsDTO.setAmount(inventoryLogV1.getAmount().doubleValue());
-        detailsDTO.setCategory(productV1.getCategory());
-        detailsDTO.setDescription(productV1.getDescription());
-        detailsDTO.setName(productV1.getName());
-        detailsDTO.setCost(productV1.getCost());
-        detailsDTO.setBrand(productV1.getBrand());
-        detailsDTO.setGstPercent(inventoryLogV1.getTaxPercent());
-        detailsDTO.setIduSerialNo(inventoryLogV1.getIduSerial());
-        detailsDTO.setOduSerialNo(inventoryLogV1.getOduSerial());
-        detailsDTO.setSubTotal(inventoryLogV1.getSubTotal());
-        detailsDTO.setUnitPrice(inventoryLogV1.getAmount());
-        return detailsDTO;
+
+//        String productId;
+        dto.setProductId(productV1.getId());
+//        String product;
+        dto.setProduct(productV1.getName());
+//        String description;
+        dto.setDescription(productV1.getDescription());
+//        Integer quantity;
+        dto.setQuantity(inventoryLogV1.getQuantity());
+//        Integer unitPrice;
+        dto.setUnitPrice(inventoryLogV1.getUnitPrice());
+//        Integer discountAmount;
+        dto.setDiscountAmount(inventoryLogV1.getDiscountAmount());
+//        Double subTotal;
+        dto.setSubTotal(inventoryLogV1.getSubTotal());
+//        Integer effectivePrice;
+        dto.setEffectivePrice(inventoryLogV1.getEffectivePrice());
+//        GSTDTO gstValue;
+        GSTDTO gstDTO = new GSTDTO();
+        gstDTO.setGstRate(inventoryLogV1.getTaxLabel());
+        gstDTO.setGstValue(inventoryLogV1.getTaxPercent());
+        dto.setGstValue(gstDTO);
+//        String iduSerialNo;
+        dto.setIduSerialNo(inventoryLogV1.getIduSerial());
+//        String oduSerialNo;
+        dto.setOduSerialNo(inventoryLogV1.getOduSerial());
+//        String type;
+        dto.setType(inventoryLogV1.getType().name());
+//        String accessoryId;
+//        String accessory;
+//        String serviceId;
+//        String service;
+//        Double gstPercent;
+
+        return dto;
     }
 
-    public ServiceDetailsDTO getServiceDetailsDTOfromEntity(InventoryLogV1 inventoryLogV1){
-        ServiceDetailsDTO detailsDTO = new ServiceDetailsDTO();
+    public InventoryDTOV1 getServiceDetailsDTOfromEntity(InventoryLogV1 inventoryLogV1){
+        InventoryDTOV1 dto = new InventoryDTOV1();
         ServiceV1 service = inventoryLogV1.getInventory().getService();
-        detailsDTO.setId(service.getId());
-        detailsDTO.setAmount(inventoryLogV1.getAmount().doubleValue());
-        detailsDTO.setCategory(service.getCategory());
-        detailsDTO.setCount(inventoryLogV1.getQuantity());
-        detailsDTO.setDescription(service.getDescription());
-        detailsDTO.setName(service.getName());
-        detailsDTO.setCost(service.getCost());
-        detailsDTO.setBrand(null);
-        detailsDTO.setGstPercent(inventoryLogV1.getTaxPercent());
-        detailsDTO.setIduSerialNo(inventoryLogV1.getIduSerial());
-        detailsDTO.setOduSerialNo(inventoryLogV1.getOduSerial());
-        detailsDTO.setSubTotal(inventoryLogV1.getSubTotal());
-        detailsDTO.setUnitPrice(inventoryLogV1.getAmount());
-        return detailsDTO;
+
+
+
+//        String productId;
+//        String product;
+//        String description;
+        dto.setDescription(service.getDescription());
+//        Integer quantity;
+        dto.setQuantity(inventoryLogV1.getQuantity());
+//        Integer unitPrice;
+        dto.setUnitPrice(inventoryLogV1.getUnitPrice());
+//        Integer discountAmount;
+        dto.setDiscountAmount(inventoryLogV1.getDiscountAmount());
+//        Double subTotal;
+        dto.setSubTotal(inventoryLogV1.getSubTotal());
+//        Integer effectivePrice;
+        dto.setEffectivePrice(inventoryLogV1.getEffectivePrice());
+//        GSTDTO gstValue;
+        GSTDTO gstDTO = new GSTDTO();
+        gstDTO.setGstRate(inventoryLogV1.getTaxLabel());
+        gstDTO.setGstValue(inventoryLogV1.getTaxPercent());
+        dto.setGstValue(gstDTO);
+//        String iduSerialNo;
+        dto.setIduSerialNo(inventoryLogV1.getIduSerial());
+//        String oduSerialNo;
+        dto.setOduSerialNo(inventoryLogV1.getOduSerial());
+//        String type;
+        dto.setType(inventoryLogV1.getType().name());
+//        String accessoryId;
+//        String accessory;
+//        String serviceId;
+        dto.setServiceId(service.getId());
+//        String service;
+        dto.setService(service.getName());
+//        Double gstPercent;
+        return dto;
     }
 
 

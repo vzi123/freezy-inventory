@@ -42,7 +42,13 @@ public class InventoryLogV1 {
     private String createdAt;
 
     @Column(nullable = false)
-    private Integer amount;
+    private Integer unitPrice;
+
+    @Column
+    private Integer discountAmount;
+
+    @Column
+    private Integer effectivePrice;
 
     @ManyToOne
     @JoinColumn(name = "consignment_id")
@@ -56,6 +62,9 @@ public class InventoryLogV1 {
 
     @Column
     private Double taxPercent;
+
+    @Column
+    private String taxLabel;
 
     @Column
     private Double subTotal;

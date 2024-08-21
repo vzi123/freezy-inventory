@@ -3,15 +3,22 @@ package freezy.dto.v1;
 public class InventoryDTOV1 {
 
     String productId;
+    String product;
+    String description;
     Integer quantity;
     Integer unitPrice;
-    Double gstPercent;
+    Integer discountAmount;
     Double subTotal;
+    Integer effectivePrice;
+    GSTDTO gstValue;
     String iduSerialNo;
     String oduSerialNo;
     String type;
     String accessoryId;
+    String accessory;
     String serviceId;
+    String service;
+    Double gstPercent;
 
     public String getServiceId() {
         return serviceId;
@@ -91,5 +98,61 @@ public class InventoryDTOV1 {
 
     public void setSubTotal(Double subTotal) {
         this.subTotal = subTotal;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(Integer discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public Integer getEffectivePrice() {
+        return effectivePrice;
+    }
+
+    public void setEffectivePrice(Integer effectivePrice) {
+        this.effectivePrice = effectivePrice;
+    }
+
+    public String getAccessory() {
+        return accessory;
+    }
+
+    public void setAccessory(String accessory) {
+        this.accessory = accessory;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public GSTDTO getGstValue() {
+        return gstValue;
+    }
+
+    public void setGstValue(GSTDTO gstValue) {
+        this.gstValue = gstValue;
     }
 }

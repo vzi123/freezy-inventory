@@ -9,25 +9,33 @@ import java.util.List;
 
 public class ConsignmentDetailsDTOV1 {
 
-    List<ProductDetailsDTO> products;
-    List<AccessoryDetailsDTO> accessories;
-    List<ServiceDetailsDTO> services;
+    List<InventoryDTOV1> products;
+    List<InventoryDTOV1> accessories;
+    List<InventoryDTOV1> services;
     ConsignmentV1 consignment;
 
-    public List<ProductDetailsDTO> getProducts() {
+    public List<InventoryDTOV1> getProducts() {
         return products;
     }
 
-    public void setProducts(List<ProductDetailsDTO> products) {
+    public void setProducts(List<InventoryDTOV1> products) {
         this.products = products;
     }
 
-    public List<AccessoryDetailsDTO> getAccessories() {
+    public List<InventoryDTOV1> getAccessories() {
         return accessories;
     }
 
-    public void setAccessories(List<AccessoryDetailsDTO> accessories) {
+    public void setAccessories(List<InventoryDTOV1> accessories) {
         this.accessories = accessories;
+    }
+
+    public List<InventoryDTOV1> getServices() {
+        return services;
+    }
+
+    public void setServices(List<InventoryDTOV1> services) {
+        this.services = services;
     }
 
     public ConsignmentV1 getConsignment() {
@@ -36,13 +44,5 @@ public class ConsignmentDetailsDTOV1 {
 
     public void setConsignment(ConsignmentV1 consignment) {
         this.consignment = consignment;
-    }
-
-    public List<ServiceDetailsDTO> getServices() {
-        return services;
-    }
-
-    public void setServices(List<ServiceDetailsDTO> services) {
-        this.services = services;
     }
 }
