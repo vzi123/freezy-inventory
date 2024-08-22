@@ -2,23 +2,23 @@ package freezy.dto.v1;
 
 public class InventoryDTOV1 {
 
-    String productId;
-    String product;
-    String description;
-    Integer quantity;
-    Integer unitPrice;
-    Integer discountAmount;
-    Double subTotal;
-    Integer effectivePrice;
+    String productId = "";
+    String product = "";
+    String description = "";
+    Integer quantity = 0;
+    Integer unitPrice = 0;
+    Integer discountAmount = 0;
+    Double subTotal = 0.0;
+    Integer effectivePrice = 0;
     GSTDTO gstValue;
-    String iduSerialNo;
-    String oduSerialNo;
-    String type;
-    String accessoryId;
-    String accessory;
-    String serviceId;
-    String service;
-    Double gstPercent;
+    String iduSerialNo = "";
+    String oduSerialNo = "";
+    String type = "";
+    String accessoryId = "";
+    String accessory = "";
+    String serviceId = "";
+    String service = "";
+    Double gstPercent = 0.0;
 
     public String getServiceId() {
         return serviceId;

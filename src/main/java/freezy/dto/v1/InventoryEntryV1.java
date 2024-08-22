@@ -7,7 +7,7 @@ import java.util.List;
 public class InventoryEntryV1 {
     String comments;
     @FreazyValidField(notBlank = true, message = "User Details cannot be blank")
-    String userId;
+    String userId = "";
     List<InventoryDTOV1> products;
     List<InventoryDTOV1> accessories;
     List<InventoryDTOV1> services;
