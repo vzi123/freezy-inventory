@@ -74,4 +74,16 @@ public class FreazyUtilsService {
 //    public BigDecimal toPercentageOf(BigDecimal value, BigDecimal total) {
 //        return value.divide(total, 4, RoundingMode.HALF_UP).multiply(ONE_HUNDRED);
 //    }
+
+    public String returnDefaultString(String input){
+        return (null != input)?input:"";
+    }
+
+    public Integer returnDefaultInt(Integer input){
+        return (null != input)?input:0;
+    }
+
+    public Double returnDefaultDouble(Double input){
+        return (null != input)?input:0.0;
+    }
 }
