@@ -89,4 +89,9 @@ public class UserControllerV1 {
     public UserV1 updateSupplier(@PathVariable String supplierId, @RequestBody UserDTO dto) {
         return userServiceV1.createOrUpdateUser(supplierId, dto, UserRoleV1.SUPPLIER);
     }
+
+    @GetMapping(value = "/superAdmin", produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserV1 getSuperAdmin() {
+        return freazyUtilsService.getSuperUserV1();
+    }
 }
