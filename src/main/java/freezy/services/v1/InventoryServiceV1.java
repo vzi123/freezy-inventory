@@ -249,6 +249,12 @@ public class InventoryServiceV1 {
         return true;
     }
 
+    public Boolean validateProductsOrAccessoriesOrServices(InventoryEntryV1 inventoryEntryV1) {
+        if(inventoryEntryV1.getServices().size() == 0 && inventoryEntryV1.getAccessories().size() == 0
+        && inventoryEntryV1.getProducts().size() == 0 ) return false;
+        return true;
+    }
+
     public Integer createProductEntry(InventoryDTOV1 inventoryDTO, InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 consignmentV1){
 
         Integer totalAmount = 0;

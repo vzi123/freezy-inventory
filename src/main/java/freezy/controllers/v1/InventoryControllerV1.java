@@ -59,6 +59,10 @@ public class InventoryControllerV1 {
     public Object saveInwardInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1){
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
         Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
+        Boolean isValidEntries = inventoryServiceV1.validateProductsOrAccessoriesOrServices(inventoryEntryV1);
+        if(isValidEntries != null && isValidEntries.equals(Boolean.FALSE)){
+            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ENTRIES, HttpStatus.BAD_REQUEST);
+        }
         if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
             return freazyUtilsService.sendResponse(FreazyConstants.INVALID_IDU, HttpStatus.BAD_REQUEST);
         }
@@ -75,6 +79,10 @@ public class InventoryControllerV1 {
         Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
             return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.BAD_REQUEST);
+        }
+        Boolean isValidEntries = inventoryServiceV1.validateProductsOrAccessoriesOrServices(inventoryEntryV1);
+        if(isValidEntries != null && isValidEntries.equals(Boolean.FALSE)){
+            return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ENTRIES, HttpStatus.BAD_REQUEST);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, null);
         outwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), FreazyStringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
