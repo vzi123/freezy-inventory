@@ -173,7 +173,7 @@ public class InventoryServiceV1 {
                     totalAmount = totalAmount + createAccessoryEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
             }
-            for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getServices()){
+            if(null != inventoryEntryV1.getServices())for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getServices()){
                 if(null != inventoryDTO){
                     totalAmount = totalAmount + createServiceEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
@@ -250,8 +250,14 @@ public class InventoryServiceV1 {
     }
 
     public Boolean validateProductsOrAccessoriesOrServices(InventoryEntryV1 inventoryEntryV1) {
-        if(inventoryEntryV1.getServices().size() == 0 && inventoryEntryV1.getAccessories().size() == 0
-        && inventoryEntryV1.getProducts().size() == 0 ) return false;
+        if(null != inventoryEntryV1.getServices()){
+            if(inventoryEntryV1.getServices().size() == 0 && inventoryEntryV1.getAccessories().size() == 0
+                    && inventoryEntryV1.getProducts().size() == 0 ) return false;
+        }
+        if(null == inventoryEntryV1.getServices()){
+            if(inventoryEntryV1.getAccessories().size() == 0
+                    && inventoryEntryV1.getProducts().size() == 0 ) return false;
+        }
         return true;
     }
 
