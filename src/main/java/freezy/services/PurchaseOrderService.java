@@ -70,7 +70,7 @@ public class PurchaseOrderService {
         log.info(" in service");
         if(null == purchaseOrder.getId()){
             purchaseOrder.setId(freazyUtilsService.generateId(FreazyConstants.PURCHASE_ORDER_PREFIX));
-            purchaseOrder.setCreatedAt(freazyUtilsService.generateDateFormat());
+            purchaseOrder.setCreatedAt(freazyUtilsService.generateDate());
             purchaseOrder.setCreatedBy(freazyUtilsService.getSuperUser());
             purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
         }
@@ -109,7 +109,7 @@ public class PurchaseOrderService {
     private PurchaseOrderItems getPurchaseOrderItems() {
         PurchaseOrderItems purchaseOrderItem = new PurchaseOrderItems();
         purchaseOrderItem.setId(freazyUtilsService.generateId(FreazyConstants.PURCHASE_ORDER_ITEM_PREFIX));
-        purchaseOrderItem.setCreatedAt(freazyUtilsService.generateDateFormat());
+        purchaseOrderItem.setCreatedAt(freazyUtilsService.generateDate());
         purchaseOrderItem.setCreatedBy(freazyUtilsService.getSuperUser());
         return purchaseOrderItem;
     }
@@ -161,7 +161,7 @@ public class PurchaseOrderService {
     private PurchaseOrder getPurchaseOrder() {
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         purchaseOrder.setId(freazyUtilsService.generateId(FreazyConstants.PURCHASE_ORDER_PREFIX));
-        purchaseOrder.setCreatedAt(freazyUtilsService.generateDateFormat());
+        purchaseOrder.setCreatedAt(freazyUtilsService.generateDate());
         purchaseOrder.setCreatedBy(freazyUtilsService.getSuperUser());
         purchaseOrder.setStatus(PurchaseOrderStatus.DRAFT.toString());
         return purchaseOrder;

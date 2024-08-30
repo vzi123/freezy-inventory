@@ -58,12 +58,12 @@ public class ProcurementService {
         }
 
         procurement.setId(freazyUtilsService.generateId(FreazyConstants.PROC_PREFIX));
-        procurement.setDate(freazyUtilsService.generateDateFormat());
+        procurement.setDate(freazyUtilsService.generateDate());
         procurement.setProduct(productService.getProductById(procurementDTO.getProductId()));
         procurement.setQuantity(procurementDTO.getQuantity());
         procurement.setCost(procurementDTO.getCost());
         procurement.setVendor(procurementDTO.getVendorId());
-        procurement.setDescription("Procured on " + freazyUtilsService.generateDateFormat() + " from " + procurementDTO.getVendorId());
+        procurement.setDescription("Procured on " + freazyUtilsService.generateDate() + " from " + procurementDTO.getVendorId());
         procurementRepository.save(procurement);
         InventoryDTO dto = new InventoryDTO();
         dto.setProductId(procurement.getProduct().getId());

@@ -46,7 +46,7 @@ public class UserController {
         user.setRole(UserRole.CUSTOMER);
         user.setCity(dto.getCity());
         user.setId(freazyUtilsService.generateId(FreazyConstants.USER_PREFIX));
-        user.setCreated_at(freazyUtilsService.generateDateFormat());
+        user.setCreated_at(freazyUtilsService.generateDate());
         userService.saveUser(user);
     }
 
@@ -60,7 +60,7 @@ public class UserController {
         user.setCity(dto.getCity());
         user.setRole(UserRole.SUPPLIER);
         user.setId(freazyUtilsService.generateId(FreazyConstants.USER_PREFIX));
-        user.setCreated_at(freazyUtilsService.generateDateFormat());
+        user.setCreated_at(freazyUtilsService.generateDate());
         userService.saveUser(user);
     }
 

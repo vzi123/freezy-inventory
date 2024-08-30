@@ -81,7 +81,7 @@ public class QuotationService {
             quotation.setUserPersona(dto.getUserPersona());
         }
 
-        quotation.setCreatedAt(freazyUtilsService.generateDateFormat());
+        quotation.setCreatedAt(freazyUtilsService.generateDate());
         quotation.setCreatedBy(freazyUtilsService.getSuperUser());
         quotation.setBudget(0);
         if(null != dto.getDiscount()){
@@ -115,7 +115,7 @@ public class QuotationService {
             //item.setPrice((int)((productService.getProductById(items.getProductId())).getPrice() * (1 - (float)(dto.getDiscount())/100)));
             item.setQuantity(items.getQuantity());
             item.setId(freazyUtilsService.generateId(FreazyConstants.QUOTATION_ITEM_PREFIX));
-            item.setCreatedAt(freazyUtilsService.generateDateFormat());
+            item.setCreatedAt(freazyUtilsService.generateDate());
             item.setCreatedBy(freazyUtilsService.getSuperUser());
             item.setProduct(productService.getProductById(items.getProductId()));
             quotationItemsService.saveQuotationItems(item);

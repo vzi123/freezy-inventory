@@ -137,13 +137,13 @@ public class SalesOrderService {
 
     private void getDefaultSO(SalesOrder salesOrder) {
         salesOrder.setId(freazyUtilsService.generateId(FreazyConstants.SALES_ORDER_PREFIX));
-        salesOrder.setCreatedAt(freazyUtilsService.generateDateFormat());
+        salesOrder.setCreatedAt(freazyUtilsService.generateDate());
         salesOrder.setCreatedBy(freazyUtilsService.getSuperUser());
     }
 
     private void getDefaultSOI(SalesOrderItems salesOrderItem) {
         salesOrderItem.setId(freazyUtilsService.generateId(FreazyConstants.SALES_ORDER_ITEM_PREFIX));
-        salesOrderItem.setCreatedAt(freazyUtilsService.generateDateFormat());
+        salesOrderItem.setCreatedAt(freazyUtilsService.generateDate());
         salesOrderItem.setCreatedBy(freazyUtilsService.getSuperUser());
     }
 
@@ -206,7 +206,7 @@ public class SalesOrderService {
         payable.setAmount(payableAmount);
         payable.setStatus(status);
         payable.setComments(comments);
-        payable.setCreatedAt(freazyUtilsService.generateDateFormat());
+        payable.setCreatedAt(freazyUtilsService.generateDate());
         payable.setCreatedBy(freazyUtilsService.getSuperUser());
         payableRepository.saveAndFlush(payable);
         freazySMSService.sendSms(FreazyConstants.SEND_SMS2, freazyUtilsService.generatePayableMessage(payableAmount.toString()));
@@ -231,7 +231,7 @@ public class SalesOrderService {
             receivable.setCustomer(purchaseOrder.getUser());
         }
         receivable.setAmount(receivableAmount);
-        receivable.setCreatedAt(freazyUtilsService.generateDateFormat());
+        receivable.setCreatedAt(freazyUtilsService.generateDate());
         receivable.setCreatedBy(freazyUtilsService.getSuperUser());
         receivable.setStatus(status);
         receivable.setComments(comments);

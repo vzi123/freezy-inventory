@@ -31,7 +31,7 @@ public class ProjectService {
 
     public void saveProject(Project project) {
         project.setId(freazyUtilsService.generateId(FreazyConstants.PROJECT_ORDER_PREFIX));
-        project.setCreatedAt(freazyUtilsService.generateDateFormat());
+        project.setCreatedAt(freazyUtilsService.generateDate());
         project.setCreatedBy(userService.getSuperUser());
         projectRepository.save(project);
     }

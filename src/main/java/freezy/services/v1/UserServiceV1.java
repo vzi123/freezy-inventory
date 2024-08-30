@@ -71,7 +71,7 @@ public class UserServiceV1 {
         user.setEmail(dto.getEmail());
         user.setRole(role);
         user.setCity(dto.getCity());
-        user.setCreatedAt(FreazyUtilsService.generateDateFormat());
+        user.setCreatedAt(FreazyUtilsService.generateDate());
         user.setPincode(dto.getPincode());
         user.setGstId(dto.getGstId());
         saveUser(user);

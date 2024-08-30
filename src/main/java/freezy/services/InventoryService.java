@@ -50,10 +50,10 @@ public class InventoryService {
         else{
             inventory.setInventory(inventory.getInventory() + inventoryDTO.getStock());
         }
-        inventory.setCreatedAt(freazyUtilsService.generateDateFormat());
+        inventory.setCreatedAt(freazyUtilsService.generateDate());
         inventory.setCreatedBy(freazyUtilsService.getSuperUser());
         inventory.setProduct(product);
-        inventory.setUpdatedAt(freazyUtilsService.generateDateFormat());
+        inventory.setUpdatedAt(freazyUtilsService.generateDate());
         inventory.setUpdatedBy(freazyUtilsService.getSuperUser());
 
         inventoryRepository.saveAndFlush(inventory);
@@ -62,8 +62,8 @@ public class InventoryService {
         inventoryLog.setInventory(inventory);
         inventoryLog.setId(freazyUtilsService.generateId(FreazyConstants.INVENTORY_ORDER_PREFIX));
         inventoryLog.setInOut(InventoryLogEntry.IN);
-        inventoryLog.setComments("Procured " + inventoryDTO.getStock() + " on " + freazyUtilsService.generateDateFormat());
-        inventoryLog.setCreatedAt(freazyUtilsService.generateDateFormat());
+        inventoryLog.setComments("Procured " + inventoryDTO.getStock() + " on " + freazyUtilsService.generateDate());
+        inventoryLog.setCreatedAt(freazyUtilsService.generateDate());
         inventoryLogService.saveInventoryLog(inventoryLog);
     }
 
@@ -89,7 +89,7 @@ public class InventoryService {
         try{
             Product product = productService.getProductById(inventoryDTO.getProductId());
             Inventory inventory = inventoryRepository.findByProduct(product);
-            inventory.setCreatedAt(freazyUtilsService.generateDateFormat());
+            inventory.setCreatedAt(freazyUtilsService.generateDate());
             inventory.setCreatedBy(freazyUtilsService.getSuperUser());
             inventory.setProduct(product);
             if(addOrDeduct.equalsIgnoreCase(FreazyConstants.INVENTORY_INC)){
@@ -98,7 +98,7 @@ public class InventoryService {
             else{
                 inventory.setInventory(inventory.getInventory() - inventoryDTO.getStock());
             }
-            inventory.setUpdatedAt(freazyUtilsService.generateDateFormat());
+            inventory.setUpdatedAt(freazyUtilsService.generateDate());
             inventory.setUpdatedBy(freazyUtilsService.getSuperUser());
 
             inventoryRepository.saveAndFlush(inventory);
@@ -108,14 +108,14 @@ public class InventoryService {
             inventoryLog.setId(freazyUtilsService.generateId(FreazyConstants.INVENTORY_ORDER_PREFIX));
             if(addOrDeduct.equalsIgnoreCase(FreazyConstants.INVENTORY_INC)){
                 inventoryLog.setInOut(InventoryLogEntry.IN);
-                inventoryLog.setComments("Procured " + inventoryDTO.getStock() + " on " + freazyUtilsService.generateDateFormat());
+                inventoryLog.setComments("Procured " + inventoryDTO.getStock() + " on " + freazyUtilsService.generateDate());
             }
             else{
                 inventoryLog.setInOut(InventoryLogEntry.OUT);
-                inventoryLog.setComments("Deducted " + inventoryDTO.getStock() + " on " + freazyUtilsService.generateDateFormat() + " for " + comments);
+                inventoryLog.setComments("Deducted " + inventoryDTO.getStock() + " on " + freazyUtilsService.generateDate() + " for " + comments);
             }
 
-            inventoryLog.setCreatedAt(freazyUtilsService.generateDateFormat());
+            inventoryLog.setCreatedAt(freazyUtilsService.generateDate());
             inventoryLogService.saveInventoryLog(inventoryLog);
         }
         catch (Exception e){

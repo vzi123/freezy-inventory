@@ -29,7 +29,7 @@ public class FreazyUtilsService {
         return prefix+((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
     }
 
-    public static String generateDateFormat(){
+    public static String generateDate(){
         SimpleDateFormat dateFormat = new SimpleDateFormat(FreazyConstants.DATE_FORMAT);
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata")); // Set timezone to IST
         String formattedDate = dateFormat.format(new Timestamp(System.currentTimeMillis()));
