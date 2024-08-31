@@ -56,7 +56,7 @@ public class InventoryControllerV1 {
     }
 
     @PostMapping(value = "/inward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object saveInwardInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1){
+    public Object saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1){
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
         Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
         Boolean isValidEntries = inventoryServiceV1.validateProductsOrAccessoriesOrServices(inventoryEntryV1);
@@ -75,7 +75,7 @@ public class InventoryControllerV1 {
     }
 
     @PostMapping(value = "/outward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object saveOuwardInventory(@Valid @RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception {
+    public Object saveOuwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception {
         Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
             return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.BAD_REQUEST);
