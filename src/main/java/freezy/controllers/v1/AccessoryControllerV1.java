@@ -13,6 +13,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +43,10 @@ public class AccessoryControllerV1 {
     }
 
     @PostMapping(value = "/save",produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object save(@Valid @RequestBody AccessoryDTOV1 dto) {
+    public Object save(@Valid @RequestBody AccessoryDTOV1 dto, BindingResult result) throws Exception{
+        if (result.hasErrors()) {
+            return new ResponseEntity<>(result.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+        }
         if(null == dto.getCategoryId()){
             return freazyUtilsService.sendResponse(FreazyConstants.CATEGORY_NULL, HttpStatus.OK);
         }

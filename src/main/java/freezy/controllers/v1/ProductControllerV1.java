@@ -48,9 +48,9 @@ public class ProductControllerV1 {
     }
 
     @PostMapping(value = "/save",produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Object addProduct(@Valid @RequestBody ProductDTOV1 productDTO) {
+    public Object addProduct(@RequestBody ProductDTOV1 productDTO) {
         if(null == productDTO.getCategoryId()){
-            return freazyUtilsService.sendResponse(FreazyConstants.CATEGORY_NULL, HttpStatus.OK);
+            return freazyUtilsService.sendResponse(FreazyConstants.CATEGORY_NULL, HttpStatus.BAD_REQUEST);
         }
         else{
             CategoryV1 category = categoryServiceV1.getCategoryById(productDTO.getCategoryId());

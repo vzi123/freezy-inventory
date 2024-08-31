@@ -10,7 +10,6 @@ public class AccessoryDTOV1 {
     String description;
     @FreazyValidField(notBlank = true, message = "Category Details cannot be blank.")
     String categoryId;
-    @FreazyValidField(numbersOnly = true, message = "Cost should be in numbers.")
     Integer cost;
     String brandId;
 

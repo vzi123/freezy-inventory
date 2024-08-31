@@ -10,7 +10,6 @@ public class ProductDTOV1 {
     String description;
     @FreazyValidField(notBlank = true, message = "Category Details cannot be blank.")
     String categoryId;
-    @FreazyValidField(numbersOnly = true, message = "Cost should be in numbers.")
     Integer cost;
     @FreazyValidField(alphanumeric = true, message = "HSN No should be alphanumeric.")
     String hsnNo;
