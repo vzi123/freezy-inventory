@@ -10,6 +10,7 @@ import freezy.events.InwardDetailPublisher;
 import freezy.repository.v1.InventoryRepositoryV1;
 import freezy.utils.FreazyConstants;
 import freezy.utils.FreazyUtilsService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -154,6 +155,7 @@ public class InventoryServiceV1 {
         return countList;
     }
 
+    @Transactional
     public ConsignmentV1 incrementOrDecrementInventory(InventoryEntryV1 inventoryEntryV1, String inOrOut, ConsignmentV1 existingConsignment){
 //        try{
         ConsignmentV1 consignmentV1 = existingConsignment;

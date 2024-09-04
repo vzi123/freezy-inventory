@@ -57,6 +57,9 @@ public class InventoryControllerV1 {
 
     @PostMapping(value = "/inward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Object saveInwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1){
+        if(null == inventoryEntryV1.getUserId()){
+            inventoryEntryV1.setUserId(freazyUtilsService.getSuperUserV1().getId());
+        }
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
         Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
         Boolean isValidEntries = inventoryServiceV1.validateProductsOrAccessoriesOrServices(inventoryEntryV1);
