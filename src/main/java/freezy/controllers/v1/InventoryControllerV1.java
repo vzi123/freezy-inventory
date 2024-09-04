@@ -79,6 +79,9 @@ public class InventoryControllerV1 {
 
     @PostMapping(value = "/outward", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Object saveOuwardInventory(@RequestBody InventoryEntryV1 inventoryEntryV1) throws Exception {
+        if(null == inventoryEntryV1.getUserId()){
+            inventoryEntryV1.setUserId(freazyUtilsService.getSuperUserV1().getId());
+        }
         Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
             return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.BAD_REQUEST);
@@ -87,7 +90,7 @@ public class InventoryControllerV1 {
         if(isValidEntries != null && isValidEntries.equals(Boolean.FALSE)){
             return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ENTRIES, HttpStatus.BAD_REQUEST);
         }
-        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, null);
+        ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_DEDUCT, null);
         outwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), FreazyStringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
         return consignmentServiceV1.generateDC(consignmentV1.getId());
     }
