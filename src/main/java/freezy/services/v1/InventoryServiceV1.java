@@ -284,7 +284,7 @@ public class InventoryServiceV1 {
         }
         inventory.setUpdatedAt(freazyUtilsService.generateDate());
         inventory.setUpdatedBy(freazyUtilsService.getSuperUserV1());
-        totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
+        totalAmount = totalAmount + (inventoryDTO.getSubTotal().intValue());
 
         inventoryRepositoryV1.saveAndFlush(inventory);
 
@@ -338,7 +338,7 @@ public class InventoryServiceV1 {
         }
         inventory.setUpdatedAt(freazyUtilsService.generateDate());
         inventory.setUpdatedBy(freazyUtilsService.getSuperUserV1());
-        totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
+        totalAmount = totalAmount + (inventoryDTO.getSubTotal().intValue());
 
         inventoryRepositoryV1.saveAndFlush(inventory);
 
@@ -387,7 +387,7 @@ public class InventoryServiceV1 {
         inventory.setStock(0);
         inventory.setUpdatedAt(freazyUtilsService.generateDate());
         inventory.setUpdatedBy(freazyUtilsService.getSuperUserV1());
-        totalAmount = totalAmount + (inventoryDTO.getUnitPrice() * inventoryDTO.getQuantity());
+        totalAmount = totalAmount + (inventoryDTO.getSubTotal().intValue());
 
         inventoryRepositoryV1.saveAndFlush(inventory);
 
