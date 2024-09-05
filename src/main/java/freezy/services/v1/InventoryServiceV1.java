@@ -208,9 +208,21 @@ public class InventoryServiceV1 {
                 direction = InventoryLogEntryV1.OUT;
             }
             consignmentV1.setInOut(direction);
-            if(null != inventoryEntryV1.getProducts())itemCount = itemCount + inventoryEntryV1.getProducts().size();
-            if(null != inventoryEntryV1.getAccessories())itemCount = itemCount + inventoryEntryV1.getAccessories().size();
-            if(null != inventoryEntryV1.getServices())itemCount = itemCount + inventoryEntryV1.getServices().size();
+            if(null != inventoryEntryV1.getProducts()){
+                for(InventoryDTOV1 dto: inventoryEntryV1.getProducts()){
+                    itemCount = itemCount + dto.getQuantity();
+                }
+            }
+            if(null != inventoryEntryV1.getAccessories()){
+                for(InventoryDTOV1 dto: inventoryEntryV1.getAccessories()){
+                    itemCount = itemCount + dto.getQuantity();
+                }
+            }
+            if(null != inventoryEntryV1.getServices()){
+                for(InventoryDTOV1 dto: inventoryEntryV1.getServices()){
+                    itemCount = itemCount + dto.getQuantity();
+                }
+            }
             consignmentV1.setItemCount(itemCount);
             consignmentV1.setCreatedFor(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
             consignmentV1.setTotalAmount(0);
