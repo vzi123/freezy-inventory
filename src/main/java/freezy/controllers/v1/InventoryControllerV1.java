@@ -125,16 +125,16 @@ public class InventoryControllerV1 {
             if(null == consignmentV1){
                 return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.BAD_REQUEST);
             }
-            else{
-                Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
-                Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
-                if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
-                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_IDU, HttpStatus.BAD_REQUEST);
-                }
-                if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
-                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_QUANTITY_IDU, HttpStatus.BAD_REQUEST);
-                }
-            }
+//            else{
+//                Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
+//                Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
+//                if(isValidIDU != null && isValidIDU.equals(Boolean.FALSE)){
+//                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_IDU, HttpStatus.BAD_REQUEST);
+//                }
+//                if(isValidQuantity != null && isValidQuantity.equals(Boolean.FALSE)){
+//                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_QUANTITY_IDU, HttpStatus.BAD_REQUEST);
+//                }
+//            }
             inventoryServiceV1.undoConsignment(consignmentV1);
             ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, consignmentV1);
             return consignment;
@@ -149,12 +149,12 @@ public class InventoryControllerV1 {
             if(null == consignmentV1){
                 return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.BAD_REQUEST);
             }
-            else{
-                Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
-                if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
-                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.BAD_REQUEST);
-                }
-            }
+//            else{
+//                Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
+//                if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
+//                    return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.BAD_REQUEST);
+//                }
+//            }
             inventoryServiceV1.undoConsignment(consignmentV1);
             ConsignmentV1 consignment = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, consignmentV1);
             return consignmentServiceV1.generateDC(consignmentV1.getId());
