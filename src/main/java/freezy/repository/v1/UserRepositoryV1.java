@@ -21,5 +21,10 @@ public interface UserRepositoryV1 extends JpaRepository<UserV1, String>, JpaSpec
     public List<UserV1> searchByParams(@Param("firstName") String firstName, @Param("lastName") String lastName,
                                      @Param("phNo") String phNo, @Param("email") String email);
 
+//    @Query(value = "SELECT * FROM user_v1  WHERE (first_name ILIKE '%' || :firstName || '%' OR phone_number ILIKE '%' || :phNo || '%' OR last_name ILIKE '%' || :lastName || '%' OR email ILIKE '%' || :email || '%')"
+//            , nativeQuery = true)
+//    public List<UserV1> searchByParams(@Param("firstName") String firstName, @Param("lastName") String lastName,
+//                                       @Param("phNo") String phNo, @Param("email") String email, Boolean isPostGres);
+
     public List<UserV1> findAllByRoleOrderByCreatedAtDesc(UserRoleV1 userRole);
 }

@@ -175,7 +175,7 @@ public class InventoryServiceV1 {
                     totalAmount = totalAmount + createAccessoryEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
             }
-            if(null != inventoryEntryV1.getServices())for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getServices()){
+            if(null != inventoryEntryV1.getServices() && inventoryEntryV1.getServices().size() > 0)for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getServices()){
                 if(null != inventoryDTO){
                     totalAmount = totalAmount + createServiceEntry(inventoryDTO, inventoryEntryV1, inOrOut, consignmentV1);
                 }
