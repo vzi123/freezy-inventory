@@ -205,7 +205,7 @@ public class FreazyPdfGenerateService {
         String s3Link = freazyS3Service.uploadFile(file);
 //        System.out.println("Link : " + link);
         System.out.println("S3 Link : " + s3Link);
-        dcCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(),s3Link,userDTO.getName() );
+        dcCreatedPublisher.publishEvent(freazyUtilsService.getSuperUserV1().getId(),s3Link,userDTO.getName() );
         return generatePdfFileContents("deliveryChallan", data,consignmentV1.getId() + "-" + "dc.pdf");
     }
 }

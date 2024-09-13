@@ -73,7 +73,7 @@ public class InventoryControllerV1 {
             return freazyUtilsService.sendResponse(FreazyConstants.INVALID_QUANTITY_IDU, HttpStatus.BAD_REQUEST);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_INC, null);
-        inwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(), consignmentV1.getItemCount());
+        inwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUserV1().getId(), consignmentV1.getItemCount());
         return consignmentV1;
     }
 
@@ -91,7 +91,7 @@ public class InventoryControllerV1 {
             return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ENTRIES, HttpStatus.BAD_REQUEST);
         }
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_DEDUCT, null);
-        outwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUser().getId(), consignmentV1.getTotalAmount(), FreazyStringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
+        outwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUserV1().getId(), consignmentV1.getTotalAmount(), FreazyStringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
         return consignmentServiceV1.generateDC(consignmentV1.getId());
     }
 
