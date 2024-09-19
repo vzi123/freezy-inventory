@@ -468,4 +468,37 @@ public class InventoryServiceV1 {
         inwardDetailPublisher.publishEvent(userName, quantity, productName);
     }
 
+    public InventoryV1 getInventoryForProduct(ProductV1 product){
+        return inventoryRepositoryV1.findByProduct(product);
+    }
+    public InventoryV1 getInventoryForAccessory(AccessoryV1 accessory){
+        return inventoryRepositoryV1.findByAccessory(accessory);
+    }
+
+    public Boolean validateProductInventory(InventoryEntryV1 inventoryEntry){
+        List<InventoryDTOV1> productV1s = inventoryEntry.getProducts();
+        if(null != productV1s && productV1s.size() > 0){
+            for(InventoryDTOV1 product: productV1s){
+                ProductV1 productV1 = productServiceV1.getProductV1ById(product.getProductId());
+                if(null == productV1) return false;
+                InventoryV1 productInv = getInventoryForProduct(productV1);
+                if(productInv.getStock() < product.getQuantity())return false;
+            }
+        }
+        return true;
+    }
+
+    public Boolean validateAccessoryInventory(InventoryEntryV1 inventoryEntry){
+        List<InventoryDTOV1> accessories = inventoryEntry.getAccessories();
+        if(null != accessories && accessories.size() > 0){
+            for(InventoryDTOV1 accessory: accessories){
+                AccessoryV1 accessoryV1 = accessoryServiceV1.getAccessoryById(accessory.getAccessoryId());
+                if(null == accessoryV1) return false;
+                InventoryV1 productInv = getInventoryForAccessory(accessoryV1);
+                if(productInv.getStock() < accessory.getQuantity())return false;
+            }
+        }
+        return true;
+    }
+
 }

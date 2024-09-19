@@ -144,5 +144,9 @@ public class FreazyConstants {
     public static final String ACCESSORIES = "Accessories";
     public static final String SERVICES = "Services";
 
+    public static final String PRODUCT_INV_INVALID = "The requested quantity for Products is not available in the stock.";
+    public static final String ACCESSORY_INV_INVALID = "The requested quantity for Accessories is not available in the stock.";
+
+    public static final String INVALID_DC_REQ = "Cannot generate DC for an Inward Request.";
 
 }

@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,6 +64,14 @@ public class InventoryControllerV1 {
         Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
         Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
         Boolean isValidEntries = inventoryServiceV1.validateProductsOrAccessoriesOrServices(inventoryEntryV1);
+        Boolean isProductStockValid = inventoryServiceV1.validateProductInventory(inventoryEntryV1);
+        Boolean isAccessoryStockValid = inventoryServiceV1.validateAccessoryInventory(inventoryEntryV1);
+        if(isProductStockValid != null && isProductStockValid.equals(Boolean.FALSE)){
+            return freazyUtilsService.sendResponse(FreazyConstants.PRODUCT_INV_INVALID, HttpStatus.BAD_REQUEST);
+        }
+        if(isAccessoryStockValid != null && isAccessoryStockValid.equals(Boolean.FALSE)){
+            return freazyUtilsService.sendResponse(FreazyConstants.ACCESSORY_INV_INVALID, HttpStatus.BAD_REQUEST);
+        }
         if(isValidEntries != null && isValidEntries.equals(Boolean.FALSE)){
             return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ENTRIES, HttpStatus.BAD_REQUEST);
         }
@@ -82,6 +91,14 @@ public class InventoryControllerV1 {
         if(null == inventoryEntryV1.getUserId()){
             inventoryEntryV1.setUserId(freazyUtilsService.getSuperUserV1().getId());
         }
+        Boolean isProductStockValid = inventoryServiceV1.validateProductInventory(inventoryEntryV1);
+        Boolean isAccessoryStockValid = inventoryServiceV1.validateAccessoryInventory(inventoryEntryV1);
+        if(isProductStockValid != null && isProductStockValid.equals(Boolean.FALSE)){
+            return freazyUtilsService.sendResponse(FreazyConstants.PRODUCT_INV_INVALID, HttpStatus.BAD_REQUEST);
+        }
+        if(isAccessoryStockValid != null && isAccessoryStockValid.equals(Boolean.FALSE)){
+            return freazyUtilsService.sendResponse(FreazyConstants.ACCESSORY_INV_INVALID, HttpStatus.BAD_REQUEST);
+        }
         Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
         if(isValidODU != null && isValidODU.equals(Boolean.FALSE)){
             return freazyUtilsService.sendResponse(FreazyConstants.INVALID_ODU, HttpStatus.BAD_REQUEST);
@@ -93,6 +110,21 @@ public class InventoryControllerV1 {
         ConsignmentV1 consignmentV1 = inventoryServiceV1.incrementOrDecrementInventory(inventoryEntryV1, FreazyConstants.INVENTORY_DEDUCT, null);
         outwardCreatedPublisher.publishEvent(freazyUtilsService.getSuperUserV1().getId(), consignmentV1.getTotalAmount(), FreazyStringUtils.replaceSpaces(consignmentV1.getCreatedFor().getFirst_name()));
         return consignmentServiceV1.generateDC(consignmentV1.getId());
+    }
+
+    @GetMapping(value = "/dc/{consignmentId}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getDCForConsignment(@PathVariable String consignmentId) throws Exception {
+        if(null != consignmentId) {
+            ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
+            if (null == consignmentV1) {
+                return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.BAD_REQUEST);
+            }
+            if(!consignmentV1.getInOut().name().equalsIgnoreCase(FreazyConstants.INVENTORY_OUT)){
+                return freazyUtilsService.sendResponse(FreazyConstants.INVALID_DC_REQ, HttpStatus.BAD_REQUEST);
+            }
+            return consignmentServiceV1.generateDC(consignmentV1.getId());
+        }
+        return null;
     }
 
 //    @GetMapping(value = "/consignment/{consignmentId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -125,6 +157,14 @@ public class InventoryControllerV1 {
             if(null == consignmentV1){
                 return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.BAD_REQUEST);
             }
+            Boolean isProductStockValid = inventoryServiceV1.validateProductInventory(inventoryEntryV1);
+            Boolean isAccessoryStockValid = inventoryServiceV1.validateAccessoryInventory(inventoryEntryV1);
+            if(isProductStockValid != null && isProductStockValid.equals(Boolean.FALSE)){
+                return freazyUtilsService.sendResponse(FreazyConstants.PRODUCT_INV_INVALID, HttpStatus.BAD_REQUEST);
+            }
+            if(isAccessoryStockValid != null && isAccessoryStockValid.equals(Boolean.FALSE)){
+                return freazyUtilsService.sendResponse(FreazyConstants.ACCESSORY_INV_INVALID, HttpStatus.BAD_REQUEST);
+            }
 //            else{
 //                Boolean isValidIDU = inventoryServiceV1.validateIDU(inventoryEntryV1);
 //                Boolean isValidQuantity = inventoryServiceV1.validateQuantity(inventoryEntryV1);
@@ -148,6 +188,14 @@ public class InventoryControllerV1 {
             ConsignmentV1 consignmentV1 = consignmentServiceV1.getConsignmentById(consignmentId);
             if(null == consignmentV1){
                 return freazyUtilsService.sendResponse(FreazyConstants.INVALID_CONSIGNMENT, HttpStatus.BAD_REQUEST);
+            }
+            Boolean isProductStockValid = inventoryServiceV1.validateProductInventory(inventoryEntryV1);
+            Boolean isAccessoryStockValid = inventoryServiceV1.validateAccessoryInventory(inventoryEntryV1);
+            if(isProductStockValid != null && isProductStockValid.equals(Boolean.FALSE)){
+                return freazyUtilsService.sendResponse(FreazyConstants.PRODUCT_INV_INVALID, HttpStatus.BAD_REQUEST);
+            }
+            if(isAccessoryStockValid != null && isAccessoryStockValid.equals(Boolean.FALSE)){
+                return freazyUtilsService.sendResponse(FreazyConstants.ACCESSORY_INV_INVALID, HttpStatus.BAD_REQUEST);
             }
 //            else{
 //                Boolean isValidODU = inventoryServiceV1.validateODU(inventoryEntryV1);
