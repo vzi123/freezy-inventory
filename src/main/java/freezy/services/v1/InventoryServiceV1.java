@@ -161,7 +161,12 @@ public class InventoryServiceV1 {
         ConsignmentV1 consignmentV1 = existingConsignment;
         if(null != inventoryEntryV1 && (inventoryEntryV1.getProducts().size() > 0 || inventoryEntryV1.getAccessories().size() > 0
                 || inventoryEntryV1.getServices().size() > 0)){
-            if(null == consignmentV1)consignmentV1 = createConsignment(inventoryEntryV1, inOrOut);
+            if(null == consignmentV1){
+                consignmentV1 = createConsignment(inventoryEntryV1, inOrOut);
+            }
+            else{
+                editConsignment(inventoryEntryV1, consignmentV1);
+            }
             Integer totalAmount = 0;
 
             for(InventoryDTOV1 inventoryDTO : inventoryEntryV1.getProducts()){
@@ -208,6 +213,37 @@ public class InventoryServiceV1 {
                 direction = InventoryLogEntryV1.OUT;
             }
             consignmentV1.setInOut(direction);
+            if(null != inventoryEntryV1.getProducts()){
+                for(InventoryDTOV1 dto: inventoryEntryV1.getProducts()){
+                    itemCount = itemCount + dto.getQuantity();
+                }
+            }
+            if(null != inventoryEntryV1.getAccessories()){
+                for(InventoryDTOV1 dto: inventoryEntryV1.getAccessories()){
+                    itemCount = itemCount + dto.getQuantity();
+                }
+            }
+            if(null != inventoryEntryV1.getServices()){
+                for(InventoryDTOV1 dto: inventoryEntryV1.getServices()){
+                    itemCount = itemCount + dto.getQuantity();
+                }
+            }
+            consignmentV1.setItemCount(itemCount);
+            consignmentV1.setCreatedFor(userServiceV1.getUserById(inventoryEntryV1.getUserId()));
+            consignmentV1.setTotalAmount(0);
+            consignmentServiceV1.saveConsignment(consignmentV1);
+            return consignmentV1;
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    private ConsignmentV1 editConsignment(InventoryEntryV1 inventoryEntryV1, ConsignmentV1 consignmentV1) {
+        Integer itemCount = 0;
+        try{
+            consignmentV1.setComments(inventoryEntryV1.getComments());
             if(null != inventoryEntryV1.getProducts()){
                 for(InventoryDTOV1 dto: inventoryEntryV1.getProducts()){
                     itemCount = itemCount + dto.getQuantity();
