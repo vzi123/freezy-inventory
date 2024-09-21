@@ -18,7 +18,7 @@ RUN echo \
     > /usr/share/maven/conf/settings.xml;
 
 COPY . /usr/src/app
-RUN mvn --batch-mode -f /usr/src/app/pom.xml clean package
+
 
 
 # Default command
