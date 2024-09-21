@@ -16,7 +16,6 @@ public class UserDTO {
     String city;
     @FreazyValidField(numbersOnly = true, message = "Pincode field can only have numbers.")
     String pincode;
-    @FreazyValidField(alphanumeric = true, message = "GST code shoule be alphanumeric.")
     String gstId;
 
     public String getPincode() {
